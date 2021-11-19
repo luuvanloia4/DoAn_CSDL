@@ -1,0 +1,245 @@
+﻿.UI-container{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+.UI-show{
+    display: flex;
+}
+.UI-container .UI-show{
+    display: block!important;
+}
+.UI-loading {
+    display: none;
+    width: 50rem;
+    padding: 5rem 7rem;
+    background-color: white;
+    border-radius: var(--normal-border-radius);
+    box-shadow: var(--normal-box-shadow);
+}
+.loading-icon{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+/* old option */
+.spinner-border{
+    width: 7rem;
+    height: 7rem;
+    border-width: 0.5rem;
+}
+/* new option */
+.load-dots{
+    position: relative;
+    width: 30rem;
+    height: 10rem;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* .load-dot{
+    width: 1rem;
+    height: 1rem;
+    margin: .5rem;
+    display:block;
+    position: relative;
+    background-color: blue;
+    transition: .25s ease;
+    animation: dot_loading_animation;
+
+    @keyframes dot_loading_animation {
+        {
+            background-color: lightblue;
+            height: 3.5rem;
+        }
+    }
+} */
+.loading-text{
+    font-size: 2rem;
+    text-align: center;
+}
+
+.UI-content {
+    display: none;
+    width: 70rem;
+    padding: 2rem 4rem;
+    background-color: white;
+    border-radius: var(--normal-border-radius);
+    box-shadow: var(--normal-box-shadow);
+}
+.message{
+    font-size: 2rem;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+.UI-button-content{
+    padding: .5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+.UI-button-content .btn{
+    padding: 0.5rem 1rem;
+    font-size: 1.6rem;
+}
+.UI-button-content .btn-success:hover{
+    background-color: white;
+    color: var(--success);
+}
+.UI-button-content .btn-danger:hover{
+    background-color: white;
+    color: var(--danger);
+}
+
+/* message */
+:root {
+    --success-background: #28a745;
+    --success-background-progress: darkgreen;
+    --fail-background: #dc3545;
+    --fail-background-progress: darkred;
+}
+
+.UI-message{
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 16;
+    padding: 0.5rem;
+}
+
+.UI-message > div{
+    margin-bottom: 0.5rem;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: var(--normal-box-shadow);
+    cursor: pointer;
+}
+.UI-message > div:hover{
+
+}
+
+.message__content{
+    display: flex;
+    align-items: center;
+    padding: 0.7rem 2rem;
+    width: 40rem;
+}
+.message-icon{
+    font-size: 3rem;
+    margin-right: 1rem;
+    color: white;
+}
+.message-text p{
+    margin: 0;
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+.message__progress{
+    background-color: transparent;
+    border-radius: 0;
+    height: .7rem;
+}
+    .UI-message .progress-bar{
+        transition: 0.1s;
+    }
+    /* success */
+.UI-success {
+    background-color: var(--success-background);
+}
+    .UI-success .progress-bar {
+        background-color: var(--success-background-progress);
+    }
+
+    /* fail */
+.UI-fail {
+    background-color: var(--fail-background);
+}
+    .UI-fail .progress-bar{
+        background-color: var(--fail-background-progress);
+    }
+
+/* Nội dung toàn màn hình */
+.UI-hidden{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.UI-hidden .btn{
+    font-size: 1.6rem;
+    padding: 0.7rem 1rem;
+}
+.UI-hidden__content{
+    padding: 2rem 3rem;
+    margin: 2rem;
+    min-width: 60rem;
+    background-color: white;
+    border-radius: var(--normal-border-radius);
+    box-shadow: var(--normal-box-shadow);
+    pointer-events: all;
+}
+.UI-hidden__content > div{
+    overflow-y: auto;
+    max-height: 80vh;
+}
+    .UI-hidden__content .title{
+        font-size: 2.3rem;
+        font-weight: normal;
+        color: rgba(13,27,62,0.7);
+        padding-bottom: 0.5rem;
+        border-bottom: 0.2rem solid dodgerblue;
+        margin-bottom: 2rem;
+    }
+
+.UI-image{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 14;
+    background-color:rgba(255, 255, 255, 0.7);
+}
+    .UI-image img{
+        width: 100%;
+        height: auto;
+    }
+    .UI-image .btn{
+        position: fixed;
+        top: 3rem;
+        right: 3rem;
+        border: none;
+        background-color: transparent;
+        color: gray;
+        font-size: 3rem;
+        width: 5rem;
+        height: 5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100rem;
+    }
+    .UI-image .btn:hover{
+        background-color: gray;
+        color: white;
+    }

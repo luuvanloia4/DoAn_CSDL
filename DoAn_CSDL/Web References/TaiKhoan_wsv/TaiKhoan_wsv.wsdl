@@ -1,0 +1,1015 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Login">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoginResult" type="tns:API_ResultOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="EnumErrCode">
+        <s:restriction base="s:string">
+          <s:enumeration value="Error" />
+          <s:enumeration value="Fail" />
+          <s:enumeration value="Success" />
+          <s:enumeration value="Empty" />
+          <s:enumeration value="NotYetLogin" />
+          <s:enumeration value="ExistMultiOfUnique" />
+          <s:enumeration value="DiffrentPass" />
+          <s:enumeration value="AlreadyExist" />
+          <s:enumeration value="InvalidEndDate" />
+          <s:enumeration value="FailUploadImage" />
+          <s:enumeration value="SuccessWithEmptyTokenFirebase" />
+          <s:enumeration value="PermissionDenied" />
+          <s:enumeration value="FailAddNotification" />
+          <s:enumeration value="DoesNotExist" />
+          <s:enumeration value="ValidateRequiment" />
+          <s:enumeration value="SuccessWithFailSomething" />
+          <s:enumeration value="NotHaveQuotaToRollback" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="Create">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="obj" type="tns:tbl_TaiKhoan" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="tbl_TaiKhoan">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Pass" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HoTen" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgaySinh" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChucVu" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PhanQuyenID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Token" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Img" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_CuaHangs" type="tns:ArrayOfTbl_CuaHang" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HeThongs" type="tns:ArrayOfTbl_HeThong" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HopDongs" type="tns:ArrayOfTbl_HopDong" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HT_TKs" type="tns:ArrayOfTbl_HT_TK" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_NhaCungCaps" type="tns:ArrayOfTbl_NhaCungCap" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_Notifications" type="tns:ArrayOfTbl_Notification" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuNhaps" type="tns:ArrayOfTbl_PhieuNhap" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuXuats" type="tns:ArrayOfTbl_PhieuXuat" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_PhanQuyen" type="tns:tbl_PhanQuyen" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_CuaHang">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_CuaHang" nillable="true" type="tns:tbl_CuaHang" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_CuaHang">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="STK" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NganHang" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuXuats" type="tns:ArrayOfTbl_PhieuXuat" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_PhieuXuat">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_PhieuXuat" nillable="true" type="tns:tbl_PhieuXuat" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_PhieuXuat">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayLap" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NguoiDuyet" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayDuyet" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayHT" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CuaHangID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPXes" type="tns:ArrayOfTbl_ChiTietPX" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_CuaHang" type="tns:tbl_CuaHang" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_ChiTietPX">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_ChiTietPX" nillable="true" type="tns:tbl_ChiTietPX" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_ChiTietPX">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="PhieuXuatID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MatHangID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SoLuong" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_MatHang" type="tns:tbl_MatHang" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuXuat" type="tns:tbl_PhieuXuat" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_MatHang">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MoTa" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Gia" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SoLuong" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NhaCungCapID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietHDs" type="tns:ArrayOfTbl_ChiTietHD" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPNs" type="tns:ArrayOfTbl_ChiTietPN" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPXes" type="tns:ArrayOfTbl_ChiTietPX" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_MH_LMHs" type="tns:ArrayOfTbl_MH_LMH" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_NhaCungCap" type="tns:tbl_NhaCungCap" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_ChiTietHD">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_ChiTietHD" nillable="true" type="tns:tbl_ChiTietHD" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_ChiTietHD">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="HopDongID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MatHangID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SoLuong" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HopDong" type="tns:tbl_HopDong" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_MatHang" type="tns:tbl_MatHang" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_HopDong">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayLap" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayHT" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NguoiLap" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NhaCungCapID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietHDs" type="tns:ArrayOfTbl_ChiTietHD" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuNhaps" type="tns:ArrayOfTbl_PhieuNhap" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_NhaCungCap" type="tns:tbl_NhaCungCap" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_PhieuNhap">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_PhieuNhap" nillable="true" type="tns:tbl_PhieuNhap" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_PhieuNhap">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NguoiLap" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayLap" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="NguoiGiao" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="HopDongID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPNs" type="tns:ArrayOfTbl_ChiTietPN" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HopDong" type="tns:tbl_HopDong" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_ChiTietPN">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_ChiTietPN" nillable="true" type="tns:tbl_ChiTietPN" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_ChiTietPN">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="PhieuNhapID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MatHangID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SoLuong" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ViTriID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ViTri" type="tns:tbl_ViTri" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_MatHang" type="tns:tbl_MatHang" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuNhap" type="tns:tbl_PhieuNhap" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_ViTri">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="HangID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CotID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="KhoID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPNs" type="tns:ArrayOfTbl_ChiTietPN" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_Kho" type="tns:tbl_Kho" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_Kho">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HeTHongID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ViTris" type="tns:ArrayOfTbl_ViTri" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HeThong" type="tns:tbl_HeThong" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_ViTri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_ViTri" nillable="true" type="tns:tbl_ViTri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_HeThong">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="STK" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NganHang" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HT_TKs" type="tns:ArrayOfTbl_HT_TK" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_Khos" type="tns:ArrayOfTbl_Kho" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_HT_TK">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_HT_TK" nillable="true" type="tns:tbl_HT_TK" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_HT_TK">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="HeTHongID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HeThong" type="tns:tbl_HeThong" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_Kho">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_Kho" nillable="true" type="tns:tbl_Kho" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_NhaCungCap">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="STK" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NganHang" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HopDongs" type="tns:ArrayOfTbl_HopDong" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_MatHangs" type="tns:ArrayOfTbl_MatHang" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_HopDong">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_HopDong" nillable="true" type="tns:tbl_HopDong" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_MatHang">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_MatHang" nillable="true" type="tns:tbl_MatHang" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_MH_LMH">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_MH_LMH" nillable="true" type="tns:tbl_MH_LMH" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_MH_LMH">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="LoaiMatHangID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MatHangID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_LoaiMatHang" type="tns:tbl_LoaiMatHang" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_MatHang" type="tns:tbl_MatHang" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_LoaiMatHang">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GhiChu" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_MH_LMHs" type="tns:ArrayOfTbl_MH_LMH" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_HeThong">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_HeThong" nillable="true" type="tns:tbl_HeThong" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_NhaCungCap">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_NhaCungCap" nillable="true" type="tns:tbl_NhaCungCap" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_Notification">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_Notification" nillable="true" type="tns:tbl_Notification" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_Notification">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="TieuDe" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NoiDung" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ThoiGian" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_PhanQuyen">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GhiChu" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="IsDelete" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoans" type="tns:ArrayOfTbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_TaiKhoan">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_TaiKhoan" nillable="true" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateResult" type="tns:API_ResultOfBoolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfBoolean">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Data" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Edit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="obj" type="tns:tbl_TaiKhoan" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EditResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="EditResult" type="tns:API_ResultOfBoolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Delete">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteResult" type="tns:API_ResultOfBoolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="listID" type="tns:ArrayOfInt" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DeleteListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteListResult" type="tns:API_ResultOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListComboboxID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="phanQuyenID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListComboboxIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetListComboboxIDResult" type="tns:API_ResultOfListOfListCombobox_ettOfInt32" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfListOfListCombobox_ettOfInt32">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="tns:ArrayOfListCombobox_ettOfInt32" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfListCombobox_ettOfInt32">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ListCombobox_ettOfInt32" nillable="true" type="tns:ListCombobox_ettOfInt32" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ListCombobox_ettOfInt32">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Data" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayData" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetListComboboxName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="phanQuyenID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListComboboxNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetListComboboxNameResult" type="tns:API_ResultOfListOfListCombobox_ettOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfListOfListCombobox_ettOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="tns:ArrayOfListCombobox_ettOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfListCombobox_ettOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ListCombobox_ettOfString" nillable="true" type="tns:ListCombobox_ettOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ListCombobox_ettOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayData" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SearchPaging">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="startTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="endTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchValue" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="searchType" type="tns:EnumSearchType" />
+            <s:element minOccurs="1" maxOccurs="1" name="curPage" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pageSize" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="orderBy" type="tns:EnumOrderBy" />
+            <s:element minOccurs="1" maxOccurs="1" name="isDescending" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="EnumSearchType">
+        <s:restriction base="s:string">
+          <s:enumeration value="All" />
+          <s:enumeration value="ID" />
+          <s:enumeration value="Name" />
+          <s:enumeration value="UserName" />
+          <s:enumeration value="ParentID" />
+          <s:enumeration value="Phone" />
+          <s:enumeration value="ListAll" />
+          <s:enumeration value="Permission" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="EnumOrderBy">
+        <s:restriction base="s:string">
+          <s:enumeration value="Newest" />
+          <s:enumeration value="LastEdited" />
+          <s:enumeration value="ID" />
+          <s:enumeration value="Count" />
+          <s:enumeration value="Name" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="SearchPagingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchPagingResult" type="tns:API_ResultOfListOfTaiKhoan_ett" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfListOfTaiKhoan_ett">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="tns:ArrayOfTaiKhoan_ett" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTaiKhoan_ett">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TaiKhoan_ett" nillable="true" type="tns:TaiKhoan_ett" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TaiKhoan_ett">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HoTen" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Avatar" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgaySinh" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChucVu" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PhanQuyenID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PhanQuyen" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCurrentUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCurrentUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCurrentUserResult" type="tns:API_ResultOfTaiKhoan_ett" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfTaiKhoan_ett">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="tns:TaiKhoan_ett" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetByName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetByNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetByNameResult" type="tns:API_ResultOfTaiKhoan_ett" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetByID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetByIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetByIDResult" type="tns:API_ResultOfTaiKhoan_ett" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PhanQuyen">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="listUserID" type="tns:ArrayOfInt" />
+            <s:element minOccurs="1" maxOccurs="1" name="phanQuyenID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PhanQuyenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PhanQuyenResult" type="tns:API_ResultOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="LoginSoapIn">
+    <wsdl:part name="parameters" element="tns:Login" />
+  </wsdl:message>
+  <wsdl:message name="LoginSoapOut">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateSoapIn">
+    <wsdl:part name="parameters" element="tns:Create" />
+  </wsdl:message>
+  <wsdl:message name="CreateSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateResponse" />
+  </wsdl:message>
+  <wsdl:message name="EditSoapIn">
+    <wsdl:part name="parameters" element="tns:Edit" />
+  </wsdl:message>
+  <wsdl:message name="EditSoapOut">
+    <wsdl:part name="parameters" element="tns:EditResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteSoapIn">
+    <wsdl:part name="parameters" element="tns:Delete" />
+  </wsdl:message>
+  <wsdl:message name="DeleteSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteListSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteList" />
+  </wsdl:message>
+  <wsdl:message name="DeleteListSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetListComboboxIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetListComboboxID" />
+  </wsdl:message>
+  <wsdl:message name="GetListComboboxIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetListComboboxIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetListComboboxNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetListComboboxName" />
+  </wsdl:message>
+  <wsdl:message name="GetListComboboxNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetListComboboxNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchPagingSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchPaging" />
+  </wsdl:message>
+  <wsdl:message name="SearchPagingSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchPagingResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCurrentUser" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCurrentUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetByNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetByName" />
+  </wsdl:message>
+  <wsdl:message name="GetByNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetByIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetByID" />
+  </wsdl:message>
+  <wsdl:message name="GetByIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetByIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="PhanQuyenSoapIn">
+    <wsdl:part name="parameters" element="tns:PhanQuyen" />
+  </wsdl:message>
+  <wsdl:message name="PhanQuyenSoapOut">
+    <wsdl:part name="parameters" element="tns:PhanQuyenResponse" />
+  </wsdl:message>
+  <wsdl:portType name="TaiKhoan_wsvSoap">
+    <wsdl:operation name="Login">
+      <wsdl:input message="tns:LoginSoapIn" />
+      <wsdl:output message="tns:LoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Create">
+      <wsdl:input message="tns:CreateSoapIn" />
+      <wsdl:output message="tns:CreateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Edit">
+      <wsdl:input message="tns:EditSoapIn" />
+      <wsdl:output message="tns:EditSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Delete">
+      <wsdl:input message="tns:DeleteSoapIn" />
+      <wsdl:output message="tns:DeleteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteList">
+      <wsdl:input message="tns:DeleteListSoapIn" />
+      <wsdl:output message="tns:DeleteListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetListComboboxID">
+      <wsdl:input message="tns:GetListComboboxIDSoapIn" />
+      <wsdl:output message="tns:GetListComboboxIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetListComboboxName">
+      <wsdl:input message="tns:GetListComboboxNameSoapIn" />
+      <wsdl:output message="tns:GetListComboboxNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchPaging">
+      <wsdl:input message="tns:SearchPagingSoapIn" />
+      <wsdl:output message="tns:SearchPagingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <wsdl:input message="tns:GetCurrentUserSoapIn" />
+      <wsdl:output message="tns:GetCurrentUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetByName">
+      <wsdl:input message="tns:GetByNameSoapIn" />
+      <wsdl:output message="tns:GetByNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetByID">
+      <wsdl:input message="tns:GetByIDSoapIn" />
+      <wsdl:output message="tns:GetByIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PhanQuyen">
+      <wsdl:input message="tns:PhanQuyenSoapIn" />
+      <wsdl:output message="tns:PhanQuyenSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TaiKhoan_wsvSoap" type="tns:TaiKhoan_wsvSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Login">
+      <soap:operation soapAction="http://tempuri.org/Login" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Create">
+      <soap:operation soapAction="http://tempuri.org/Create" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Edit">
+      <soap:operation soapAction="http://tempuri.org/Edit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Delete">
+      <soap:operation soapAction="http://tempuri.org/Delete" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteList">
+      <soap:operation soapAction="http://tempuri.org/DeleteList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListComboboxID">
+      <soap:operation soapAction="http://tempuri.org/GetListComboboxID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListComboboxName">
+      <soap:operation soapAction="http://tempuri.org/GetListComboboxName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchPaging">
+      <soap:operation soapAction="http://tempuri.org/SearchPaging" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <soap:operation soapAction="http://tempuri.org/GetCurrentUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetByName">
+      <soap:operation soapAction="http://tempuri.org/GetByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetByID">
+      <soap:operation soapAction="http://tempuri.org/GetByID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PhanQuyen">
+      <soap:operation soapAction="http://tempuri.org/PhanQuyen" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="TaiKhoan_wsvSoap12" type="tns:TaiKhoan_wsvSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Login">
+      <soap12:operation soapAction="http://tempuri.org/Login" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Create">
+      <soap12:operation soapAction="http://tempuri.org/Create" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Edit">
+      <soap12:operation soapAction="http://tempuri.org/Edit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Delete">
+      <soap12:operation soapAction="http://tempuri.org/Delete" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteList">
+      <soap12:operation soapAction="http://tempuri.org/DeleteList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListComboboxID">
+      <soap12:operation soapAction="http://tempuri.org/GetListComboboxID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListComboboxName">
+      <soap12:operation soapAction="http://tempuri.org/GetListComboboxName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchPaging">
+      <soap12:operation soapAction="http://tempuri.org/SearchPaging" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <soap12:operation soapAction="http://tempuri.org/GetCurrentUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetByName">
+      <soap12:operation soapAction="http://tempuri.org/GetByName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetByID">
+      <soap12:operation soapAction="http://tempuri.org/GetByID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PhanQuyen">
+      <soap12:operation soapAction="http://tempuri.org/PhanQuyen" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TaiKhoan_wsv">
+    <wsdl:port name="TaiKhoan_wsvSoap" binding="tns:TaiKhoan_wsvSoap">
+      <soap:address location="https://localhost:44377/View/TaiKhoan_wsv.asmx" />
+    </wsdl:port>
+    <wsdl:port name="TaiKhoan_wsvSoap12" binding="tns:TaiKhoan_wsvSoap12">
+      <soap12:address location="https://localhost:44377/View/TaiKhoan_wsv.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

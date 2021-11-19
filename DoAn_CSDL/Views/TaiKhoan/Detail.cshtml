@@ -1,0 +1,52 @@
+﻿@*@using QuanLyKho.Models
+@model tbl_TaiKhoan 
+@{
+    ViewBag.Title = "Tài khoản " + Model.TenTK;
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<div class="main--content">
+    <h1 class="main--title">CHI TIẾT TÀI KHOẢN:</h1>
+    <div class="user">
+        <div>
+            <img src="data:image/png;base64,@Model.Avatar" class="detail--img" onclick="ShowImage(this)"/>
+        </div>
+        <div class="right">
+            <p><strong>Mã tài khoản:</strong> @Model.MaTK</p>
+            <p><strong>Họ và tên:</strong> @Model.HoTen</p>
+            <p><strong>Ngày sinh:</strong> @Model.NgaySinh.ToString("dd/MM/yyyy")</p>
+            <p><strong>Địa chỉ:</strong> @Model.DiaChi</p>
+            <p><strong>Số điện thoại:</strong> @Model.SDT</p>
+            <p><strong>Tên tài khoản:</strong> @Model.TenTK</p>
+            <p>
+                <strong>Phân quyền:</strong>
+                @foreach (tbl_PhanQuyen quyen in TempData.Peek("ListPhanQuyen") as List<tbl_PhanQuyen>)
+                {
+                    if (quyen.MaQuyen == Model.PhanQuyen)
+                    {
+                        @quyen.ChucVu
+                    }
+                }
+            </p>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" onclick="GoEdit(this)">
+                    <i class="fas fa-user-edit"></i> Cập nhật thông tin
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function GoEdit(ele) {
+        let taiKhoan = "@Model.TenTK";
+        $.ajax({
+            url: "@LocalLinks.EditTaiKhoan",
+            method: "POST",
+            data: { TaiKhoan, taiKhoan }
+        });
+    }
+</script>*@
+
+
+

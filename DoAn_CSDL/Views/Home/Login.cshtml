@@ -1,0 +1,183 @@
+﻿
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="login">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-6 login-left">
+                <!---->
+                <img src="/Data/System/Images/app_icon.jpg">
+            </div>
+            <div class="col-12 col-sm-6 login-right">
+                <div class="login__main">
+                    <div class="login__title">
+                        <p class="title-1">LTH's Kho</p>
+                        <p class="title-2">Đẳng cấp quản lý kho<br />Tiền của bạn đang được tiêu bởi chúng tôi!</p>
+                    </div>
+                    <div class="login__form">
+                        <form class="form-group" onsubmit="return false" id="form-login">
+                            <div class="pb-2">
+                                <label for="txt_UserName">Tên tài khoản:</label>
+                                <input type="text" name="txt_UserName" id="txt_UserName" class="form-control" maxlength="100" placeholder="" />
+                            </div>
+                            
+                            <div class="pb-2">
+                                <label for="txt_Password">Mật khẩu:</label>
+                                <div class="d-flex">
+                                    <input type="password" name="txt_Password" id="txt_Password" class="form-control" maxlength="100" placeholder="" />
+                                    <button type="button" class="btn btn-showpass" onclick="ShowPass(this)" tabindex="-1" style="box-shadow: none;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center form-group pb-5">
+                                <input type="checkbox" name="ck_Save" id="ck_Save"/>
+                                <label class="form-check-label" for="ck_Save">Ghi nhớ lần đăng nhập này.</label>
+                            </div>
+
+                            <div class="login__button">
+                                <button type="button" class="btn btn-success" onclick="Login()">
+                                    Đăng nhập
+                                </button>
+                            </div>
+                            <div class="login__error">
+                                <p id="login-error"></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var hasFocus = false;
+
+    function ShowPass(ele) {
+        let input = $(ele).parent().find("input");
+        if (input.prop("type") == "password") {
+            input.prop("type", "text");
+            $(ele).addClass("active");
+        }
+        else {
+            input.prop("type", "password");
+            $(ele).removeClass("active");
+        }
+    }
+
+    function ShowLoginError(msg) {
+        $('#login-error').html(msg);
+    }
+
+    function TryFocus(jqEle) {
+        jqEle.addClass("required");
+        if (!hasFocus) {
+            hasFocus = true;
+            jqEle.focus();
+        }
+    }
+
+    function Login() {
+        hasFocus = false;
+        ShowLoginError("");
+
+        let userName = $('[name=txt_UserName]');
+        let userName_val = userName.val();
+        let password = $('[name=txt_Password]');
+        let password_val = password.val();
+
+        if (userName_val.length == 0) {
+            TryFocus(userName);
+            ShowLoginError("*Không được để trống tên tài khoản!");
+        }
+        else if (userName_val.length > 100) {
+            TryFocus(userName);
+            ShowLoginError("*Tên tài khoản không được vượt quá 100 ký tự!");
+        }
+        else if (password_val.length == 0) {
+            TryFocus(password);
+            ShowLoginError("*Không được để trống mật khẩu!");
+        }
+        else if (password_val.length > 100) {
+            TryFocus(password);
+            ShowLoginError("Mật khẩu không được vượt quá 100 ký tự!");
+        }
+        else {
+            let save = $('#ck_Save').prop("checked");
+            if (save) {
+                window.localStorage.setItem("UserName", userName_val);
+                window.localStorage.setItem("Password", password_val);
+            }
+
+            //UI block
+            ShowLoading();
+
+            let form = $('#form-login');
+            let fData = form.serialize();
+
+            $.ajax({
+                url: "/Home/Login",
+                method: "POST",
+                data: fData,
+                success: function (result, status, xhr) {
+                    let rs = JSON.parse(result);
+
+                    console.log(rs);
+                    if (rs.ErrCode == 2) {
+                        window.location.replace("/");
+                    }
+                    else {
+                        ShowLoginError("*Thông tin tài khoản hoặc mật khẩu không chính xác!");
+                        ShowFailMessage("Thông tin tài khoản hoặc mật khẩu không chính xác!");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    ShowLoginError("*Có lỗi xảy ra trong quá trình đăng nhập!");
+                    ShowFailMessage("Mất kết nối với máy chủ!");
+                }
+            }).always(function () {
+                HideLoading();
+            });
+        }
+    }
+
+    function RestoreInputValue() {
+        let userName = window.localStorage.getItem("UserName");
+        let password = window.localStorage.getItem("Password");
+
+        if (userName) {
+            $('[name=txt_UserName]').val(userName);
+            $('[name=txt_Password]').val(password);
+            $('[name=ck_Save]').prop("checked", true);
+        }
+        else {
+            $('[name=ck_Save]').prop("checked", false);
+        }
+    }
+
+    $(function () {
+        RestoreInputValue();
+
+        $('#txt_UserName').change(function () {
+            ShowLoginError("");
+        });
+        $('#txt_Password').change(function () {
+            ShowLoginError("");
+        });
+
+        $('#form-login input').keyup(function (e) {
+            if (e.key == "Enter") {
+                Login();
+            }
+        });
+    });
+</script>
+@{
+    //Html.RenderAction("RenderLoginFooter", "Home");
+}
+

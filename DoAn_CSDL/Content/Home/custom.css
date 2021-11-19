@@ -1,0 +1,340 @@
+/* custom form-control */
+.form-group{
+    margin-bottom: 0;
+}
+
+.custom-search-input{
+    display: inline-block;
+    width: 25rem;
+    font-size: 1.4rem;
+}
+
+.custom-select{
+    display: inline-block;
+    width: 100%;
+    height: fit-content;
+    font-size: 1.4rem;
+    border-radius: var(--normal-border-radius);
+    cursor: pointer;
+}
+
+.custom-checkbox{
+    cursor: pointer;
+}
+
+/* custom btn */
+.custom-btn-func{
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding: 0.4rem 1.2rem;
+}
+
+.custom-btn-search{
+    width: 3.4rem;
+    height: 3.4rem;
+    padding: 0!important;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.custom-btn-detail{
+    color: var(--success);
+    margin: 0 .2rem;
+}
+.custom-btn-detail:hover{
+    color: white;
+    background-color: var(--success);
+}
+
+.custom-btn-edit{
+    color: var(--primary);
+    margin: 0 .2rem;
+}
+.custom-btn-edit:hover{
+    color: white;
+    background-color: var(--primary);
+}
+
+.custom-btn-delete{
+    color: var(--danger);
+    margin: 0 .2rem;
+}
+.custom-btn-delete:hover{
+    color: white;
+    background-color: var(--danger);
+}
+
+/* custom table */
+.custom-table{
+    font-size: 1.5rem;
+    padding: 0 1rem;
+    width: 100%;
+    border-radius: var(--normal-border-radius);
+}
+.custom-table thead{
+    text-align: center;
+    color: white;
+    background-color: rgb(70, 70, 70);
+}
+.custom-table th{
+    font-weight: 500;
+    padding: 2rem 0;
+}
+.custom-table td{
+    vertical-align: middle;
+}
+
+.custom-table tbody tr{
+    background-color: white;
+    transition: .2s;
+}
+.custom-table tbody tr:hover{
+    background-color: rgb(210, 244, 255);
+}
+
+.menu-paging{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.menu-paging__content{
+    border: 1px solid lightgray;
+    border-radius: .7rem;
+    overflow: hidden;
+}
+.menu-paging__content .btn{
+    border-radius: 0;
+}
+.menu-paging__content .btn-page-active,
+.menu-paging__content .btn:hover{
+    color: white;
+    background-color: var(--nav-background);
+}
+
+/* custom form */
+.custom-table{
+    --label-text-color: rgb(70, 70, 70);
+    --label-font-size: 1.7rem;
+    --label-font-weight: normal;
+    --input-text-color: rgb(70, 70, 70);
+    --input-bg-color: white;
+    --input-font-size: 1.6rem;
+}
+.custom-form{
+
+}
+
+.custom-form .row > div{
+    padding-bottom: 1.5rem;
+}
+
+.custom-form img.img-detail{
+    width: auto;
+    height: 22rem;
+    cursor: pointer;
+    display: block;
+    box-shadow: var(--normal-box-shadow);
+    border-radius: var(--normal-border-radius);
+}
+
+.custom-form label{
+    font-size: var(--label-font-size);
+    color: var(--label-text-color);
+    font-weight: var(--label-font-weight);
+}
+
+.custom-form input{
+    color: var(--input-text-color);
+    font-size: var(--input-font-size);
+    background-color: var(--input-bg-color);
+}
+
+.custom-form .input-required{
+    background-color: rgb(255, 190, 190);
+    border-color: var(--danger);
+}
+
+.custom-form input[type='password']{
+    padding-right: 4rem;
+}
+.custom-form .showPas{
+    border: none;
+    background-color: transparent;
+    border-radius: 50%;
+    color: lightgray;
+    margin-left: -3.5rem;
+    transition: .1s;
+}
+.custom-form .showedPas,
+.custom-form .showPas:hover{
+    color: rgb(19, 88, 158);
+}
+
+.custom-form select{
+    font-size: var(--input-font-size);
+    color: var(--input-text-color);
+    background-color: var(--input-bg-color);
+    cursor: pointer;
+}
+
+    /* custom input file */
+        .custom-input-file {
+            width: 100%;
+            max-width: 35rem;
+            height: 3.5rem;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .custom-input-file input[type='file']{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+            display: none!important;
+            z-index: -1;
+        }
+
+        .custom-input-file input[type=text]{
+            width: calc(100% - 12rem);
+            height: 100%;
+            font-size: 1.8rem;
+            border-radius: 0.3rem 0 0 0.3rem;
+            overflow: hidden;
+            pointer-events: none;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .custom-input-file > span{
+            content: "";
+            width: 12rem;
+            height: 100%;
+            background-color: #275bdf;
+            border-radius: 0 0.3rem 0.3rem 0;
+            color: whitesmoke;
+            font-size: 1.6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+    /* end custom input file */
+
+
+
+
+
+
+
+
+
+
+.add-new-item{
+    padding-top: var(--header-height);
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 7;
+}
+.add-new-item > div{
+    max-width: 100rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 1rem lightgray;
+    padding: 3rem 5rem;
+}
+.add-new-item .btn{
+    font-size: 2rem;
+}
+.add-new-item .form-add-item{
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.edit-item{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 8;
+}
+.edit-item > div{
+    max-width: 100rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 1rem lightgray;
+    padding: 5rem 7rem;
+}
+
+.form-add-item{
+}
+    .form-add-item label{
+        font-size: 2.2rem;
+        margin-top: 2rem;
+    }
+    .form-add-item input.form-control{
+        max-width: 100%;
+        height: 4rem;
+        font-size: 1.8rem;
+    }
+    .form-add-item select.form-control{
+        max-width: 100%;
+        width: 100%;
+        height: 4rem;
+        font-size: 1.8rem;
+    }
+    .form-add-item textarea.form-control{
+        max-width: 100%;
+        height: 10rem;
+        font-size: 1.8rem;
+    }
+.add-item-img-show{
+    width: 20rem;
+    height: 20rem;
+    overflow: hidden;
+}
+    .add-item-img-show img{
+        width: 100%;
+        height: auto;
+    }
+
+
+.list-mh{
+
+}
+.list-add-mh{
+    display: none;
+}
+.list-add-mh form{
+    margin: 0;
+}
+.th-sl{
+    width: 15rem;
+}
+.list-add-mh input{
+    height: 4rem;
+    font-size: 2rem;
+    width: 100%;
+    text-align: center;
+}

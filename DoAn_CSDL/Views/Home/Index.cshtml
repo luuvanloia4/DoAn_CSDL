@@ -1,0 +1,87 @@
+﻿@model List<int>
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+
+<div class="trangchu">
+    <div class="trangchu--content">
+        <div class="work-follow @(Model[6] == 2? "d-none": "")">
+            <h1>HỢP ĐỒNG MUA HÀNG:</h1>
+            <div class="work-follow--content" id="nhan">
+                <a href="/HopDong/QuanLy" class="work-follow--link">
+                    <div class="number-container">
+                        <p>@Model[0]</p>
+                    </div>
+                    <div class="text-container">
+                        <p>Hợp đồng đã được tạo</p>
+                    </div>
+                </a>
+                <a href="/HopDong/QuanLy/0" class="work-follow--link">
+                    <div class="number-container">
+                        <p>@Model[1]</p>
+                    </div>
+                    <div class="text-container">
+                        <p>Hợp đồng trong quá trình giao hàng</p>
+                    </div>
+                </a>
+                <a href="/HopDong/QuanLy/1" class="work-follow--link">
+                    <div class="number-container">
+                        <p>@Model[2]</p>
+                    </div>
+                    <div class="text-container">
+                        <p>Hợp đồng đã hoàn thành</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="work-follow @(Model[6] == 3? "d-none": "")">
+            <h1>YÊU CẦU XUẤT HÀNG:</h1>
+            <div class="work-follow--content" id="giao">
+                <a href="/PhieuXuat/QuanLy" class="work-follow--link">
+                    <div class="number-container">
+                        <p>@Model[3]</p>
+                    </div>
+                    <div class="text-container">
+                        <p>Yêu cầu đã được tạo</p>
+                    </div>
+                </a>
+                <a href="/PhieuXuat/QuanLy/1" class="work-follow--link">
+                    <div class="number-container">
+                        <p>@Model[4]</p>
+                    </div>
+                    <div class="text-container">
+                        <p>Yêu cầu đang giao hàng</p>
+                    </div>
+                </a>
+                <a href="/PhieuXuat/QuanLy/2" class="work-follow--link">
+                    <div class="number-container">
+                        <p>@Model[5]</p>
+                    </div>
+                    <div class="text-container">
+                        <p>Yêu cầu đã hoàn thành</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function TestAbstract() {
+        $.ajax({
+            url: "/Home/TestAbstract",
+            method: "POST",
+            success: function (result, statuc, xhr) {
+                let objs = JSON.parse(result);
+                console.log(objs);
+            },
+            error: function () {
+
+            }
+        });
+    }
+</script>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetListMenu">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListMenuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetListMenuResult" type="tns:API_ResultOfListOfview_Menu" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfListOfview_Menu">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="tns:ArrayOfView_Menu" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfView_Menu">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="view_Menu" nillable="true" type="tns:view_Menu" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="view_Menu">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Icon" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="reID" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Content" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Role" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Order" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Active" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Link" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PhanQuyen" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="EnumErrCode">
+        <s:restriction base="s:string">
+          <s:enumeration value="Error" />
+          <s:enumeration value="Fail" />
+          <s:enumeration value="Success" />
+          <s:enumeration value="Empty" />
+          <s:enumeration value="NotYetLogin" />
+          <s:enumeration value="ExistMultiOfUnique" />
+          <s:enumeration value="DiffrentPass" />
+          <s:enumeration value="AlreadyExist" />
+          <s:enumeration value="InvalidEndDate" />
+          <s:enumeration value="FailUploadImage" />
+          <s:enumeration value="SuccessWithEmptyTokenFirebase" />
+          <s:enumeration value="PermissionDenied" />
+          <s:enumeration value="FailAddNotification" />
+          <s:enumeration value="DoesNotExist" />
+          <s:enumeration value="ValidateRequiment" />
+          <s:enumeration value="SuccessWithFailSomething" />
+          <s:enumeration value="NotHaveQuotaToRollback" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetListMenuSoapIn">
+    <wsdl:part name="parameters" element="tns:GetListMenu" />
+  </wsdl:message>
+  <wsdl:message name="GetListMenuSoapOut">
+    <wsdl:part name="parameters" element="tns:GetListMenuResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Menu_wsvSoap">
+    <wsdl:operation name="GetListMenu">
+      <wsdl:input message="tns:GetListMenuSoapIn" />
+      <wsdl:output message="tns:GetListMenuSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Menu_wsvSoap" type="tns:Menu_wsvSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetListMenu">
+      <soap:operation soapAction="http://tempuri.org/GetListMenu" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Menu_wsvSoap12" type="tns:Menu_wsvSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetListMenu">
+      <soap12:operation soapAction="http://tempuri.org/GetListMenu" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Menu_wsv">
+    <wsdl:port name="Menu_wsvSoap" binding="tns:Menu_wsvSoap">
+      <soap:address location="https://localhost:44377/View/Menu_wsv.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Menu_wsvSoap12" binding="tns:Menu_wsvSoap12">
+      <soap12:address location="https://localhost:44377/View/Menu_wsv.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

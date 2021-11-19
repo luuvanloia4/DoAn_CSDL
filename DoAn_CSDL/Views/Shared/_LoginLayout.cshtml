@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title | LTH's Kho - Đẳng cấp quản lý kho</title>
+
+    @Styles.Render("~/Content/css")
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    
+    <link rel="stylesheet" href="~/Content/Home/main.css">
+    <link rel="stylesheet" href="~/Content/Login/login.css">
+
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+
+    @Html.Partial("~/Views/Shared/Partial/_UIBlock.cshtml")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

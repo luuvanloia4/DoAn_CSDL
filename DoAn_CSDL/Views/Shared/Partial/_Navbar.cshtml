@@ -1,0 +1,115 @@
+﻿@using DoAn_CSDL.Menu_wsv
+@model  List<view_Menu>
+
+<nav id="nav">
+    <div class="navbar nav__content">
+        <ul class="navbar-nav">
+            @{
+                var listMainMenu = Model.Where(u => u.reID < 0).ToList();
+            }
+            @foreach (var mainItem in listMainMenu)
+            {
+                var listSubMenu = Model.Where(u => u.reID.Equals(mainItem.ID)).ToList();
+                bool haveSubMenu = listSubMenu.Count() > 0;
+
+            <li id="@Html.Raw("menu_admin_" + mainItem.ID)" class="nav-item">
+                @Html.Raw((haveSubMenu)? "<a href='javascript: void(0)' class='nav-link' onclick='ToggleSecondNav(this, event)'>": ("<a href='" + mainItem.Link + "' class='nav-link'>"))
+                        <div class="d-flex">
+                            <div class="icon">
+                                @if (string.IsNullOrEmpty(mainItem.Icon))
+                                {
+                                    <i class="fas fa-sticky-note"></i>
+                                }
+                                else
+                                {
+                                    @Html.Raw(mainItem.Icon)
+                                }
+                            </div>
+                            @mainItem.Title
+                        </div>
+                        @if (haveSubMenu)
+                        {
+                            <div class="menu-icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        }
+                    @Html.Raw("</a>")
+                    @if (haveSubMenu)
+                    {
+                        <div class="hide-navbar">
+                            <div class="line">
+                                <div class="line__content"></div>
+                            </div>
+                            <div class="nav-second">
+                                @foreach (var subMenu in listSubMenu)
+                                {
+                                    <a href="@subMenu.Link" class="function-link">
+                                        @subMenu.Title
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                </li>
+            }
+            <!--<li class="nav-item d-none">
+        <a href="javascript: void(0)" class="nav-link" onclick="ToggleSecondNav(this, event)">
+            <div class="d-flex">
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="menu-icon">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </a>
+        <div class="hide-navbar">
+            <div class="line">
+                <div class="line--content"></div>
+            </div>
+            <div class="nav-second">
+                <a href="#" class="function-link">
+                    Chức năng 1
+                </a>
+                <a href="#" class="function-link">
+                    Chức năng 2
+                </a>
+                <a href="#" class="function-link">
+                    Chức năng 3
+                </a>
+                <a href="#" class="function-link">
+                    Chức năng 4
+                </a>
+            </div>
+        </div>
+    </li>-->
+
+        </ul>
+    </div>
+    @*<div class="footer">
+        <p>Hello world!</p>
+    </div>*@
+</nav>
+
+<script src="~/Scripts/Main.js"></script>
+
+<script>
+    function ToggleSecondNav(ele, event) {
+        let hideEle = $(ele).siblings(".hide-navbar");
+        let itemHeight = hideEle.find("a").outerHeight();
+        let itemMarginBottom = hideEle.find("a").css("margin-bottom");
+        let itemCount = hideEle.find("a").length;
+
+        if ($(ele).parent().hasClass("active")) {
+            $(ele).parent().removeClass("active");
+            hideEle.height(0);
+        }
+        else {
+            $(ele).parent().siblings('.active').removeClass("active");
+            $(ele).parent().addClass("active");
+            //=>?
+            $(".hide-navbar").height(0);
+            hideEle.height((12 + itemCount * (itemHeight + PxConvert(itemMarginBottom))) + "px");
+        }
+    }
+</script>

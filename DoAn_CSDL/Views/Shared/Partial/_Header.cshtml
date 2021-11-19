@@ -1,0 +1,258 @@
+﻿@using DoAn_CSDL.TaiKhoan_wsv
+@model TaiKhoan_ett
+
+<header>
+    <div class="navbar navbar-expand nav-header">
+        <ul class="navbar-nav">
+            <li class="nav-item header-logo">
+                <a href="/">
+                    <img src="~/Data/System/Images/galaxy_background.jpg">
+                </a>
+            </li>
+            <li class="nav-item">
+                <button type="button" class="btn btn-header btn-menu" onclick="ToggleNavMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </li>
+            <li class="nav-item search">
+                <form class="form-group form-search-header" autocomplete="off">
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-header btn-search" onclick="ToggleSearch(this)">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <input type="text" name="txt_ExTuKhoa" class="form-control" onkeyup="ShowHeaderResult(this)" onchange="ShowHeaderResult(this)" placeholder="Bạn muốn tìm gì?">
+                    </div>
+                </form>
+                <div class="search-result">
+                    <a href="#">
+                        Kết quả số 1
+                    </a>
+                    <a href="#">
+                        Kết quả số 2
+                    </a>
+                    <a href="#">
+                        Kết quả số 3
+                    </a>
+                    <a href="#">
+                        Kết quả số 4
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item noti__container" id="notify">
+                <button type="button" class="btn btn-header btn-round" onclick="ToggleNoti(this)">
+                    <i class="fas fa-bell"></i>
+                    <p class="num">5</p>
+                </button>
+                <div class="noti__main">
+                    <div class="noti__header">
+                        <p><!-- num of unseen msg --></p>
+                    </div>
+                    <div class="noti__content">
+                        <a href="javascript: void(0)">
+                            <i class="far fa-envelope"></i> Lỗi thông báo
+                        </a>
+                    </div>
+                    <div class="noti__footer">
+                        <a href="/Home/Message">
+                            Xem tất cả...
+                        </a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item user-info__container">
+                <button type="button" class="btn btn-header btn-round" onclick="ToggleUser(this)">
+                    @if (true)
+                    {
+                    <i class="fas fa-user-circle"></i>
+                    }
+                    else
+                    {
+                        <img src="data:image/jpeg;base64," class="avatar--img"/>
+                    }
+                </button>
+                <p class="user-info__name">@Model.HoTen</p>
+                <div class="user-info__content">
+                    <div>
+                        <p><strong>@Model.UserName</strong></p>
+                        <p>@Model.PhanQuyen</p>
+                    </div>
+                    <button type="button" class="btn btn-danger rounded-pill" onclick="Logout()">
+                            Đăng xuất
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="user-message">
+        <div class="user-message__main">
+            <div class="user-message__title">
+                <p><strong>Thông báo</strong></p>
+                <div id="msg_title"></div>
+            </div>
+            <div class="user-message__content">
+                <p style="font-weight: 500">Nội dung thông báo:</p>
+                <div id="msg_content"></div>
+            </div>
+            <div class="user-message__footer">
+                <button type="button" class="btn btn-danger" onclick="MsgClose(this)">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var logOut = false;
+        var showNav = false;
+
+
+        function ToggleNavMenu() {
+            if ($('.app-main').hasClass("active-navbar")) {
+                $('.app-main').removeClass("active-navbar");
+            }
+            else {
+                $('.app-main').addClass("active-navbar");
+            }
+        }
+
+        function HideAllHeader() {
+            $('.result-active').removeClass("result-active");
+            $('.noti-active').removeClass("noti-active");
+            $('.user-active').removeClass("user-active");
+        }
+        function ToggleSearch(ele) {
+            let form = $(ele).parent().parent();
+            let input = $(ele).siblings('input');
+            if (form.hasClass("form-search-active")) {
+                form.removeClass("form-search-active");
+                input.val("");
+                input.change();
+            }
+            else {
+                form.addClass("form-search-active");
+            }
+        }
+
+        function ToggleNoti(ele) {
+            let li = $(ele).parent();
+            if (li.hasClass("noti-active")) {
+                li.removeClass("noti-active");
+            }
+            else {
+                HideAllHeader();
+                li.addClass("noti-active");
+            }
+        }
+
+        function ToggleUser(ele) {
+            let li = $(ele).parent();
+            if (li.hasClass("user-active")) {
+                li.removeClass("user-active");
+            }
+            else {
+                HideAllHeader();
+                li.addClass("user-active");
+            }
+        }
+
+        function ShowHeaderResult(input) {
+            let TuKhoa = $(input).val();
+            let li = $(input).parent().parent().parent();
+            if (TuKhoa.length != 0) {
+                //Tìm kiếm và trả về kết quả
+
+                HideAllHeader();
+                li.addClass("result-active");
+            }
+            else {
+                li.removeClass("result-active");
+            }
+        }
+
+        function Logout() {
+            if (confirm("Bạn có thực sự muốn đăng xuất?")) {
+                window.location.href = "/Home/Login";
+            }
+        }
+
+        // function ReloadMessage() {
+        //     let ctn = $('#notify');
+
+        //     $.ajax({
+        //         url: "/Home/GetSmallListMessage",
+        //         method: "POST",
+        //         data: {},
+        //         success: function (result, status, xhr) {
+        //             let rs = JSON.parse(result);
+        //             console.log(rs);
+        //             if (rs.ErrCode != 2) {
+        //                 ShowFailMessage("Có lỗi xảy ra trong quá trình lấy danh sách thông báo, vui lòng thử lại sau ít phút!");
+        //             }
+        //             else {
+        //                 let listMsg = rs.Data;
+        //                 let numOfUS = rs.RecordCount;
+        //                 if (parseInt(numOfUS) > 9) {
+        //                     ctn.find("p.num").text("9+");
+        //                 }
+        //                 else {
+        //                     ctn.find("p.num").text(numOfUS);
+        //                 }
+        //                 ctn.find(".content--header p").html("Bạn có " + numOfUS + " thông báo chưa đọc!");
+        //                 let htmlResult = "";
+        //                 if (listMsg == null || listMsg == undefined || listMsg.length != 0) {
+        //                     listMsg.forEach((item) => {
+        //                         htmlResult += "<a href=\"javascript: void (0)\" class=\"" +
+        //                             (item.IsSeen == false ? "un-seen" : "")
+        //                         + "\" onclick=\" ShowDetailMessage(this, " + item["ID"] + ")\">"
+        //                             + (item.IsSeen == false ? "<i class=\"fas fa-envelope\"></i>" : "<i class=\"fas fa-envelope-open\"></i>")  + item["Title"]
+        //                             + "</a>";
+        //                     });
+        //                 }
+        //                 ctn.find(".content--main").html(htmlResult);
+        //             }
+        //         },
+        //         error: function (xhr, status, error) {
+        //             ShowFailMessage("Mất kết nối với máy chủ!");
+        //         }
+        //     });
+        // }
+
+        // function ShowDetailMessage(ele, id) {
+        //     ShowLoading();
+        //     $(ele).removeClass("un-seen");
+        //     $.ajax({
+        //         url: "/Home/GetDetailMessage",
+        //         method: "POST",
+        //         data: { id },
+        //         success: function (result, status, xhr) {
+        //             let rs = JSON.parse(result);
+        //             console.log(rs);
+        //             if (rs.ErrCode == 2) {
+        //                 let msg = rs.Data;
+        //                 $('#msg-title-printer').html(msg.Title);
+        //                 $('#msg-content-printer').html(msg.Content);
+        //                 $('.user-message').addClass("d-flex");
+        //             }
+        //             else {
+        //                 $('.user-message').removeClass("d-flex");
+        //             }
+
+        //         },
+        //         error: function () {
+        //             $('.user-message').removeClass("d-flex");
+        //         }
+        //     }).always(function () {
+        //         HideLoading();
+        //     });
+        // }
+
+        function MsgClose(ele) {
+            $('.user-message').removeClass("d-flex");
+        }
+
+        $(function () {
+            ReloadMessage();
+        });
+    </script>
+</header>

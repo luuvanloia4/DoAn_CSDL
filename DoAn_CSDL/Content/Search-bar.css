@@ -1,0 +1,198 @@
+﻿.search-bar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.search-bar--content{
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+}
+.form-search{
+    max-width: 80rem;
+    width: 100vw;
+}
+    .form-search > div{
+        margin-bottom: 1rem;
+    }
+    .form-search label {
+        display: block;
+        font-size: 2.2rem;
+        margin-right: 1rem;
+        font-weight: 500;
+        color: #505050;
+        min-width: max-content;
+    }
+    .form-search input.form-control{
+        height: 3.5rem;
+        max-width: 60rem;
+        font-size: 1.8rem;
+    }
+    .form-search .btn-toggle{
+        background-color: transparent;
+        color: lightgray;
+        font-size: 2rem;
+    }
+    .form-search .btn-toggle:hover,
+    .toggle-active .btn-toggle{
+        color: dodgerblue;
+    }
+    .form-search .btn-search{
+        width: 4rem;
+        height: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: -4rem;
+        font-size: 1.9rem;
+    }
+    .form-search .btn-search:hover{
+        color: rgb(30, 129, 228);
+    }
+    /* Hidden content */
+.search--hidden-content{
+        /* height: 0; */
+        padding: 0 2rem;
+        /* display: flex;
+        justify-content: center; */
+        overflow: hidden;
+        transition: 0.2s;
+}
+.search--hidden-content > div{
+    margin: 0 2rem 1rem 2rem;
+}
+.toggle-active .search--hidden-content{
+    /* height: 5rem; */
+}
+.search--hidden-content label{
+    font-size: 1.9rem;
+    font-weight: normal;
+}
+.search--hidden-content select{
+    font-size: 1.8rem;
+}
+
+
+/* result-container */
+:root{
+    --result-height: 60rem;
+    --result-width: 144rem;
+}
+
+.result-container{
+    max-width: var(--result-width);
+    width: 100vw;
+    min-height: var(--result-height);
+}
+/* Success Result */
+.result-container--success{
+    min-height: var(--result-height);
+    display: none;
+}
+.result--title p{
+    font-size: 2.3rem;
+    font-weight: 500;
+
+}
+.form-option{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+    .form-option label{
+        font-size: 1.9rem;
+        margin: 0 0.5rem; 
+    }
+    .form-option select{
+        font-size: 1.6rem;
+        margin: 0 0.5rem;
+    }
+.table-container{
+
+}
+.table-center th, td{
+    text-align: center;
+    vertical-align: middle!important;
+}
+.table-center thead tr{
+    background-color: var(--half-light);
+    color: var(--half-dark);
+}
+.table-center tbody tr{
+    background-color: var(--light);
+    color: var(--dark);
+}
+
+/* button inline */
+.table-center .btn{
+    background-color: transparent;
+    font-size: 1.6rem;
+    margin: 0 0.5rem;
+    border-radius: 0.3rem;
+}
+
+.table-center .btn-detail{
+    color: var(--primary);
+}
+.table-center .btn-detail:hover{
+    color: var(--light);
+    background-color: var(--primary);
+}
+
+.table-center .btn-edit{
+    color: var(--success);
+}
+.table-center .btn-edit:hover{
+    color: var(--light);
+    background-color: var(--success);
+}
+
+.table-center .btn-delete{
+    color: var(--danger);
+}
+.table-center .btn-delete:hover{
+    color: var(--light);
+    background-color: var(--danger);
+}
+
+.menu-paging{
+    display: none;
+    justify-content: center;
+}
+.menu-paging--content{
+    display: flex;
+    align-items: center;
+    border: 0.1rem solid var(--primary);
+    border-radius: 0.3rem;
+    overflow: hidden;
+}
+.menu-paging--content .btn{
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.7rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+}
+.menu-paging .btn:hover,
+.menu-paging .btn-page-active{
+    color: var(--light);
+    background-color: var(--primary);
+}
+/* Fail Result */
+.result-container--fail{
+    display: none;
+    height: var(--result-height);
+}
+    .result-container--fail .message-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: var(--result-height);
+    }
+
+/*  */
+.show{
+    display: block;
+}

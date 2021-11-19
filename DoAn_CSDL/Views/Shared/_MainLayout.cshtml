@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="~/Images/web_icon.png">
+
+    <title>@ViewBag.Title | LTH's Kho - Đẳng cấp quản lý kho</title>
+
+    @Styles.Render("~/Content/css")
+
+    <link rel="stylesheet" href="~/lib/OwlCarousel2/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="~/lib/OwlCarousel2/assets/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="~/lib/apexcharts/apexcharts.min.css" />
+
+    <link rel="stylesheet" href="~/Content/Home/main.css" />
+    <link rel="stylesheet" href="~/Content/Home/custom.css" />
+
+    <!-- Script -->
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script src="~/lib/OwlCarousel2/owl.carousel.min.js"></script>
+    <script src="~/lib/apexcharts/apexcharts.js"></script>
+    <script src="~/Scripts/main.js"></script>
+</head>
+<body>
+    @*@Html.Partial("~/Views/Shared/Partial/_Header.cshtml")*@
+    @{
+        Html.RenderAction("RenderHeader", "Home");
+    }
+    <div class="container-fluid app-main active-navbar">
+        @{Html.RenderAction("RenderMenu", "Home");}
+        <main>
+            <div class="main__inner">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    @Html.Partial("~/Views/Shared/Partial/_UIBlock.cshtml")
+
+</body>
+</html>

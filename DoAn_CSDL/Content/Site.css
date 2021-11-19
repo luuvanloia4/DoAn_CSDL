@@ -1,0 +1,103 @@
+﻿.thongke{
+
+}
+.form-thongke{
+
+}
+.form-thongke input.form-control{
+    font-size: 1.6rem;
+}
+.form-thongke select.form-control{
+    font-size: 1.6rem;
+}
+.form-thongke label{
+    font-size: 1.8rem;
+    padding-right: 1rem;
+}
+
+.user-message{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+}
+.user-message--show{
+    padding: 3rem 2.5rem;
+    border-radius: 0.5rem;
+    background-color: white;
+    min-width: 100rem;
+    max-width: 120rem;
+    box-shadow: 0 0 0.5rem lightgray;
+}
+.user-message--title{
+    font-size: 2.3rem;
+    text-align: center;
+    padding-bottom: 0.3rem;
+    border-bottom: 0.2rem solid blue;
+}
+.user-message--content{
+    font-size: 1.7rem;
+    padding: 1rem 0.5rem;
+    min-height: 40rem;
+}
+.user-message--footer{
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 1.8rem;
+}
+.user-message--footer button{
+    font-size: 1.7rem;
+    padding: 0.5rem 2rem;
+}
+.noti .un-seen{
+    font-weight: 500;
+    color: dodgerblue !important;
+}
+
+
+.reset-container{
+    width: 100rem;
+    height: 50rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notify-container{
+    width: 70rem;
+    height: 50rem;
+    overflow: auto;
+}
+.td-icon{
+    width: 6rem;
+}
+.notify-container .td-button{
+    width: 6rem;
+}
+.notify-container .td-button button{
+    padding: 0;
+}
+.notify-container td{
+    font-weight: 500;
+}
+.btn-reset{
+    padding: 1rem!important;
+    border-radius: 50%!important;
+    color: var(--danger)!important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10rem!important;
+}
+
+.btn-reset:hover{
+    background-color: var(--danger)!important;
+    color: white!important;
+}
