@@ -1,4 +1,4 @@
-/* custom form-control */
+/* custom search option */
 .form-group{
     margin-bottom: 0;
 }
@@ -16,6 +16,15 @@
     font-size: 1.4rem;
     border-radius: var(--normal-border-radius);
     cursor: pointer;
+}
+
+img.img-detail{
+    width: auto;
+    height: 22rem;
+    cursor: pointer;
+    display: block;
+    box-shadow: var(--normal-box-shadow);
+    border-radius: var(--normal-border-radius);
 }
 
 .custom-checkbox{
@@ -112,16 +121,13 @@
 }
 
 /* custom form */
-.custom-table{
+.custom-form{
     --label-text-color: rgb(70, 70, 70);
     --label-font-size: 1.7rem;
-    --label-font-weight: normal;
+    --label-font-weight: 500;
     --input-text-color: rgb(70, 70, 70);
     --input-bg-color: white;
     --input-font-size: 1.6rem;
-}
-.custom-form{
-
 }
 
 .custom-form .row > div{
@@ -130,7 +136,7 @@
 
 .custom-form img.img-detail{
     width: auto;
-    height: 22rem;
+    height: 25rem;
     cursor: pointer;
     display: block;
     box-shadow: var(--normal-box-shadow);
@@ -152,6 +158,10 @@
 .custom-form .input-required{
     background-color: rgb(255, 190, 190);
     border-color: var(--danger);
+}
+
+span.required{
+    color: red;
 }
 
 .custom-form input[type='password']{
@@ -206,7 +216,7 @@
         .custom-input-file input[type=text]{
             width: calc(100% - 12rem);
             height: 100%;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             border-radius: 0.3rem 0 0 0.3rem;
             overflow: hidden;
             pointer-events: none;
@@ -230,8 +240,29 @@
         }
     /* end custom input file */
 
-
-
+/* custom detail page */
+.custom-detail{
+    max-width: 1;
+}
+.custom-detail__content {
+    padding: 1rem 5rem;
+}
+.custom-detail__table {
+    border: none;
+}
+.custom-detail__table th,
+.custom-detail__table td {
+    padding: .2rem 1rem;
+}
+.custom-detail__table th {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color:rgb(107, 103, 103);
+}
+.custom-detail__table td{
+    font-size: 1.6rem;
+    padding-left: 4rem;
+}
 
 
 

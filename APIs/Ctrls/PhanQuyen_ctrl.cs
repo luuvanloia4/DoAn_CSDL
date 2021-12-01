@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web;
 using APIs.Models;
 using APIs.Models.Entity;
 using APIs.Shareds;
-using APIs.Models.Form;
 
 namespace APIs.Ctrls
 {
-    public class HopDong_ctrl
+    public class PhanQuyen_ctrl
     {
-        private string tableName = "hợp đồng";
+        private string tableName = "phân quyền";
 
         private DatabaseDataContext db = new DatabaseDataContext();
 
@@ -21,7 +19,7 @@ namespace APIs.Ctrls
             API_Result<bool> rs = new API_Result<bool>();
             try
             {
-                rs.Data = db.view_HopDongs.Where(u => u.IsDelete == null || u.IsDelete == false).Count() == 0;
+                rs.Data = db.view_PhanQuyens.Where(u => (u.IsDelete == null || u.IsDelete == false)).Count() == 0;
                 rs.ErrCode = EnumErrCode.Success;
             }
             catch (Exception ex)
@@ -33,73 +31,39 @@ namespace APIs.Ctrls
             return rs;
         }
 
-        private bool AddCTHD(int hdID, ID_SL cthd)
+        public API_Result<bool> Create(string loginCode, tbl_PhanQuyen obj)
         {
-            try
-            {
-                tbl_ChiTietHD oldObj = db.tbl_ChiTietHDs.Where(u => u.HopDongID.Equals(hdID) && u.MatHangID.Equals(cthd.ID)).FirstOrDefault();
-                if (oldObj != null)
-                {
-                    oldObj.SoLuong = cthd.SL;
-                    db.SubmitChanges();
-                }
-                else
-                {
-                    tbl_ChiTietHD newObj = new tbl_ChiTietHD();
-                    newObj.HopDongID = hdID;
-                    newObj.MatHangID = cthd.ID;
-                    db.SubmitChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                //
-            }
-
-            return false;
-        }
-
-        private void AddCTHD(int hdID, List<ID_SL> listCTHD)
-        {
-            foreach (var item in listCTHD)
-            {
-                AddCTHD(hdID, item);
-            }
-        }
-
-        public API_Result<int> Create(string loginCode, tbl_HopDong obj, List<ID_SL> listCTHD)
-        {
-            API_Result<int> rs = new API_Result<int>();
+            API_Result<bool> rs = new API_Result<bool>();
             try
             {
                 view_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
                 if (curUser != null)
                 {
-                    if (Authentication.IsAdmin(curUser))
+                    if (Authentication.IsSuperAdmin(curUser))
                     {
                         //Admin
-                        tbl_HopDong newObj = new tbl_HopDong();
-                        newObj.NguoiLap = curUser.ID;
-                        newObj.NhaCungCapID = obj.NhaCungCapID;
-                        newObj.NgayLap = DateTime.Now;
-                        newObj.NgayHT = null;
-                        newObj.TrangThai = 0;
-                        newObj.IsDelete = false;
+                        tbl_PhanQuyen newObj = new tbl_PhanQuyen();
+                        var sameIdObj = db.tbl_PhanQuyens.Where(u => u.ID.Equals(obj.ID) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
+                        if (sameIdObj == null) {
+                            newObj.ID = obj.ID;
+                            newObj.Ten = obj.Ten;
+                            newObj.GhiChu = obj.GhiChu;
+                            newObj.IsDelete = false;
 
-                        db.tbl_HopDongs.InsertOnSubmit(newObj);
-                        db.SubmitChanges();
+                            newObj.NgayTao = DateTime.Now;
+                            newObj.NgayCapNhat = newObj.NgayTao;
 
-                        rs.ErrCode = EnumErrCode.Success;
-                        rs.Data = newObj.ID;
-                        rs.ErrDes = string.Format(Constants.MSG_Insert_Success, tableName);
+                            db.tbl_PhanQuyens.InsertOnSubmit(newObj);
+                            db.SubmitChanges();
 
-                        try
-                        {
-                            AddCTHD(newObj.ID, listCTHD);
+                            rs.ErrCode = EnumErrCode.Success;
+                            rs.Data = true;
+                            rs.ErrDes = string.Format(Constants.MSG_Insert_Success, tableName);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            //
+                            rs.ErrCode = EnumErrCode.AlreadyExist;
+                            rs.ErrDes = string.Format(Constants.MSG_Already_Exist, obj.ID);
                         }
                     }
                     else
@@ -123,7 +87,7 @@ namespace APIs.Ctrls
             return rs;
         }
 
-        public API_Result<bool> Edit(string loginCode, tbl_HopDong obj, List<ID_SL> listCTHD)
+        public API_Result<bool> Edit(string loginCode, tbl_PhanQuyen obj)
         {
             API_Result<bool> rs = new API_Result<bool>();
             try
@@ -131,22 +95,65 @@ namespace APIs.Ctrls
                 view_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
                 if (curUser != null)
                 {
-                    tbl_HopDong editObj = db.tbl_HopDongs.Where(u => u.ID.Equals(obj.ID)).FirstOrDefault();
-                    if (Authentication.IsSuperAdmin(curUser) || editObj.NguoiLap.Equals(curUser.ID))
+                    if (Authentication.IsSuperAdmin(curUser))
                     {
+                        tbl_PhanQuyen editObj = db.tbl_PhanQuyens.Where(u => u.ID.Equals(obj.ID)).FirstOrDefault();
+                        var sameIdObj = db.tbl_PhanQuyens.Where(u => u.ID.Equals(obj.ID) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
                         if (editObj != null)
                         {
-                            AddCTHD(editObj.ID, listCTHD);
+                            if(!editObj.ID.Equals(obj.ID) && sameIdObj != null)
+                            {
+                                rs.ErrCode = EnumErrCode.AlreadyExist;
+                                rs.ErrDes = string.Format(Constants.MSG_Already_Exist, obj.ID);
+                            }
+                            else
+                            {
+                                editObj.ID = obj.ID;
+                                editObj.Ten = obj.Ten;
+                                editObj.GhiChu = obj.GhiChu;
 
-                            rs.ErrCode = EnumErrCode.Success;
-                            rs.Data = true;
-                            rs.ErrDes = string.Format(Constants.MSG_Update_Success, tableName);
+                                editObj.NgayCapNhat = DateTime.Now;
+
+                                db.SubmitChanges();
+
+                                rs.ErrCode = EnumErrCode.Success;
+                                rs.Data = true;
+                                rs.ErrDes = string.Format(Constants.MSG_Update_Success, tableName);
+                            }
                         }
                         else
                         {
                             rs.ErrCode = EnumErrCode.DoesNotExist;
                             rs.ErrDes = string.Format(Constants.MSG_Object_Empty, obj.ID);
                         }
+
+                        //Admin
+
+                        //int? resultCode = 0;
+                        //db.pr_User_Edit(ref resultCode, curUser.ID, obj.ID, obj.Pass, obj.HoTen, obj.NgaySinh.ToString("yyyy-MM-dd"), obj.SDT, obj.PhanQuyenID, obj.DiaChi, obj.ChucVu);
+
+                        //if (resultCode == 1)
+                        //{
+                        //    rs.ErrCode = EnumErrCode.Success;
+                        //    rs.Data = true;
+                        //    rs.ErrDes = string.Format(Constants.MSG_Update_Success, tableName);
+                        //}
+                        //else if (resultCode == -1)
+                        //{
+                        //    rs.ErrCode = EnumErrCode.Fail;
+                        //    rs.Data = false;
+                        //    rs.ErrDes = string.Format(Constants.MSG_Update_Fail, tableName);
+                        //}
+                        //else if (resultCode == -2)
+                        //{
+                        //    rs.ErrCode = EnumErrCode.AlreadyExist;
+                        //    rs.ErrDes = string.Format(Constants.MSG_Already_Exist, obj.UserName);
+                        //}
+                        //else if(resultCode == -3)
+                        //{
+                        //    rs.ErrCode = EnumErrCode.DoesNotExist;
+                        //    rs.ErrDes = string.Format(Constants.MSG_Object_Empty, obj.ID);
+                        //}
                     }
                     else
                     {
@@ -177,9 +184,9 @@ namespace APIs.Ctrls
                 view_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
                 if (curUser != null)
                 {
-                    tbl_HopDong delObj = db.tbl_HopDongs.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
-                    if (Authentication.IsSuperAdmin(curUser) || delObj.NguoiLap.Equals(curUser.ID))
+                    if (Authentication.IsSuperAdmin(curUser))
                     {
+                        tbl_PhanQuyen delObj = db.tbl_PhanQuyens.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
                         if (delObj != null)
                         {
                             delObj.IsDelete = true;
@@ -224,33 +231,25 @@ namespace APIs.Ctrls
                 var curUser = Authentication.GetUser(loginCode).Data;
                 if (curUser != null)
                 {
-                    if (Authentication.IsAdmin(curUser))
+                    if (Authentication.IsSuperAdmin(curUser))
                     {
                         int delSuccessCount = 0;
                         int delFailCount = 0;
                         foreach (var id in listID)
                         {
-                            tbl_HopDong delObj = db.tbl_HopDongs.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
-
-                            if (Authentication.IsSuperAdmin(curUser) || delObj.NguoiLap.Equals(curUser.ID))
+                            tbl_PhanQuyen delObj = db.tbl_PhanQuyens.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
+                            try
                             {
-                                try
-                                {
-                                    delObj.IsDelete = true;
-                                    db.SubmitChanges();
-                                    delSuccessCount++;
-                                }
-                                catch (Exception ex)
-                                {
-                                    foreach (var change in db.GetChangeSet().Updates)
-                                    {
-                                        db.Refresh(System.Data.Linq.RefreshMode.OverwriteCurrentValues, change);
-                                    }
-                                    delFailCount++;
-                                }
+                                delObj.IsDelete = true;
+                                db.SubmitChanges();
+                                delSuccessCount++;
                             }
-                            else
+                            catch (Exception ex)
                             {
+                                foreach (var change in db.GetChangeSet().Updates)
+                                {
+                                    db.Refresh(System.Data.Linq.RefreshMode.OverwriteCurrentValues, change);
+                                }
                                 delFailCount++;
                             }
                         }
@@ -279,14 +278,48 @@ namespace APIs.Ctrls
             return rs;
         }
 
-        public API_Result<List<view_HopDong>> SearchPaging(string loginCode, DateTime startTime, DateTime endTime, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
+        public API_Result<List<ListCombobox_ett<int>>> GetListCombobox(string loginCode)
         {
-            API_Result<List<view_HopDong>> rs = new API_Result<List<view_HopDong>>();
+            API_Result<List<ListCombobox_ett<int>>> rs = new API_Result<List<ListCombobox_ett<int>>>();
             try
             {
                 if (Authentication.CheckLogin(loginCode))
                 {
-                    IQueryable<view_HopDong> qrs = db.view_HopDongs.Where(u => (u.IsDelete == null || u.IsDelete == false) && startTime <= u.NgayLap && u.NgayLap < endTime);
+                    IQueryable<view_PhanQuyen> qrs = db.view_PhanQuyens.Where(u => !u.ID.Equals(Authentication.qSuperAdmin));
+
+                    List<ListCombobox_ett<int>> listCB = new List<ListCombobox_ett<int>>();
+                    foreach (var item in qrs.ToList())
+                    {
+                        listCB.Add(new ListCombobox_ett<int>(item.ID, item.Ten));
+                    }
+
+                    rs.Data = listCB;
+                    rs.RecordCount = listCB.Count();
+                    rs.ErrCode = EnumErrCode.Success;
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
+
+            return rs;
+        }
+
+        public API_Result<List<view_PhanQuyen>> SearchPaging(string loginCode, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
+        {
+            API_Result<List<view_PhanQuyen>> rs = new API_Result<List<view_PhanQuyen>>();
+            try
+            {
+                if (Authentication.CheckLogin(loginCode))
+                {
+                    IQueryable<view_PhanQuyen> qrs = db.view_PhanQuyens.Where(u => (u.IsDelete == null || u.IsDelete == false));
 
                     switch (searchType)
                     {
@@ -299,9 +332,6 @@ namespace APIs.Ctrls
                         case EnumSearchType.Name:
                             qrs = qrs.Where(u => u.Ten.Contains(searchValue));
                             break;
-                        case EnumSearchType.UserName:
-                            qrs = qrs.Where(u => u.UserName.Contains(searchValue));
-                            break;
                     }
 
                     if (isDescending)
@@ -309,13 +339,16 @@ namespace APIs.Ctrls
                         switch (orderBy)
                         {
                             case EnumOrderBy.Newest:
-                                qrs = qrs.OrderByDescending(u => u.NgayLap);
+                                qrs = qrs.OrderByDescending(u => u.NgayTao);
                                 break;
                             case EnumOrderBy.ID:
                                 qrs = qrs.OrderByDescending(u => u.ID);
                                 break;
+                            case EnumOrderBy.LastEdited:
+                                qrs = qrs.OrderByDescending(u => u.NgayCapNhat);
+                                break;
                             case EnumOrderBy.Name:
-                                qrs = qrs.OrderByDescending(u => u.UserName);
+                                qrs = qrs.OrderByDescending(u => u.Ten);
                                 break;
                         }
                     }
@@ -324,13 +357,16 @@ namespace APIs.Ctrls
                         switch (orderBy)
                         {
                             case EnumOrderBy.Newest:
-                                qrs = qrs.OrderBy(u => u.NgayLap);
+                                qrs = qrs.OrderBy(u => u.NgayTao);
                                 break;
                             case EnumOrderBy.ID:
                                 qrs = qrs.OrderBy(u => u.ID);
                                 break;
+                            case EnumOrderBy.LastEdited:
+                                qrs = qrs.OrderBy(u => u.NgayCapNhat);
+                                break;
                             case EnumOrderBy.Name:
-                                qrs = qrs.OrderBy(u => u.UserName);
+                                qrs = qrs.OrderBy(u => u.Ten);
                                 break;
                         }
                     }
@@ -369,38 +405,12 @@ namespace APIs.Ctrls
             return rs;
         }
 
-        public API_Result<List<ListCombobox_ett<int>>> GetListCombobox()
+        public API_Result<view_PhanQuyen> GetByID(string loginCode, int id)
         {
-            API_Result<List<ListCombobox_ett<int>>> rs = new API_Result<List<ListCombobox_ett<int>>>();
+            API_Result<view_PhanQuyen> rs = new API_Result<view_PhanQuyen>();
             try
             {
-                IQueryable<view_HopDong> qrs = db.view_HopDongs.Where(u => (u.IsDelete == null || u.IsDelete == false));
-
-                List<ListCombobox_ett<int>> listCB = new List<ListCombobox_ett<int>>();
-                foreach (var item in qrs.ToList())
-                {
-                    listCB.Add(new ListCombobox_ett<int>(item.ID, item.ID + " (" + item.UserName + " - " + item.Ten + ")"));
-                }
-
-                rs.Data = listCB;
-                rs.RecordCount = listCB.Count();
-                rs.ErrCode = EnumErrCode.Success;
-            }
-            catch (Exception ex)
-            {
-                rs.ErrCode = EnumErrCode.Error;
-                rs.ErrDes = ex.Message;
-            }
-
-            return rs;
-        }
-
-        public API_Result<view_HopDong> GetByID(int id)
-        {
-            API_Result<view_HopDong> rs = new API_Result<view_HopDong>();
-            try
-            {
-                var obj = db.view_HopDongs.Where(u => u.ID.Equals(id) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
+                var obj = db.view_PhanQuyens.Where(u => u.ID.Equals(id) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
                 rs.Data = obj;
                 rs.ErrCode = EnumErrCode.Success;
             }

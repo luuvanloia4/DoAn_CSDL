@@ -1,4 +1,8 @@
-﻿/* Validate */
+﻿/* Constant error element */
+const errorImagePath = "/Data/System/Images/img_error.png";
+const True = true;
+const False = false;
+/* Validate */
 
 var NonFunctionMessage = "Chức năng sẽ được ra mắt trong các bản cập nhật sau!";
 var base64Dir = "data:image/jpeg;base64,";
@@ -103,12 +107,27 @@ $(function () {
             }
         }
     });
+
+    $('.custom-input-file input[type=file]').change(function () {
+        if (this.files.length <= 1) {
+            $(this).parent().find("input[type=text]").val($(this).val().split('\\').pop());
+        }
+        else {
+            $(this).parent().find("input[type=text]").val(this.files.length + " files is choosed");
+        }
+    });
 });
 
 /* Check */
 class MyString {
     static IsNullOrEmpty(str) {
         return (str == null || str == undefined || str.length == 0);
+    }
+}
+
+class MyDateTime {
+    static ParseDate(str) {
+        return str.substring(0, 10);
     }
 }
 

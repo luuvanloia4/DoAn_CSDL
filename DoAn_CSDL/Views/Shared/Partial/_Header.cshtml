@@ -4,15 +4,15 @@
 <header>
     <div class="navbar navbar-expand nav-header">
         <ul class="navbar-nav">
+            <li class="nav-item btn-menu__container">
+                <button type="button" class="btn btn-header btn-menu" onclick="ToggleNavMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </li>
             <li class="nav-item header-logo">
                 <a href="/">
                     <img src="~/Data/System/Images/galaxy_background.jpg">
                 </a>
-            </li>
-            <li class="nav-item">
-                <button type="button" class="btn btn-header btn-menu" onclick="ToggleNavMenu()">
-                    <i class="fas fa-bars"></i>
-                </button>
             </li>
             <li class="nav-item search">
                 <form class="form-group form-search-header" autocomplete="off">
@@ -63,13 +63,13 @@
             </li>
             <li class="nav-item user-info__container">
                 <button type="button" class="btn btn-header btn-round" onclick="ToggleUser(this)">
-                    @if (true)
+                    @if (string.IsNullOrEmpty(Model.Img))
                     {
                     <i class="fas fa-user-circle"></i>
                     }
                     else
                     {
-                        <img src="data:image/jpeg;base64," class="avatar--img"/>
+                        <img src="@Model.Img" class="avatar__img"/>
                     }
                 </button>
                 <p class="user-info__name">@Model.HoTen</p>
@@ -251,8 +251,8 @@
             $('.user-message').removeClass("d-flex");
         }
 
-        $(function () {
-            ReloadMessage();
-        });
+        //$(function () {
+        //    ReloadMessage();
+        //});
     </script>
 </header>

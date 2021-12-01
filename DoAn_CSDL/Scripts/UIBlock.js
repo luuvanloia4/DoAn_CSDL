@@ -33,7 +33,7 @@ function HideLoading() {
 function ShowUIBlock(){
     $('.UI-loading').removeClass("UI-show");
     $('.UI-content').removeClass("UI-show");
-    $('.UI-container').addClass("show");
+    $('.UI-container').addClass("d-flex");
 }
 
 function CheckLoadingCount() {
@@ -42,6 +42,7 @@ function CheckLoadingCount() {
         HideLoading();
     }
 }
+
 //Message script
 var msgIndex = 0;
 

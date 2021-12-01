@@ -87,7 +87,7 @@ namespace APIs.Shareds
             {
                 DatabaseDataContext db = new DatabaseDataContext();
                 view_TaiKhoan curUser = db.view_TaiKhoans.Where(u => u.Token.Equals(loginCode) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
-                if(curUser != null)
+                if (curUser != null)
                 {
                     rs.ErrCode = EnumErrCode.Success;
                     rs.Data = curUser;
@@ -98,7 +98,7 @@ namespace APIs.Shareds
                     rs.ErrDes = "Phiên đăng nhập đã kết thúc!";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 rs.ErrCode = EnumErrCode.Error;
                 rs.ErrDes = ex.Message;
@@ -106,17 +106,46 @@ namespace APIs.Shareds
 
             return rs;
         }
-    
+
+        private static view_TaiKhoan GetUserByID(int id)
+        {
+            DatabaseDataContext db = new DatabaseDataContext();
+            
+            return db.view_TaiKhoans.Where(u => u.ID.Equals(id)).FirstOrDefault();
+        }
+
+        public static bool IsSuperAdmin(string loginCode)
+        {
+            view_TaiKhoan curUser = GetUser(loginCode).Data;
+
+            return IsSuperAdmin(curUser);
+        }
+        public static bool IsSuperAdmin(view_TaiKhoan obj)
+        {
+            return obj.PhanQuyenID == qSuperAdmin;
+        }
+        public static bool IsSuperAdmin(int id)
+        {
+            view_TaiKhoan curUser = GetUserByID(id);
+
+            return IsSuperAdmin(curUser);
+        }
+
         public static bool IsAdmin(string loginCode)
         {
             view_TaiKhoan curUser = GetUser(loginCode).Data;
 
             return IsAdmin(curUser);
         }
-
         public static bool IsAdmin(view_TaiKhoan curUser)
         {
             return curUser.PhanQuyenID == qAdmin || curUser.PhanQuyenID == qSuperAdmin;
+        }
+        public static bool IsAdmin(int id)
+        {
+            view_TaiKhoan curUser = GetUserByID(id);
+
+            return IsAdmin(curUser);
         }
 
         public static bool IsNCC(string loginCode)
@@ -125,10 +154,15 @@ namespace APIs.Shareds
 
             return IsNCC(curUser);
         }
-
         public static bool IsNCC(view_TaiKhoan curUser)
         {
             return curUser.PhanQuyenID == qNCC;
+        }
+        public static bool IsNCC(int id)
+        {
+            view_TaiKhoan curUser = GetUserByID(id);
+
+            return IsNCC(curUser);
         }
 
         public static bool IsCuaHang(string loginCode)
@@ -137,12 +171,24 @@ namespace APIs.Shareds
 
             return IsCuaHang(curUser);
         }
-
         public static bool IsCuaHang(view_TaiKhoan curUser)
         {
             return curUser.PhanQuyenID == qCuaHang;
         }
+        public static bool IsCuaHang(int id)
+        {
+            view_TaiKhoan curUser = GetUserByID(id);
+
+            return IsCuaHang(curUser);
+        }
 
         //Extra phan quyen ...
+        //Kho
+        public static bool IsOwnKho(int userID, int khoID)
+        {
+            DatabaseDataContext db = new DatabaseDataContext();
+
+            return db.fn_IsOwnKho(userID, khoID).Value; 
+        }
     }
 }

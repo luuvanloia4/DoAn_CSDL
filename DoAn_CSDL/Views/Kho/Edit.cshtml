@@ -1,0 +1,215 @@
+﻿@using DoAn_CSDL.Shared
+@{
+    ViewBag.Title = "Cập nhật kho hàng";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+
+    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+    int id = SharedFunction.ParseID(Request["id"]);
+}
+
+<div class="main__content">
+    <h1 class="main__title">CẬP NHẬT KHO HÀNG</h1>
+
+    <div class="card">
+        <p class="card-title">Thông tin kho hàng:</p>
+        <div class="card-body">
+            <form class="form-group custom-form" id="input-form" onsubmit="return false;">
+                <div class="row">
+                    @*<div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+                            <label for="file_avatar">Ảnh đại diện:</label>
+                            <img src="~/Data/System/Images/default_image.jpg" class="mt-1 mb-3 img-detail" onclick="ShowImage(this)" id="avatar-review" />
+                            <input type="text" name="txt_ImgName" id="txt_ImgName" class="form-control" hidden />
+                            <label class="custom-input-file" id="file_Image">
+                                <input type="file" name="file_Upload" class="form-control-file" accept="image/*" onchange="SingleImageChange(this)" />
+                                <input type="text" class="form-control" placeholder="Chọn tệp. . . " tabindex="-1" />
+                                <span>File browser</span>
+                            </label>
+                        </div>
+                        <div class="col-4 d-none d-sm-block"></div>*@
+
+                    <div class="col-12 col-sm-4 col-md-3 form-group position-relative">
+                        <label for="txt_ID">Mã kho hàng:</label>
+                        <input type="text" name="txt_ID" id="txt_ID" class="form-control" autocomplete="off" maxlength="500" value="@id" readonly />
+                    </div>
+                    <div class="col-8 d-none d-sm-block"></div>
+
+                    <div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+                        <label for="txt_Ten">Tên kho hàng<span class="required">*</span>:</label>
+                        <input type="text" name="txt_Ten" id="txt_Ten" class="form-control" autocomplete="off" maxlength="200" autofocus />
+                    </div>
+
+                    <div class="col-12 col-md-8 form-group position-relative">
+                        <label for="txt_DiaChi">Địa chỉ:</label>
+                        <input type="text" name="txt_DiaChi" id="txt_DiaChi" class="form-control" autocomplete="off" maxlength="300" />
+                    </div>
+                    <div class="col-4 d-none d-md-block"></div>
+
+                    <div class="col-12 col-sm-8 col-lg-6 @Html.Raw(isAdmin? "": "d-none")">
+                        <label for="sel_HeThong">Hệ thống<span class="required">*</span>: </label>
+                        <select name="sel_HeThong" id="sel_HeThong" class="form-control">
+                            <option value="-1">-- Chọn hệ thống --</option>
+                            <!---->
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-bottom">
+            <p class="card-bottom__note" id="card-note"><strong>Lưu ý:</strong> Những trường có dấu <span class="required">*</span> bắt buộc phải có giá trị!</p>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-success custom-btn-func" onclick="Edit()">
+            <i class="fas fa-sync"></i> Cập nhật thông tin
+        </button>
+    </div>
+</div>
+
+<script>
+    var editObj;
+    const ctrl_Name = "/Kho/";
+    loadingCount = 0;
+
+    function FillData(obj) {
+        $('#txt_Ten').val(obj.Ten);
+        $('#txt_DiaChi').val(obj.DiaChi);
+    }
+
+    function GetObject() {
+        ShowLoading();
+
+        let id = $('#txt_ID').val();
+
+        $.ajax({
+            url: ctrl_Name + "GetDetail",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+
+                if (rs.ErrCode == 2) {
+                    editObj = rs.Data;
+                    console.log(editObj);
+                    FillData(editObj);
+                    GetListHeThong();
+                }
+                else if (rs.ErrCode == 0) {
+                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu, vui lòng thử lại sau ít phút!");
+                }
+                else {
+                    ShowFailMessage(rs.ErrDes);
+                }
+            },
+            error: function () {
+                ShowFailMessage("Mất kết nối với máy chủ!");
+            }
+        }).always(function () {
+            CheckLoadingCount();
+        });
+    }
+
+    function GetListHeThong() {
+        ShowLoading();
+        $.ajax({
+            url: "/HeThong/GetListCombobox",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List he thong: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn hệ thống --</option>";
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "' " + ((item.Data == editObj.HeThongID)? "selected": "") + " >" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //
+                }
+                $('#sel_HeThong').html(htmlResult);
+            }
+        }).always(function () {
+            CheckLoadingCount();
+        });
+    }
+
+    function Edit() {
+        //Reset biến kiểm tra:
+        hasFocus = false;
+
+        let Ten = $('#txt_Ten');
+        let Ten_val = Ten.val();
+        if (Ten_val.length == 0) {
+            TryFocus(Ten, "Không được để trống tên kho hàng!");
+        }
+        else if (Ten_val.length > 200) {
+            TryFocus(Ten, "Tên kho hàng không vượt quá 200 ký tự!");
+        }
+
+        let DiaChi = $('#txt_DiaChi');
+        let DiaChi_val = DiaChi.val();
+        if (DiaChi_val.length == 0) {
+            TryFocus(DiaChi, "Không được để trống địa chỉ!");
+        }
+        else if (DiaChi_val.length > 300) {
+            TryFocus(DiaChi, "Địa chỉ không vượt quá 300 ký tự!");
+        }
+
+        let HeThong = $('#sel_HeThong');
+        let HeThong_val = HeThong.val();
+        if (HeThong_val == null || HeThong_val == undefined || HeThong_val < 0) {
+            TryFocus(HeThong, "Không được để trống hệ thống!");
+        }
+
+        //Khi dữ liệu đã đúng:
+        if (!hasFocus) {
+            ShowUIContent("Xác nhận thêm bản ghi?");
+        }
+    }
+
+    $(function () {
+        GetObject();
+
+        $('.UI-accept').click(function () {
+            UIContentToLoading();
+
+            let form = $('#input-form')[0];
+            let dataForm = new FormData(form);
+
+            $.ajax({
+                url: ctrl_Name + "PostCreate",
+                method: "POST",
+                processData: false,
+                contentType: false,
+                data: dataForm,
+                success: function (result, status, xhr) {
+                    let rs = JSON.parse(result);
+                    console.log("Edit result:", rs);
+                    if (rs.ErrCode == 2) {
+                        ShowUIBlock();
+                        ShowSuccessMessage("Thêm mới bản ghi thành công, tự động chuyển hướng sau khi hết thông báo!", function () { window.location.replace(ctrl_Name); });
+                    }
+                    else if (rs.ErrCode == 0) {
+                        ShowFailMessage("Có lỗi xảy ra trong quá trình cập nhật dữ liệu!");
+                    }
+                    else {
+                        ShowFailMessage(rs.ErrDes);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+                }
+            }).always(function () {
+                HideLoading();
+            });
+        });
+    });
+
+    function SingleImageChange(ele) {
+        let image = ele.files[0];
+        let src = (image != null && image != undefined) ? URL.createObjectURL(image) : errorImagePath;
+        $('#avatar-review').prop("src", src);
+        $('#txt_ImgName').val($(ele).val().split('\\').pop());
+    }
+</script>

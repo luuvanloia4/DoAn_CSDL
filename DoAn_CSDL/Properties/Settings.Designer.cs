@@ -42,5 +42,45 @@ namespace DoAn_CSDL.Properties {
                 return ((string)(this["DoAn_CSDL_Menu_wsv_Menu_wsv"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/PhanQuyen_wsv.asmx")]
+        public string DoAn_CSDL_PhanQuyen_wsv_PhanQuyen_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_PhanQuyen_wsv_PhanQuyen_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/HeThong_wsv.asmx")]
+        public string DoAn_CSDL_HeThong_wsv_HeThong_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_HeThong_wsv_HeThong_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/Kho_wsv.asmx")]
+        public string DoAn_CSDL_Kho_wsv_Kho_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_Kho_wsv_Kho_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/ViTri_wsv.asmx")]
+        public string DoAn_CSDL_ViTri_wsv_ViTri_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_ViTri_wsv_ViTri_wsv"]));
+            }
+        }
     }
 }

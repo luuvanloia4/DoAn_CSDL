@@ -1,13 +1,14 @@
 ﻿@using DoAn_CSDL.Shared
+@using DoAn_CSDL.TaiKhoan_wsv
 @{
-    ViewBag.Title = "Cập nhật tài khoản";
+    ViewBag.Title = "Thêm mới tài khoản";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
-    int id = SharedFunction.ParseID(Request["id"]);
+    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0); //0 id admin
 }
 
 <div class="main__content">
-    <h1 class="main__title">CẬP NHẬT THÔNG TIN TÀI KHOẢN</h1>
+    <h1 class="main__title">THÊM MỚI TÀI KHOẢN</h1>
 
     <div class="card">
         <p class="card-title">Thông tin tài khoản:</p>
@@ -26,12 +27,10 @@
                     </div>
                     <div class="col-4 d-none d-sm-block"></div>
 
-                    <div class="col-12"></div>
-
-                    <div class="col-12 col-sm-4 col-md-3 form-group position-relative">
+                    @*<div class="col-12 col-sm-4 col-md-3 form-group position-relative">
                         <label for="txt_ID">Mã tài khoản:</label>
-                        <input type="text" name="txt_ID" id="txt_ID" class="form-control" autocomplete="off" maxlength="500" value="@id" readonly />
-                    </div>
+                        <input type="text" name="txt_ID" id="txt_ID" class="form-control" autocomplete="off" maxlength="500" value="@id" disabled />
+                    </div>*@
                     <div class="col-8 d-none d-sm-block"></div>
 
                     <div class="col-12 col-sm-8 col-md-6 form-group position-relative">
@@ -90,6 +89,13 @@
                             <!---->
                         </select>
                     </div>
+                    <div class="col-12 col-sm-4 col-lg-3 @Html.Raw(isAdmin? "": "d-none")">
+                        <label for="sel_HeThong">Hệ thống<span class="required">*</span>: </label>
+                        <select name="sel_HeThong" id="sel_HeThong" class="form-control">
+                            <option value="-1">-- Chọn hệ thống --</option>
+                            <!---->
+                        </select>
+                    </div>
                 </div>
             </form>
         </div>
@@ -99,8 +105,8 @@
     </div>
 
     <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-success custom-btn-func" onclick="Edit()">
-            <i class="fas fa-sync-alt"></i> Cập nhật dữ liệu
+        <button type="button" class="btn btn-primary custom-btn-func" onclick="Create()">
+            <i class="fas fa-plus"></i> Thêm mới
         </button>
     </div>
 </div>
@@ -108,49 +114,6 @@
 <script>
     var editObj;
     const ctrl_Name = "/TaiKhoan/";
-
-    function FillData(obj) {
-        if (!MyString.IsNullOrEmpty(obj.Img)) {
-            $('#avatar-review').prop("src", obj.Img);
-        }
-        else {
-            $('#avatar-review').prop("src", errorImagePath);
-        }
-
-        $('#txt_HoTen').val(obj.HoTen);
-        $('#txt_NgaySinh').val(MyDateTime.ParseDate(obj.NgaySinh));
-        $('#txt_DiaChi').val(obj.DiaChi);
-        $('#txt_SDT').val(obj.SDT);
-        $('#txt_UserName').val(obj.UserName);
-    }
-
-    function GetObject() {
-        let id = $('#txt_ID').val();
-        UIContentToLoading();
-        $.ajax({
-            url: ctrl_Name + "GetDetail",
-            method: "POST",
-            data: { id },
-            success: function (result, status, xhr) {
-                let rs = JSON.parse(result);
-                console.log("Get object:", rs);
-
-                if (rs.ErrCode == 2) {
-                    editObj = rs.Data;
-                    FillData(editObj);
-                    GetListPhanQuyen();
-                }
-                else if (rs.ErrCode == 0) {
-                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu!", function () { window.location.href = ctrl_Name; });
-                }
-            },
-            error: function () {
-                ShowFailMessage("Mất kết nối với máy chủ!");
-            }
-        }).always(function () {
-            HideLoading();
-        });
-    }
 
     function GetListPhanQuyen() {
         $.ajax({
@@ -163,7 +126,7 @@
                 let htmlResult = "<option value='-1'>-- Chọn phân quyền --</option>"
                 if (rs.ErrCode == 2) {
                     rs.Data.forEach((item) => {
-                        htmlResult += "<option value='" + item.Data + "'" + ((item.Data == editObj.PhanQuyenID)? "selected": "") + " >" + item.DisplayData + "</option>";
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
                     });
                 }
                 else {
@@ -177,7 +140,32 @@
         });
     }
 
-    function Edit() {
+    function GetListHeThong() {
+        $.ajax({
+            url: "/HeThong/GetListCombobox",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List phan quyen: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn hệ thống --</option>"
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //Error
+                }
+                $('#sel_HeThong').html(htmlResult);
+            },
+            error: function () {
+                //
+            }
+        });
+    }
+
+    function Create() {
         //Reset biến kiểm tra:
         hasFocus = false;
 
@@ -258,13 +246,13 @@
 
         //Khi dữ liệu đã đúng:
         if (!hasFocus) {
-            ShowUIContent("Xác nhận cập nhật dữ liệu tài khoản?");
+            ShowUIContent("Xác nhận thêm bản ghi?");
         }
     }
 
     $(function () {
-        //Get edit object
-        GetObject();
+        GetListPhanQuyen();
+        GetListHeThong();
 
         $('.UI-accept').click(function () {
             UIContentToLoading();
@@ -273,7 +261,7 @@
             let dataForm = new FormData(form);
 
             $.ajax({
-                url: ctrl_Name + "PostEdit",
+                url: ctrl_Name + "PostCreate",
                 method: "POST",
                 processData: false,
                 contentType: false,
@@ -283,7 +271,7 @@
                     console.log("Edit result:", rs);
                     if (rs.ErrCode == 2) {
                         ShowUIBlock();
-                        ShowSuccessMessage("Cập nhật dữ liệu thành công, tự động chuyển hướng sau khi hết thông báo!", function () { window.location.replace(ctrl_Name); });
+                        ShowSuccessMessage("Thêm mới bản ghi thành công, tự động chuyển hướng sau khi hết thông báo!", function () { window.location.replace(ctrl_Name); });
                     }
                     else if (rs.ErrCode == 0) {
                         ShowFailMessage("Có lỗi xảy ra trong quá trình cập nhật dữ liệu!");

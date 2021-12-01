@@ -44,6 +44,10 @@ body {
             padding: 3rem 2rem;
         }
 
+.login > .container > .row{
+    box-shadow: var(--normal-box-shadow);
+}
+
 .login-left {
     display: flex;
     align-items: center;
@@ -55,7 +59,8 @@ body {
 }
 
 .login-right {
-    background-image: linear-gradient(to left, rgb(37, 204, 126), rgb(170, 238, 205));
+    /* background-image: linear-gradient(to left, rgb(37, 204, 126), rgb(170, 238, 205)); */
+    background-color: white;
     padding: 6rem 2rem 8rem 2rem !important;
     position: relative;
 }

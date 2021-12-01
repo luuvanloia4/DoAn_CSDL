@@ -1,0 +1,226 @@
+﻿@using DoAn_CSDL.Shared
+@{
+    ViewBag.Title = "Thêm mới hệ thống";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+
+    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+}
+
+<div class="main__content">
+    <h1 class="main__title">THÊM MỚI HỆ THỐNG</h1>
+
+    <div class="card">
+        <p class="card-title">Thông tin hệ thống:</p>
+        <div class="card-body">
+            <form class="form-group custom-form" id="input-form" onsubmit="return false;">
+                <div class="row">
+                    @*<div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+                        <label for="file_avatar">Ảnh đại diện:</label>
+                        <img src="~/Data/System/Images/default_image.jpg" class="mt-1 mb-3 img-detail" onclick="ShowImage(this)" id="avatar-review" />
+                        <input type="text" name="txt_ImgName" id="txt_ImgName" class="form-control" hidden />
+                        <label class="custom-input-file" id="file_Image">
+                            <input type="file" name="file_Upload" class="form-control-file" accept="image/*" onchange="SingleImageChange(this)" />
+                            <input type="text" class="form-control" placeholder="Chọn tệp. . . " tabindex="-1" />
+                            <span>File browser</span>
+                        </label>
+                    </div>
+                    <div class="col-4 d-none d-sm-block"></div>*@
+
+                    @*<div class="col-12 col-sm-4 col-md-3 form-group position-relative">
+                            <label for="txt_ID">Mã hệ thống:</label>
+                            <input type="text" name="txt_ID" id="txt_ID" class="form-control" autocomplete="off" maxlength="500" value="@id" disabled />
+                        </div>
+                    <div class="col-8 d-none d-sm-block"></div>*@
+
+                    <div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+                        <label for="txt_Ten">Tên hệ thống<span class="required">*</span>:</label>
+                        <input type="text" name="txt_Ten" id="txt_Ten" class="form-control" autocomplete="off" maxlength="200" autofocus />
+                    </div>
+
+                    <div class="col-12 col-md-8 form-group position-relative">
+                        <label for="txt_DiaChi">Địa chỉ:</label>
+                        <input type="text" name="txt_DiaChi" id="txt_DiaChi" class="form-control" autocomplete="off" maxlength="300" />
+                    </div>
+                    <div class="col-4 d-none d-md-block"></div>
+
+                    <div class="col-12 col-sm-6 col-lg-4 form-group position-relative">
+                        <label for="txt_SDT">Số điện thoại<span class="required">*</span>:</label>
+                        <input type="text" name="txt_SDT" id="txt_SDT" class="form-control" autocomplete="off" maxlength="11" placeholder="VD: 0964062210" />
+                    </div>
+                    <div class="col-6 d-none d-md-block"></div>
+
+                    <div class="col-12 col-sm-8 col-md-6">
+                        <label for="txt_NganHang">Ngân hàng<span class="required">*</span>:</label>
+                        <input type="text" name="txt_NganHang" id="txt_NganHang" class="form-control" autocomplete="off" maxlength="100" />
+                    </div>
+                    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+                        <label for="txt_STK">Số tài khoản<span class="required">*</span>:</label>
+                        <div class="d-flex">
+                            <input type="text" name="txt_STK" id="txt_STK" class="form-control" autocomplete="off" maxlength="20" placeholder="VD: 033200004347" />
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-4 col-lg-3 @Html.Raw(isAdmin? "": "d-none")">
+                        <label for="sel_DaiDien">Người đại diện<span class="required">*</span>: </label>
+                        <select name="sel_DaiDien" id="sel_DaiDien" class="form-control">
+                            <option value="-1">-- Chọn người đại diện --</option>
+                            <!---->
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-bottom">
+            <p class="card-bottom__note" id="card-note"><strong>Lưu ý:</strong> Những trường có dấu <span class="required">*</span> bắt buộc phải có giá trị!</p>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary custom-btn-func" onclick="Create()">
+            <i class="fas fa-plus"></i> Thêm mới
+        </button>
+    </div>
+</div>
+
+<script>
+    var editObj;
+    const ctrl_Name = "/HeThong/";
+
+    function GetListDaiDien() {
+        $.ajax({
+            url: "/TaiKhoan/GetListCombobox",
+            method: "POST",
+            data: {role: "quanly"},
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List tai khoan: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn người đại diện --</option>"
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //Error
+                }
+                $('#sel_PhanQuyen').html(htmlResult);
+            },
+            error: function () {
+                //
+            }
+        });
+    }
+
+    function Create() {
+        //Reset biến kiểm tra:
+        hasFocus = false;
+
+        let Ten = $('#txt_Ten');
+        let Ten_val = Ten.val();
+        if (Ten_val.length == 0) {
+            TryFocus(Ten, "Không được để trống tên hệ thống!");
+        }
+        else if (Ten_val.length > 200) {
+            TryFocus(Ten, "Tên hệ thống không vượt quá 200 ký tự!");
+        }
+
+        let DiaChi = $('#txt_DiaChi');
+        let DiaChi_val = DiaChi.val();
+        if (DiaChi_val.length == 0) {
+            TryFocus(DiaChi, "Không được để trống địa chỉ!");
+        }
+        else if (DiaChi_val.length > 300) {
+            TryFocus(DiaChi, "Địa chỉ không vượt quá 300 ký tự!");
+        }
+
+        let SDT = $('#txt_SDT');
+        let SDT_val = SDT.val();
+        if (SDT_val.length == 0) {
+            TryFocus(SDT, "Không được để trống số điện thoại!");
+        }
+        else if (SDT_val.length > 11) {
+            TryFocus(SDT, "Số điện thoại không vượt quá 11 ký tự!");
+        }
+        else if (!ValidSDT(SDT_val)) {
+            TryFocus(SDT, "Số điện thoại chỉ chứa các ký tự 0-9!");
+        }
+
+        let NganHang = $('#txt_NganHang');
+        let NganHang_val = NganHang.val();
+        if (NganHang_val.length == 0) {
+            TryFocus(NganHang, "Không được để trống tên ngân hàng!");
+        }
+        else if (NganHang_val.length > 200) {
+            TryFocus(NganHang, "Tên ngân hàng không vượt quá 200 ký tự!");
+        }
+
+        let STK = $('#txt_STK');
+        let STK_val = STK.val();
+        if (STK_val.length == 0) {
+            TryFocus(STK, "Không được để trống tài khoản!");
+        }
+        else if (STK_val.length > 11) {
+            TryFocus(STK, "Số tài khoản không vượt quá 11 ký tự!");
+        }
+        else if (!ValidSDT(STK_val)) {
+            TryFocus(STK, "Số tài khoản chỉ chứa các ký tự 0-9!");
+        }
+
+        let DaiDien = $('#sel_DaiDien');
+        let DaiDien_val = DaiDien.val();
+        if (DaiDien_val == null || DaiDien_val == undefined || DaiDien_val < 0) {
+            TryFocus(DaiDien, "Không được để trống người đại diện!");
+        }
+
+        //Khi dữ liệu đã đúng:
+        if (!hasFocus) {
+            ShowUIContent("Xác nhận thêm bản ghi?");
+        }
+    }
+
+    $(function () {
+        GetListDaiDien();
+
+        $('.UI-accept').click(function () {
+            UIContentToLoading();
+
+            let form = $('#input-form')[0];
+            let dataForm = new FormData(form);
+
+            $.ajax({
+                url: ctrl_Name + "PostCreate",
+                method: "POST",
+                processData: false,
+                contentType: false,
+                data: dataForm,
+                success: function (result, status, xhr) {
+                    let rs = JSON.parse(result);
+                    console.log("Edit result:", rs);
+                    if (rs.ErrCode == 2) {
+                        ShowUIBlock();
+                        ShowSuccessMessage("Thêm mới bản ghi thành công, tự động chuyển hướng sau khi hết thông báo!", function () { window.location.replace(ctrl_Name); });
+                    }
+                    else if (rs.ErrCode == 0) {
+                        ShowFailMessage("Có lỗi xảy ra trong quá trình cập nhật dữ liệu!");
+                    }
+                    else {
+                        ShowFailMessage(rs.ErrDes);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+                }
+            }).always(function () {
+                HideLoading();
+            });
+        });
+    });
+
+    function SingleImageChange(ele) {
+        let image = ele.files[0];
+        let src = (image != null && image != undefined) ? URL.createObjectURL(image) : errorImagePath;
+        $('#avatar-review').prop("src", src);
+        $('#txt_ImgName').val($(ele).val().split('\\').pop());
+    }
+</script>

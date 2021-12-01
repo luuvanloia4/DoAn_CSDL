@@ -1,613 +1,412 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Web;
-//using API.Models;
-//using API.Models.Entity;
-//using API.Shareds;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using APIs.Models;
+using APIs.Models.Entity;
+using APIs.Models.Form;
+using APIs.Shareds;
 
-//namespace API.Ctrls
-//{
-//    public class NCC_ctrl
-//    {
-//        private dbQuanLyKhoDataContext db = new dbQuanLyKhoDataContext();
+namespace APIs.Ctrls
+{
+    public class NCC_ctrl
+    {
+        private string tableName = "nhà cung cấp";
 
-//        public string IncMaNCC(string maNCC)
-//        {
-//            int STT;
-//            try
-//            {
-//                STT = int.Parse(maNCC.Substring(3));
-//            }
-//            catch
-//            {
-//                STT = 0;
-//            }
-//            STT++;
+        private DatabaseDataContext db = new DatabaseDataContext();
 
-//            return "NCC" + STT.ToString();
-//        }
+        public API_Result<bool> IsEmpty()
+        {
+            API_Result<bool> rs = new API_Result<bool>();
+            try
+            {
+                rs.Data = db.view_NhaCungCaps.Where(u => u.IsDelete == null || u.IsDelete == false).Count() == 0;
+                rs.ErrCode = EnumErrCode.Success;
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//        public
-//
-//        <bool> Create(string loginCode, tbl_NhaCungCap obj)
-//        {
-//            API_Result<bool> rs = new API_Result<bool>();
-//            try
-//            {
-//                tbl_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
-//                if (curUser != null)
-//                {
-//                    if (curUser.PhanQuyen == 1 || (curUser.PhanQuyen == 3 && curUser.MaTK == obj.DaiDien) || curUser.PhanQuyen == 4)
-//                    {
-//                        //Admin hoac NCC
-//                        string id = "NCC0";
-//                        var lastRecord = db.tbl_NhaCungCaps.OrderByDescending(u => u.Update).FirstOrDefault();
-//                        if (lastRecord != null)
-//                        {
-//                            id = lastRecord.MaNCC;
-//                        }
+            return rs;
+        }
 
-//                        tbl_NhaCungCap newObj = new tbl_NhaCungCap();
-//                        newObj.MaNCC = IncMaNCC(id);
-//                        newObj.TenNCC = obj.TenNCC;
-//                        newObj.DiaChi = obj.DiaChi;
-//                        newObj.SDT = obj.SDT;
-//                        newObj.STK = obj.STK;
-//                        newObj.NganHang = obj.NganHang;
-//                        newObj.DaiDien = obj.DaiDien;
-//                        newObj.IsDelete = false;
-//                        newObj.Update = DateTime.Now;
+        public API_Result<int> Create(string loginCode, tbl_NhaCungCap obj)
+        {
+            API_Result<int> rs = new API_Result<int>();
+            try
+            {
+                view_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
+                if (curUser != null)
+                {
+                    if (Authentication.IsAdmin(curUser))
+                    {
+                        //Admin
+                        tbl_NhaCungCap newObj = new tbl_NhaCungCap();
+                        newObj.Ten = obj.Ten;
+                        newObj.DiaChi = obj.DiaChi;
+                        newObj.SDT = obj.SDT;
+                        newObj.STK = obj.STK;
+                        newObj.NganHang = obj.NganHang;
+                        if (Authentication.IsSuperAdmin(curUser))
+                        {
+                            newObj.TaiKhoanID = obj.TaiKhoanID;
+                        }
+                        else
+                        {
+                            newObj.TaiKhoanID = curUser.ID;
+                        }
+                        newObj.NgayTao = DateTime.Now;
+                        newObj.NgayCapNhat = newObj.NgayTao;
+                        newObj.IsDelete = false;
 
-//                        try
-//                        {
-//                            db.tbl_NhaCungCaps.InsertOnSubmit(newObj);
-//                            db.SubmitChanges();
+                        db.tbl_NhaCungCaps.InsertOnSubmit(newObj);
+                        db.SubmitChanges();
 
-//                            rs.ErrCode = EnumErrCode.Success;
-//                            rs.ErrDes = newObj.MaNCC;
-//                            rs.Data = true;
-//                        }
-//                        catch (Exception ex)
-//                        {
-//                            rs.ErrCode = EnumErrCode.Error;
-//                            rs.ErrDes = ex.Message;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        rs.ErrCode = EnumErrCode.PermissionDenied;
-//                        rs.ErrDes = Constants.MSG_Permission_Denied;
-//                    }
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.NotYetLogin;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
+                        rs.ErrCode = EnumErrCode.Success;
+                        rs.Data = newObj.ID;
+                        rs.ErrDes = string.Format(Constants.MSG_Insert_Success, tableName);
+                    }
+                    else
+                    {
+                        rs.ErrCode = EnumErrCode.PermissionDenied;
+                        rs.ErrDes = Constants.MSG_Permission_Denied;
+                    }
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//            return rs;
-//        }
+            return rs;
+        }
 
-//        public API_Result<bool> Edit(string loginCode, tbl_NhaCungCap obj)
-//        {
-//            API_Result<bool> rs = new API_Result<bool>();
-//            try
-//            {
-//                tbl_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
-//                if (curUser != null)
-//                {
-//                    tbl_NhaCungCap editObj = db.tbl_NhaCungCaps.Where(u => u.MaNCC.Equals(obj.MaNCC)).FirstOrDefault();
-//                    if (editObj != null)
-//                    {
-//                        if (curUser.PhanQuyen == 1 || (curUser.PhanQuyen == 3 && curUser.MaTK == editObj.DaiDien) || curUser.PhanQuyen == 4)
-//                        {
-//                            //Admin hoac NCC
-//                            editObj.TenNCC = obj.TenNCC;
-//                            editObj.DiaChi = obj.DiaChi;
-//                            editObj.SDT = obj.SDT;
-//                            editObj.STK = obj.STK;
-//                            editObj.NganHang = obj.NganHang;
-//                            editObj.DaiDien = obj.DaiDien;
-//                            editObj.IsDelete = obj.IsDelete;
-//                            editObj.Update = DateTime.Now;
+        public API_Result<bool> Edit(string loginCode, tbl_NhaCungCap obj)
+        {
+            API_Result<bool> rs = new API_Result<bool>();
+            try
+            {
+                view_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
+                if (curUser != null)
+                {
+                    tbl_NhaCungCap editObj = db.tbl_NhaCungCaps.Where(u => u.ID.Equals(obj.ID)).FirstOrDefault();
+                    if (Authentication.IsSuperAdmin(curUser) || (editObj.TaiKhoanID.Equals(curUser.ID)))
+                    {
+                        tbl_NhaCungCap sameNameObj = db.tbl_NhaCungCaps.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.Ten.Equals(obj.Ten)).FirstOrDefault();
+                        if (editObj != null)
+                        {
+                            if (!editObj.Ten.Equals(obj.Ten) && sameNameObj != null)
+                            {
+                                rs.ErrCode = EnumErrCode.AlreadyExist;
+                                rs.ErrDes = string.Format(Constants.MSG_Already_Exist, obj.Ten);
+                            }
+                            else
+                            {
+                                editObj.Ten = obj.Ten;
+                                editObj.DiaChi = obj.DiaChi;
+                                editObj.SDT = obj.SDT;
+                                editObj.STK = obj.STK;
+                                editObj.NganHang = obj.NganHang;
+                                if (Authentication.IsSuperAdmin(curUser))
+                                {
+                                    editObj.TaiKhoanID = obj.TaiKhoanID;
+                                }
 
-//                            try
-//                            {
-//                                db.SubmitChanges();
+                                editObj.NgayCapNhat = DateTime.Now;
 
-//                                rs.ErrCode = EnumErrCode.Success;
-//                                rs.Data = true;
-//                            }
-//                            catch(Exception ex)
-//                            {
-//                                rs.ErrCode = EnumErrCode.Error;
-//                                rs.ErrDes = ex.Message;
-//                            }
-//                        }
-//                        else
-//                        {
-//                            rs.ErrCode = EnumErrCode.PermissionDenied;
-//                            rs.ErrDes = Constants.MSG_Permission_Denied;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        rs.ErrCode = EnumErrCode.Empty;
-//                        rs.ErrDes = "Bản ghi không tồn tại!";
-//                    }
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.NotYetLogin;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
+                                db.SubmitChanges();
 
-//            return rs;
-//        }
-//        public API_Result<string> Delete(string loginCode, string[] listID)
-//        {
-//            API_Result<string> rs = new API_Result<string>();
-//            try
-//            {
-//                tbl_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
-//                if (curUser != null)
-//                {
-//                    if (curUser.PhanQuyen == 1 || curUser.PhanQuyen == 4)
-//                    {
-//                        int delSuccessCount = 0;
-//                        int delFailCount = 0;
-//                        foreach (var id in listID)
-//                        {
-//                            tbl_NhaCungCap delObj = db.tbl_NhaCungCaps.Where(u => u.MaNCC.Equals(id) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
-//                            try
-//                            {
-//                                delObj.IsDelete = true;
-//                                db.SubmitChanges();
+                                rs.ErrCode = EnumErrCode.Success;
+                                rs.Data = true;
+                                rs.ErrDes = string.Format(Constants.MSG_Update_Success, tableName);
+                            }
+                        }
+                        else
+                        {
+                            rs.ErrCode = EnumErrCode.DoesNotExist;
+                            rs.ErrDes = string.Format(Constants.MSG_Object_Empty, obj.ID);
+                        }
+                    }
+                    else
+                    {
+                        rs.ErrCode = EnumErrCode.PermissionDenied;
+                        rs.ErrDes = Constants.MSG_Permission_Denied;
+                    }
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//                                delSuccessCount++;
-//                            }
-//                            catch
-//                            {
-//                                foreach (var change in db.GetChangeSet().Updates)
-//                                {
-//                                    db.Refresh(System.Data.Linq.RefreshMode.OverwriteCurrentValues, change);
-//                                    delFailCount++;
-//                                }
-//                            }
-//                        }
+            return rs;
+        }
 
-//                        rs.ErrCode = EnumErrCode.Success;
-//                        rs.ErrDes = "Xóa thành công " + delSuccessCount.ToString() + " trên tổng số " + (delSuccessCount + delFailCount).ToString() + " bản ghi!";
-//                    }
-//                    else
-//                    {
-//                        rs.ErrCode = EnumErrCode.PermissionDenied;
-//                        rs.ErrDes = Constants.MSG_Permission_Denied;
-//                    }
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.NotYetLogin;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
+        public API_Result<bool> Delete(string loginCode, int id)
+        {
+            API_Result<bool> rs = new API_Result<bool>();
+            try
+            {
+                view_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
+                if (curUser != null)
+                {
+                    tbl_NhaCungCap delObj = db.tbl_NhaCungCaps.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
+                    if (delObj != null)
+                    {
+                        if (Authentication.IsSuperAdmin(curUser) || delObj.TaiKhoanID.Equals(curUser.ID))
+                        {
+                            delObj.IsDelete = true;
+                            db.SubmitChanges();
 
-//            return rs;
-//        }
+                            rs.ErrCode = EnumErrCode.Success;
+                            rs.Data = true;
+                            rs.ErrDes = string.Format(Constants.MSG_Delete_Success, tableName);
+                        }
+                        else
+                        {
+                            rs.ErrCode = EnumErrCode.PermissionDenied;
+                            rs.ErrDes = Constants.MSG_Permission_Denied;
+                        }
+                    }
+                    else
+                    {
+                        rs.ErrCode = EnumErrCode.DoesNotExist;
+                        rs.ErrDes = string.Format(Constants.MSG_Object_Empty, id);
+                    }
+                    
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//        public API_Result<List<ListCombobox_ett<string>>> GetListCombobox(string loginCode)
-//        {
-//            API_Result<List<ListCombobox_ett<string>>> rs = new API_Result<List<ListCombobox_ett<string>>>();
-//            try
-//            {
-//                if (Authentication.CheckLogin(loginCode))
-//                {
-//                    IQueryable<tbl_NhaCungCap> qrs = db.tbl_NhaCungCaps.Where(u => u.IsDelete == null || u.IsDelete == false);
+            return rs;
+        }
 
-//                    var list = qrs.ToList();
+        public API_Result<string> DeleteList(string loginCode, int[] listID)
+        {
+            API_Result<string> rs = new API_Result<string>();
+            try
+            {
+                var curUser = Authentication.GetUser(loginCode).Data;
+                if (curUser != null)
+                {
+                    if (Authentication.IsSuperAdmin(curUser))
+                    {
+                        int delSuccessCount = 0;
+                        int delFailCount = 0;
+                        foreach (var id in listID)
+                        {
+                            tbl_HeThong delObj = db.tbl_HeThongs.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
+                            try
+                            {
+                                if(Authentication.IsSuperAdmin(curUser) || delObj.TaiKhoanID.Equals(curUser.ID))
+                                {
+                                    delObj.IsDelete = true;
+                                    db.SubmitChanges();
+                                    delSuccessCount++;
+                                }
+                                else
+                                {
+                                    delFailCount++;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                foreach (var change in db.GetChangeSet().Updates)
+                                {
+                                    db.Refresh(System.Data.Linq.RefreshMode.OverwriteCurrentValues, change);
+                                }
+                                delFailCount++;
+                            }
+                        }
 
-//                    List<ListCombobox_ett<string>> listCB = new List<ListCombobox_ett<string>>();
-//                    foreach (var item in list)
-//                    {
-//                        listCB.Add(new ListCombobox_ett<string>(item.MaNCC, item.TenNCC + " - " + item.MaNCC));
-//                    }
+                        rs.ErrCode = EnumErrCode.Success;
+                        rs.ErrDes = string.Format("Xóa thành công {0} trên tổng số {1} bản ghi!", delSuccessCount, delSuccessCount + delFailCount);
+                    }
+                    else
+                    {
+                        rs.ErrCode = EnumErrCode.PermissionDenied;
+                        rs.ErrDes = Constants.MSG_Permission_Denied;
+                    }
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//                    rs.Data = listCB;
-//                    rs.RecordCount = listCB.Count();
-//                    rs.ErrCode = EnumErrCode.Success;
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.NotYetLogin;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
+            return rs;
+        }
 
-//            return rs;
-//        }
+        public API_Result<List<view_NhaCungCap>> SearchPaging(string loginCode, DateTime startTime, DateTime endTime, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
+        {
+            API_Result<List<view_NhaCungCap>> rs = new API_Result<List<view_NhaCungCap>>();
+            try
+            {
+                if (Authentication.CheckLogin(loginCode))
+                {
+                    IQueryable<view_NhaCungCap> qrs = db.view_NhaCungCaps.Where(u => (u.IsDelete == null || u.IsDelete == false) && startTime <= u.NgayTao && u.NgayTao < endTime);
 
-//        public API_Result<List<tbl_NhaCungCap>> SearchPaging(string loginCode, DateTime startTime, DateTime endTime, int status = -1, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
-//        {
-//            API_Result<List<tbl_NhaCungCap>> rs = new API_Result<List<tbl_NhaCungCap>>();
-//            try
-//            {
-//                if (Authentication.CheckLogin(loginCode))
-//                {
-//                    if(db.tbl_NhaCungCaps.Count() > 0)
-//                    {
-//                        IQueryable<tbl_NhaCungCap> qrs = null;
-//                        IQueryable<tbl_NhaCungCap> qr = null;
+                    switch (searchType)
+                    {
+                        case EnumSearchType.All:
+                            //
+                            break;
+                        case EnumSearchType.ID:
+                            qrs = qrs.Where(u => u.ID.Equals(searchValue));
+                            break;
+                        case EnumSearchType.Name:
+                            qrs = qrs.Where(u => u.Ten.Contains(searchValue));
+                            break;
+                        case EnumSearchType.UserName:
+                            qrs = qrs.Where(u => u.UserName.Contains(searchValue));
+                            break;
+                        case EnumSearchType.Phone:
+                            qrs = qrs.Where(u => u.SDT.Contains(searchValue));
+                            break;
+                    }
 
-//                        switch (searchType)
-//                        {
-//                            case EnumSearchType.All:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.IsDelete == null || u.IsDelete == false);
-//                                break;
-//                            case EnumSearchType.ID:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.MaNCC.Equals(searchValue) && (u.IsDelete == null || u.IsDelete == false));
-//                                break;
-//                            case EnumSearchType.Name:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.TenNCC.Contains(searchValue) && (u.IsDelete == null || u.IsDelete == false));
-//                                break;
-//                            case EnumSearchType.Phone:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.SDT.Equals(searchValue) && (u.IsDelete == null || u.IsDelete == false));
-//                                break;
-//                            case EnumSearchType.ListAll:
-//                                qrs = db.tbl_NhaCungCaps;
-//                                break;
-//                        }
+                    if (isDescending)
+                    {
+                        switch (orderBy)
+                        {
+                            case EnumOrderBy.Newest:
+                                qrs = qrs.OrderByDescending(u => u.NgayTao);
+                                break;
+                            case EnumOrderBy.ID:
+                                qrs = qrs.OrderByDescending(u => u.ID);
+                                break;
+                            case EnumOrderBy.LastEdited:
+                                qrs = qrs.OrderByDescending(u => u.NgayCapNhat);
+                                break;
+                            case EnumOrderBy.Name:
+                                qrs = qrs.OrderByDescending(u => u.UserName);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (orderBy)
+                        {
+                            case EnumOrderBy.Newest:
+                                qrs = qrs.OrderBy(u => u.NgayTao);
+                                break;
+                            case EnumOrderBy.ID:
+                                qrs = qrs.OrderBy(u => u.ID);
+                                break;
+                            case EnumOrderBy.LastEdited:
+                                qrs = qrs.OrderBy(u => u.NgayCapNhat);
+                                break;
+                            case EnumOrderBy.Name:
+                                qrs = qrs.OrderBy(u => u.UserName);
+                                break;
+                        }
+                    }
 
-//                        qrs = qrs.Where(u => startTime <= u.Update && u.Update <= endTime);
+                    rs.RecordCount = qrs.Count();
 
-//                        if (status != -1)
-//                        {
-//                            //
-//                        }
+                    if (rs.RecordCount > 0)
+                    {
+                        rs.PageCount = rs.RecordCount / pageSize;
+                        if (rs.RecordCount % pageSize != 0)
+                        {
+                            rs.PageCount++;
+                        }
 
-//                        if (qrs.Count() > 0)
-//                        {
-//                            if (isDescending)
-//                            {
-//                                switch (orderBy)
-//                                {
-//                                    case EnumOrderBy.Newest:
-//                                        qrs = qrs.OrderByDescending(u => u.Update);
-//                                        break;
-//                                    case EnumOrderBy.ID:
-//                                        qrs = qrs.OrderByDescending(u => u.MaNCC);
-//                                        break;
-//                                    case EnumOrderBy.Name:
-//                                        qrs = qrs.OrderByDescending(u => u.TenNCC);
-//                                        break;
-//                                }
-//                            }
-//                            else
-//                            {
-//                                switch (orderBy)
-//                                {
-//                                    case EnumOrderBy.Newest:
-//                                        qrs = qrs.OrderBy(u => u.Update);
-//                                        break;
-//                                    case EnumOrderBy.ID:
-//                                        qrs = qrs.OrderBy(u => u.MaNCC);
-//                                        break;
-//                                    case EnumOrderBy.Name:
-//                                        qrs = qrs.OrderBy(u => u.TenNCC);
-//                                        break;
-//                                }
-//                            }
+                        rs.Data = qrs.Skip((curPage - 1) * pageSize).Take(pageSize).ToList();
+                        rs.ErrCode = EnumErrCode.Success;
+                    }
+                    else
+                    {
+                        rs.ErrCode = EnumErrCode.Empty;
+                        rs.ErrDes = string.Format(Constants.MSG_Search_Empty, tableName);
+                    }
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
+                }
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//                            rs.RecordCount = qrs.Count();
-//                            rs.PageCount = rs.RecordCount / pageSize;
-//                            if (rs.RecordCount % pageSize != 0)
-//                            {
-//                                rs.PageCount++;
-//                            }
-//                            qr = qrs.Skip((curPage - 1) * pageSize).Take(pageSize);
-//                            rs.Data = qr.ToList();
-//                            rs.ErrCode = EnumErrCode.Success;
-//                        }
-//                        else
-//                        {
-//                            rs.ErrCode = EnumErrCode.Empty;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        rs.ErrCode = EnumErrCode.DoesNotExist;
-//                    }
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.NotYetLogin;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
+            return rs;
+        }
 
-//            return rs;
-//        }
+        public API_Result<List<ListCombobox_ett<int>>> GetListCombobox()
+        {
+            API_Result<List<ListCombobox_ett<int>>> rs = new API_Result<List<ListCombobox_ett<int>>>();
+            try
+            {
+                IQueryable<view_NhaCungCap> qrs = db.view_NhaCungCaps.Where(u => (u.IsDelete == null || u.IsDelete == false));
 
-//        public API_Result<List<NhaCungCap_ett>> ExportData(string loginCode, DateTime startTime, DateTime endTime, int status = -1, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
-//        {
-//            API_Result<List<NhaCungCap_ett>> rs = new API_Result<List<NhaCungCap_ett>>();
-//            try
-//            {
-//                if (Authentication.CheckLogin(loginCode))
-//                {
-//                    if (db.tbl_NhaCungCaps.Count() > 0)
-//                    {
-//                        IQueryable<tbl_NhaCungCap> qrs = null;
-//                        IQueryable<tbl_NhaCungCap> qr = null;
+                List<ListCombobox_ett<int>> listCB = new List<ListCombobox_ett<int>>();
+                foreach (var item in qrs.ToList())
+                {
+                    listCB.Add(new ListCombobox_ett<int>(item.ID, item.Ten + " (" + item.HoTen + ")"));
+                }
 
-//                        switch (searchType)
-//                        {
-//                            case EnumSearchType.All:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.IsDelete == null || u.IsDelete == false);
-//                                break;
-//                            case EnumSearchType.ID:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.MaNCC.Equals(searchValue) && (u.IsDelete == null || u.IsDelete == false));
-//                                break;
-//                            case EnumSearchType.Name:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.TenNCC.Contains(searchValue) && (u.IsDelete == null || u.IsDelete == false));
-//                                break;
-//                            case EnumSearchType.Phone:
-//                                qrs = db.tbl_NhaCungCaps.Where(u => u.SDT.Equals(searchValue) && (u.IsDelete == null || u.IsDelete == false));
-//                                break;
-//                            case EnumSearchType.ListAll:
-//                                qrs = db.tbl_NhaCungCaps;
-//                                break;
-//                        }
+                rs.Data = listCB;
+                rs.RecordCount = listCB.Count();
+                rs.ErrCode = EnumErrCode.Success;
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//                        qrs = qrs.Where(u => startTime <= u.Update && u.Update <= endTime);
+            return rs;
+        }
 
-//                        if (status != -1)
-//                        {
-//                            //
-//                        }
+        public API_Result<view_NhaCungCap> GetByID(int id)
+        {
+            API_Result<view_NhaCungCap> rs = new API_Result<view_NhaCungCap>();
+            try
+            {
+                var obj = db.view_NhaCungCaps.Where(u => u.ID.Equals(id) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
+                rs.Data = obj;
+                rs.ErrCode = EnumErrCode.Success;
+            }
+            catch (Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
 
-//                        if (qrs.Count() > 0)
-//                        {
-//                            if (isDescending)
-//                            {
-//                                switch (orderBy)
-//                                {
-//                                    case EnumOrderBy.Newest:
-//                                        qrs = qrs.OrderByDescending(u => u.Update);
-//                                        break;
-//                                    case EnumOrderBy.ID:
-//                                        qrs = qrs.OrderByDescending(u => u.MaNCC);
-//                                        break;
-//                                    case EnumOrderBy.Name:
-//                                        qrs = qrs.OrderByDescending(u => u.TenNCC);
-//                                        break;
-//                                }
-//                            }
-//                            else
-//                            {
-//                                switch (orderBy)
-//                                {
-//                                    case EnumOrderBy.Newest:
-//                                        qrs = qrs.OrderBy(u => u.Update);
-//                                        break;
-//                                    case EnumOrderBy.ID:
-//                                        qrs = qrs.OrderBy(u => u.MaNCC);
-//                                        break;
-//                                    case EnumOrderBy.Name:
-//                                        qrs = qrs.OrderBy(u => u.TenNCC);
-//                                        break;
-//                                }
-//                            }
-
-//                            rs.RecordCount = qrs.Count();
-//                            qr = qrs;
-//                            var list = qr.ToList();
-//                            List<NhaCungCap_ett> listNCC = new List<NhaCungCap_ett>();
-//                            foreach(var item in list)
-//                            {
-//                                listNCC.Add(new NhaCungCap_ett(item));
-//                            }
-//                            rs.Data = listNCC;
-//                            rs.ErrCode = EnumErrCode.Success;
-//                        }
-//                        else
-//                        {
-//                            rs.ErrCode = EnumErrCode.Empty;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        rs.ErrCode = EnumErrCode.DoesNotExist;
-//                    }
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.NotYetLogin;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
-
-//            return rs;
-//        }
-
-//        public API_Result<bool> IsEmpty(string loginCode)
-//        {
-//            API_Result<bool> rs = new API_Result<bool>();
-//            try
-//            {
-//                tbl_NhaCungCap ncc = db.tbl_NhaCungCaps.Where(n => n.IsDelete == null || n.IsDelete == false).FirstOrDefault();
-
-//                rs.Data = ncc == null;
-//                rs.ErrCode = EnumErrCode.Success;
-//            }
-//            catch(Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
-
-//            return rs;
-//        }
-
-//        public API_Result<tbl_NhaCungCap> Get(string loginCode, string id)
-//        {
-//            API_Result<tbl_NhaCungCap> rs = new API_Result<tbl_NhaCungCap>();
-//            try
-//            {
-//                tbl_NhaCungCap obj = db.tbl_NhaCungCaps.Where(u => u.MaNCC.Equals(id)).FirstOrDefault();
-//                if(obj != null)
-//                {
-//                    rs.Data = obj;
-//                    rs.ErrCode = EnumErrCode.Success;
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.Empty;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
-
-//            return rs;
-//        }
-
-//        public API_Result<NhaCungCap_ett> GetAll(string loginCode, string id)
-//        {
-//            API_Result<NhaCungCap_ett> rs = new API_Result<NhaCungCap_ett>();
-//            try
-//            {
-//                if (Authentication.CheckLogin(loginCode))
-//                {
-//                    rs.ErrCode = EnumErrCode.Success;
-//                    rs.Data = new NhaCungCap_ett(id);
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.NotYetLogin;
-//                }
-//            }
-//            catch(Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
-
-//            return rs;
-//        }
-    
-//        public API_Result<tbl_NhaCungCap> GetByDaiDien(string loginCode, string id)
-//        {
-//            API_Result<tbl_NhaCungCap> rs = new API_Result<tbl_NhaCungCap>();
-//            try
-//            {
-//                tbl_NhaCungCap obj = db.tbl_NhaCungCaps.Where(u => u.DaiDien == id).FirstOrDefault();
-//                if(obj != null)
-//                {
-//                    rs.ErrCode = EnumErrCode.Success;
-//                    rs.Data = obj;
-//                }
-//                else
-//                {
-//                    rs.ErrCode = EnumErrCode.Empty;
-//                }
-//            }
-//            catch(Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
-
-//            return rs;
-//        }
-
-//        public API_Result<List<tbl_LoaiSanPham>> GetListSanPham(string loginCode, string id)
-//        {
-//            API_Result<List<tbl_LoaiSanPham>> rs = new API_Result<List<tbl_LoaiSanPham>>();
-//            try
-//            {
-//                List<tbl_LoaiSanPham> list = db.tbl_LoaiSanPhams.Where(sp => sp.MaNCC.Equals(id) && (sp.IsDelete == null || sp.IsDelete == false)).OrderBy(u => u.Update).ToList();
-
-//                rs.Data = list;
-//                rs.ErrCode = EnumErrCode.Success;
-//            }
-//            catch(Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
-
-//            return rs;
-//        }
-    
-//        public API_Result<bool> AddListSanPham(string loginCode, string id, TempLoaiSP[] listSP)
-//        {
-//            API_Result<bool> rs = new API_Result<bool>();
-//            try
-//            {
-//                int addSuccessCount = 0;
-//                int addFailCount = 0;
-//                LoaiSP_ctrl lsp_ctrl = new LoaiSP_ctrl();
-
-//                foreach(var item in listSP)
-//                {
-//                    tbl_LoaiSanPham newObj = new tbl_LoaiSanPham();
-//                    newObj.TenLSP = item.TenSP;
-//                    newObj.MoTa = item.MoTa;
-//                    newObj.HinhAnh = item.HinhAnh;
-//                    newObj.DonGia = item.DonGia;
-//                    newObj.MaNCC = id;
-
-//                    var prePresult = lsp_ctrl.Create(loginCode, newObj);
-
-//                    if(prePresult.ErrCode == EnumErrCode.Success)
-//                    {
-//                        addSuccessCount++;
-//                    }
-//                    else
-//                    {
-//                        addFailCount++;
-//                    }
-//                }
-
-//                rs.ErrCode = EnumErrCode.Success;
-//                rs.ErrDes = "Thêm thành công " + addSuccessCount.ToString() + " trên tổng số " + (addSuccessCount + addFailCount).ToString() + " bản ghi!";
-//            }
-//            catch(Exception ex)
-//            {
-//                rs.ErrCode = EnumErrCode.Error;
-//                rs.ErrDes = ex.Message;
-//            }
-
-//            return rs;
-//        }
-//    }
-//}
+            return rs;
+        }
+    }
+}

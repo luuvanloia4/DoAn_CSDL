@@ -28,9 +28,9 @@ namespace APIs.View
         }
 
         [WebMethod]
-        public API_Result<bool> Create(string loginCode, tbl_TaiKhoan obj)
+        public API_Result<bool> Create(string loginCode, int heThongID, tbl_TaiKhoan obj)
         {
-            return ctrl.Create(loginCode, obj);
+            return ctrl.Create(loginCode, heThongID, obj);
         }
 
         [WebMethod]
@@ -64,9 +64,9 @@ namespace APIs.View
         }
 
         [WebMethod]
-        public API_Result<List<TaiKhoan_ett>> SearchPaging(string loginCode, DateTime startTime, DateTime endTime, int status = -1, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
+        public API_Result<List<TaiKhoan_ett>> SearchPaging(string loginCode, int heThongID, DateTime startTime, DateTime endTime, int status = -1, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
         {
-            return ctrl.SearchPaging(loginCode, startTime, endTime, status, searchValue, searchType, curPage, pageSize, orderBy, isDescending);
+            return ctrl.SearchPaging(loginCode, heThongID, startTime, endTime, status, searchValue, searchType, curPage, pageSize, orderBy, isDescending);
         }
 
         [WebMethod]

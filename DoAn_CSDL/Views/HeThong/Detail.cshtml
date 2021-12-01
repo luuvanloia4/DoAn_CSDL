@@ -1,0 +1,600 @@
+﻿@using DoAn_CSDL.Shared
+@{
+    ViewBag.Title = "Thông tin hệ thống";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    int id = SharedFunction.ParseID(Request["id"]);
+    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+
+    //For search paging
+    string alias = "taikhoan_hethong";
+    int size = (Session[alias + "_Size"] == null) ? 5 : int.Parse(Session[alias + "_Size"].ToString());
+    int page = (Session[alias + "_Page"] == null) ? 1 : int.Parse(Session[alias + "_Page"].ToString());
+    int searchType = (Session[alias + "_SearchType"] == null) ? 0 : int.Parse(Session[alias + "_SearchType"].ToString());
+    string searchValue = (Session[alias + "_SearchValue"] == null) ? "" : Session[alias + "_SearchValue"].ToString();
+    int orderBy = (Session[alias + "_OrderBy"] == null) ? 0 : int.Parse(Session[alias + "_OrderBy"].ToString());
+    bool isDes = (Session[alias + "_IsDes"] == null) ? false : bool.Parse(Session[alias + "_IsDes"].ToString());
+}
+
+<div class="main__inner">
+    <div class="main__content @Html.Raw(isAdmin? "w-100": "")">
+        <h2 class="main__title">THÔNG TIN HỆ THỐNG</h2>
+        <div class="custom-detail">
+            <div class="d-none">
+                <input type="text" name="txt_ID" id="txt_ID" class="form-control" value="@id" hidden />
+            </div>
+
+            <div class="custom-detail__content">
+                <table class="custom-detail__table" id="detail-printer">
+                    <!---->
+                </table>
+
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-success custom-btn-func" onclick="window.location.href = ctrlName + 'Edit?id=' + @id;">
+                        <i class="fas fa-sync"></i> Cập nhật dữ liệu
+                    </button>
+                </div>
+            </div>
+
+            <div class="card @Html.Raw(isAdmin? "": "d-none")" style="margin-top: 4rem">
+                <h2 class="card-title">Danh sách tài khoản thuộc hệ thống</h2>
+                <div class="card-body">
+                    <div class="row pb-2">
+                        <div class="col-12 col-sm-4 form-group position-relative">
+                            <label for="sel_PhanQuyen">
+                                Phân quyền:
+                                <select name="sel_PhanQuyen" id="sel_PhanQuyen" class="form-control custom-select w-auto">
+                                    <option value="-1">-- Chọn nhóm quyền --</option>
+                                    <!---->
+                                </select>
+                            </label>
+                        </div>
+                        @*<div class="d-flex align-items-center">
+                                <label for="txt_StartTime">Từ: </label>
+                                <input type="date" class="form-control" name="txt_StartTime" id="txt_StartTime" />
+                            </div>
+                            <div class="d-flex align-items-center ml-5">
+                                <label for="txt_EndTime"> đến:</label>
+                                <input type="date" class="form-control" name="txt_EndTime" id="txt_EndTime" />
+                            </div>*@
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 col-sm-2 form-group position-relative">
+                            <label for="sel_Size">
+                                Hiển thị
+                                <select name="sel_Size" id="sel_Size" class="form-control custom-select w-auto">
+                                    <option value="1" @Html.Raw((size == 1) ? "selected" : "")>1</option>
+                                    <option value="5" @Html.Raw((size == 5) ? "selected" : "")>5</option>
+                                    <option value="10" @Html.Raw((size == 10) ? "selected" : "")>10</option>
+                                    <option value="25" @Html.Raw((size == 25) ? "selected" : "")>25</option>
+                                    <option value="50" @Html.Raw((size == 50) ? "selected" : "")>50</option>
+                                    <option value="100" @Html.Raw((size == 100) ? "selected" : "")>100</option>
+                                </select>
+                                bản ghi
+                            </label>
+                        </div>
+                        <div class="col-12 col-sm-4 form-group position-relative text-right">
+                            <label for="sel_OrderBy">
+                                Sắp xếp:
+                                <select name="sel_OrderBy" id="sel_OrderBy" class="form-control custom-select w-auto">
+                                    <option value="0" @Html.Raw((orderBy == 0) ? "selected" : "")>Ngày tạo</option>
+                                    <option value="1" @Html.Raw((orderBy == 1) ? "selected" : "")>Mã tài khoản</option>
+                                    <option value="3" @Html.Raw((orderBy == 3) ? "selected" : "")>Tên tài khoản</option>
+                                </select>
+                            </label>
+                            <label for="sel_OrderDes">
+                                theo thứ tự:
+                                <select name="sel_OrderDes" id="sel_OrderDes" class="form-control custom-select w-auto">
+                                    <option value="false" @Html.Raw(isDes ? "" : "selected") )>Tăng dần</option>
+                                    <option value="true" @Html.Raw(isDes ? "selected" : "")>Giảm dần</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="col-12 col-sm-6 form-group position-relative text-right">
+                            <label for="txt_SearchValue">
+                                Tìm kiếm
+                                <select name="sel_SearchType" id="sel_SearchType" class="form-control custom-select w-auto">
+                                    <option value="0" @Html.Raw((searchType == 0) ? "selected" : "")>Tất cả</option>
+                                    <option value="1" @Html.Raw((searchType == 1) ? "selected" : "")>Mã tài khoản</option>
+                                    <option value="2" @Html.Raw((searchType == 2) ? "selected" : "")>Tên tài khoản</option>
+                                    <option value="3" @Html.Raw((searchType == 3) ? "selected" : "")>Họ và tên</option>
+                                    <option value="5" @Html.Raw((searchType == 5) ? "selected" : "")>Số điện thoại</option>
+                                </select>
+                                với từ khóa
+                                <input type="search" name="txt_SearchValue" id="txt_SearchValue" class="form-control custom-search-input" autocomplete="on" maxlength="200" value="@searchValue" />
+                                <button type="button" class="btn custom-btn-search text-primary" onclick="TransPage(1)">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table table-hover table-bordered table-striped custom-table" id="result-printer">
+                            <!-- Search result show up here -->
+                        </table>
+
+                        <div class="menu-paging">
+                            <div class="menu-paging__content" id="menu_paging">
+                                <!---->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thẻ ẩn toàn màn hình -->
+<div class="UI-hidden">
+    <div class="UI-hidden__content">
+        <h1 class="title">THÔNG TIN TÀI KHOẢN:</h1>
+        <div class="d-flex">
+            <img src="#" class="img-detail mr-5 mb-3" onclick="ShowImage(this)" id="obj_avatar" />
+            <div class="user" id="obj_top">
+                <!-- Thông tin tài khoản hiển thị ở đây! -->
+            </div>
+        </div>
+        <div class="user" id="obj_bottom">
+            <!---->
+        </div>
+    </div>
+</div>
+
+<script>
+    var detailObj;
+    const ctrlName = "/HeThong/";
+    var id;
+    var isAdmin = @isAdmin;
+    loadingCount = 0; //For multiple loading progress
+
+    function FillData(obj) {
+        htmlResult = "<tbody>"
+        htmlResult += "\
+        <tr>\
+            <th>Mã hệ thống:</th>\
+            <td>" + obj.ID + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Tên hệ thống:</th>\
+            <td>" + obj.Ten + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Địa chỉ:</th>\
+            <td>" + obj.DiaChi + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Số điện thoại:</th>\
+            <td>" + obj.SDT + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Ngân hàng:</th>\
+            <td>" + obj.NganHang + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Số tài khoản:</th>\
+            <td>" + obj.STK + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Người đại diện:</th>\
+            <td>" + obj.HoTen + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Tài khoản người đại diện:</th>\
+            <td>" + obj.UserName + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Ngày tạo:</th>\
+            <td>" + ParseHDate(obj.NgayTao) + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Ngày cập nhật:</th>\
+            <td>" + ParseHDate(obj.NgayCapNhat) + "</td>\
+        </tr>";
+
+        htmlResult += "</tbody>";
+        $('#detail-printer').html(htmlResult);
+    }
+
+    function GetObject() {
+        ShowLoading();
+        id = $('#txt_ID').val();
+        console.log("ID: ", id);
+
+        $.ajax({
+            url: ctrlName + "GetDetail",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("Detail: ", rs);
+
+                if (rs.ErrCode == 2) {
+                    detailObj = rs.Data;
+                    FillData(detailObj);
+                }
+                else if (rs.ErrCode == 0) {
+                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu, vui lòng thử lại sau!");
+                }
+                else {
+                    ShowFailMessage(rs.ErrDes);
+                }
+            },
+            error: function () {
+                ShowFailMessage("Mất kết nối với máy chủ!");
+            }
+        }).always(function () {
+            CheckLoadingCount();
+        });
+    }
+
+    //For tbl_TaiKhoan
+    const ctrl_Name_Second = "/TaiKhoan/";
+    var action = 0;
+
+    var searchValue, mode, phanQuyen, size, orderBy, orderDes, page, maxPage;
+    var userID, userName;
+    var startTime, endTime;
+
+    function TransPage(index) {
+        ShowLoading();
+        //Làm mới đầu vào:
+        searchValue = $('#txt_SearchValue').val();
+        searchType = $('#sel_SearchType').val();
+        phanQuyen = $('#sel_PhanQuyen').val();
+        size = $('#sel_Size').val();
+        orderBy = $('#sel_OrderBy').val();
+        orderDes = $('#sel_OrderDes').val();
+        page = parseInt(index);
+
+        startTime = $('#txt_StartTime').val();
+        endTime = $('#txt_EndTime').val();
+
+        //Bắt đầu tìm kiếm:
+        $.ajax({
+            url: ctrl_Name_Second + "SearchPaging",
+            method: "POST",
+            data: {
+                searchValue, searchType, phanQuyen, size, orderBy, orderDes, page,
+                startTime, endTime, heThongID: id
+            },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List tai khoan: ", rs);
+                if (rs.ErrCode == 2) {
+                    let listTaiKhoan = rs.Data;
+                    //Danh sách tài khoản
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px' style='cursor: pointer;' onclick='SelectAllRecord(this)'>#</th>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Tên tài khoản</th>\
+                                <th>Họ và tên</th>\
+                                <th>Ngày sinh</th>\
+                                <th>Số điện thoại</th>\
+                                <th>Ngày lập</th>\
+                                <th>Phân quyền</th>\
+                                <th>Thao tác</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    maxPage = rs.PageCount;
+                    let stt = 1;
+                    listTaiKhoan.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'><input type='checkbox' class='is-selected custom-checkbox' /></div></td>"
+                            + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.ID + "</td>"
+                            + "<td class='item-name'>" + item.UserName + "</td>"
+                            + "<td>" + item.HoTen + "</td>"
+                            + "<td align='center'>" + ParseDate(item.NgaySinh) + "</td>"
+                            + "<td>" + item.SDT + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
+                            + "<td>" + item.PhanQuyen;
+                        htmlResult += "</td>"
+                            + "<td align='center'>"
+                            + "<button type='button' class='btn custom-btn-detail' onclick='GoDetail(" + item.ID + ")'><i class='fas fa-eye'></i></button>"
+                            + "<button type='button' class='btn custom-btn-edit' onclick='GoEdit(" + item.ID + ")'><i class='fas fa-edit'></i></button>"
+                            + "<button type='button' class='btn custom-btn-delete' onclick='GoDelete(this)'><i class='fas fa-trash-alt'></i></button>"
+                            + "</td>";
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#result-printer').html(htmlResult);
+                    $('#menu_paging').html(RenderPageButton(page, maxPage));
+                }
+                else {
+                    $('#menu_paging').html("");
+                    if (rs.ErrCode == 3) {
+                        //
+                        ShowFailMessage("Không tìm thấy kết quả với từ khóa '" + searchValue + "'!");
+                        let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
+                        $('#result-printer').html(htmlResult);
+                    }
+                    else {
+                        ShowFailMessage("Lấy kết quả tìm kiếm thất bại, vui lòng kiểm tra đầu vào và thử lại!");
+                    }
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#menu_paging').html("");
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            HideLoading();
+        });
+    }
+
+    //Ham thao tac voi du lieu
+    function GoCreate() {
+        window.location.href = ctrl_Name_Second + "Create";
+    }
+
+    function GoDetail(id) {
+        ShowLoading();
+
+        $.ajax({
+            url: ctrl_Name_Second + "GetDetail",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log(rs);
+                if (rs.ErrCode == 2) {
+                    let user = rs.Data;
+
+                    let htmlResult = "<p><strong>Mã tài khoản:</strong> " + user.ID + "</p>"
+                        + "<p><strong>Tên tài khoản:</strong> " + user.UserName + "</p>"
+                        + "<p><strong>Phân quyền:</strong> " + user.PhanQuyen + "</p>";
+                    $("#obj_top").html(htmlResult);
+
+                    htmlResult = "<p><strong>Họ và tên:</strong> " + user.HoTen + "</p>"
+                        + "<p><strong>Ngày sinh:</strong> " + ParseDate(user.NgaySinh) + "</p>"
+                        + "<p><strong>Địa chỉ:</strong> " + user.DiaChi + "</p>"
+                        + "<p><strong>Số điện thoại:</strong> " + user.SDT + "</p>"
+                    htmlResult += "<div class='d-flex justify-content-end'>"
+                        + "<a href='/TaiKhoan/Edit?id=" + user.ID + "' class='btn btn-success'>"
+                        + "<i class='fas fa-user-edit'></i> Cập nhật thông tin"
+                        + "</a>"
+                        + "</div>";
+
+                    //Hiển thị kết quả:
+                    $('#obj_bottom').html(htmlResult);
+                    if (MyString.IsNullOrEmpty(user.Img)) {
+                        $('#obj_avatar').prop("src", errorImagePath);
+                    }
+                    else {
+                        $('#obj_avatar').prop("src", user.Img);
+                    }
+
+                    ShowUIHiddenContent();
+                }
+                else {
+                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy thông tin tài khoản, vui lòng thử lại sau ít phút!");
+                }
+            },
+            error: function (xhr, status, error) {
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            HideLoading();
+        });
+    }
+
+    function GoEdit(id) {
+        window.location.href = ctrl_Name + "Edit?id=" + id;
+    }
+
+    function GoDelete(ele) {
+        let tr = $(ele).parents('tr');
+        userName = tr.find(".item-name").text();
+        userID = tr.find('.item-id').text();
+        action = 0;
+
+        ShowUIContent("Xác nhận xóa bản ghi " + name + "?");
+    }
+
+    var allSelected = false;
+    function SelectAllRecord(ele) {
+        allSelected = !allSelected;
+        $('#result-printer .is-selected').prop("checked", allSelected);
+    }
+
+    var listDeleteID = new Array();
+    function GoDeleteAll() {
+        listDeleteID = new Array();
+        $('#result-printer .is-selected').each(function () {
+            if (this.checked) {
+                listDeleteID.push($(this).parents("tr").find(".item-id").text());
+            }
+        });
+
+        if (listDeleteID != null && listDeleteID != undefined && listDeleteID.length > 0) {
+            action = 2;
+            ShowUIContent("Xác nhận xóa " + listDeleteID.length + " bản ghi được chọn?");
+        }
+        else {
+            ShowFailMessage("Vui lòng chọn bản ghi trước khi nhấn nút xóa!");
+        }
+    }
+
+    function ExportData(ele) {
+        action = 1;
+        ShowUIContent("Xác nhận xuất dữ liệu ra file excel?");
+    }
+
+    function GetListPhanQuyen() {
+        $.ajax({
+            url: "/PhanQuyen/GetListCombobox",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+
+                let htmlResult = "<option value='-1'>-- Chọn nhóm quyền --</option>"
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //Error
+                }
+
+                $('#sel_PhanQuyen').html(htmlResult);
+            },
+            error: function () {
+                //Error
+            }
+        });
+    }
+
+    //Ready
+    $(function () {
+        GetObject();
+
+        if (isAdmin) {
+            TransPage(1);
+
+            GetListPhanQuyen();
+
+            //Nhấn nút xác nhận:
+            $('.UI-accept').click(function () {
+                UIContentToLoading();
+                switch (action) {
+                    case 0:
+                        $.ajax({
+                            url: ctrl_Name + "Delete",
+                            method: "POST",
+                            data: { id },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                console.log(rs);
+                                if (rs.ErrCode == 2) {
+                                    TransPage(page);
+                                    ShowSuccessMessage("Xóa bản ghi " + userName + " thành công!");
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Xóa bản ghi thất bại, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+
+                    case 1:
+                        searchValue = $('#txt_SearchValue').val();
+                        searchType = $('#sel_SearchType').val();
+                        phanQuyen = $('#sel_PhanQuyen').val();
+                        orderBy = $('#sel_OrderBy').val();
+                        orderDes = $('#sel_OrderDes').val();
+
+                        startTime = $('#txt_StartTime').val();
+                        endTime = $('#txt_EndTime').val();
+
+                        $.ajax({
+                            url: ctrl_Name + "ExportFileExcel",
+                            method: "POST",
+                            data: { searchValue, searchType, phanQuyen, orderBy, orderDes, startTime, endTime, heThongID: id },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                console.log(rs);
+                                if (rs.ErrCode == 2) {
+                                    window.location.href = rs.Data;
+                                    ShowSuccessMessage("Xuất dữ liệu thành công!");
+                                }
+                                else if (rs.ErrCode == 3) {
+                                    ShowFailResult("Không thể xuất file với dữ liệu trống!");
+                                }
+                                else {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình xuất dữ liệu, vui lòng thử lại sau ít phút!");
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+                    case 2:
+                        let jsonListID = JSON.stringify(listDeleteID);
+                        $.ajax({
+                            url: ctrl_Name + "DeleteAll",
+                            method: "POST",
+                            data: { ListID: jsonListID },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+
+                                if (rs.ErrCode == 2) {
+                                    TransPage(page);
+                                    ShowSuccessMessage(rs.ErrDes);
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình xóa danh sách bản ghi, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+                    default:
+                        HideLoading();
+                }
+            });
+
+            //Thay đổi điều kiện:
+            //$('[name=sel_Mode]').change(function () {
+            //    TransPage(1);
+            //});
+            $('#sel_PhanQuyen').change(function () {
+                TransPage(1);
+            });
+            $('#sel_Size').change(function () {
+                TransPage(1);
+            });
+
+            $('#sel_OrderBy').change(function () {
+                TransPage(page);
+            });
+            $('#sel_OrderDes').change(function () {
+                TransPage(page);
+            });
+
+            //Enter
+            $('#txt_SearchValue').keydown(function (event) {
+                if (event.key == "Enter") {
+                    TransPage(1);
+                }
+            })
+        }
+    });
+</script>
+
+

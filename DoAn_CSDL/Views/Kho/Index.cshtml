@@ -1,18 +1,21 @@
-﻿@{
-    ViewBag.Title = "Quản lý tài khoản";
+﻿@using DoAn_CSDL.Shared
+@{
+    ViewBag.Title = "Quản lý kho hàng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
-    string alias = "taikhoan";
+    string alias = "kho";
     int size = (Session[alias + "_Size"] == null) ? 5 : int.Parse(Session[alias + "_Size"].ToString());
     int page = (Session[alias + "_Page"] == null) ? 1 : int.Parse(Session[alias + "_Page"].ToString());
     int searchType = (Session[alias + "_SearchType"] == null) ? 0 : int.Parse(Session[alias + "_SearchType"].ToString());
     string searchValue = (Session[alias + "_SearchValue"] == null) ? "" : Session[alias + "_SearchValue"].ToString();
     int orderBy = (Session[alias + "_OrderBy"] == null) ? 0 : int.Parse(Session[alias + "_OrderBy"].ToString());
     bool isDes = (Session[alias + "_IsDes"] == null) ? false : bool.Parse(Session[alias + "_IsDes"].ToString());
+
+    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
 }
 
 <div class="main__content w-100">
-    <h2 class="main__title">DANH SÁCH TÀI KHOẢN:</h2>
+    <h2 class="main__title">DANH SÁCH KHO HÀNG:</h2>
 
     <div class="row pb-5 px-4 justify-content-between">
         <button type="button" class="btn custom-btn-func btn-primary float-right" onclick="GoCreate(this)">
@@ -26,24 +29,16 @@
         </button>
     </div>
 
-    <div class="row pb-2">
-        <div class="col-12 col-sm-4 form-group position-relative">
-            <label for="sel_PhanQuyen">
-                Phân quyền:
-                <select name="sel_PhanQuyen" id="sel_PhanQuyen" class="form-control custom-select w-auto">
-                    <option value="-1">-- Chọn nhóm quyền --</option>
+    <div class="row pb-2 @Html.Raw(isAdmin? "": "d-none")">
+        <div class="col-12 col-sm-4 col-md-3">
+            <label for="sel_HeThong">
+                Hệ thống: 
+                <select name="sel_HeThong" id="sel_HeThong" class="form-control custom-select w-auto">
+                    <option value="-1">-- Chọn hệ thống --</option>
                     <!---->
                 </select>
             </label>
         </div>
-        @*<div class="d-flex align-items-center">
-            <label for="txt_StartTime">Từ: </label>
-            <input type="date" class="form-control" name="txt_StartTime" id="txt_StartTime" />
-        </div>
-        <div class="d-flex align-items-center ml-5">
-            <label for="txt_EndTime"> đến:</label>
-            <input type="date" class="form-control" name="txt_EndTime" id="txt_EndTime" />
-        </div>*@
     </div>
 
     <div class="row">
@@ -66,8 +61,8 @@
                 Sắp xếp:
                 <select name="sel_OrderBy" id="sel_OrderBy" class="form-control custom-select w-auto">
                     <option value="0" @Html.Raw((orderBy == 0) ? "selected" : "")>Ngày tạo</option>
-                    <option value="1" @Html.Raw((orderBy == 1) ? "selected" : "")>Mã tài khoản</option>
-                    <option value="3" @Html.Raw((orderBy == 3) ? "selected" : "")>Tên tài khoản</option>
+                    <option value="1" @Html.Raw((orderBy == 1) ? "selected" : "")>Mã kho</option>
+                    <option value="2" @Html.Raw((orderBy == 2) ? "selected" : "")>Tên kho</option>
                 </select>
             </label>
             <label for="sel_OrderDes">
@@ -83,10 +78,8 @@
                 Tìm kiếm
                 <select name="sel_SearchType" id="sel_SearchType" class="form-control custom-select w-auto">
                     <option value="0" @Html.Raw((searchType == 0) ? "selected" : "")>Tất cả</option>
-                    <option value="1" @Html.Raw((searchType == 1) ? "selected" : "")>Mã tài khoản</option>
-                    <option value="2" @Html.Raw((searchType == 2) ? "selected" : "")>Tên tài khoản</option>
-                    <option value="3" @Html.Raw((searchType == 3) ? "selected" : "")>Họ và tên</option>
-                    <option value="5" @Html.Raw((searchType == 5) ? "selected" : "")>Số điện thoại</option>
+                    <option value="1" @Html.Raw((searchType == 1) ? "selected" : "")>Mã kho</option>
+                    <option value="2" @Html.Raw((searchType == 2) ? "selected" : "")>Tên kho</option>
                 </select>
                 với từ khóa
                 <input type="search" name="txt_SearchValue" id="txt_SearchValue" class="form-control custom-search-input" autocomplete="on" maxlength="200" value="@searchValue" />
@@ -96,7 +89,7 @@
             </label>
         </div>
     </div>
-        
+
     <div class="table-container">
         <table class="table table-hover table-bordered table-striped custom-table" id="result-printer">
             <!-- Search result show up here -->
@@ -111,35 +104,57 @@
 </div>
 
 <!-- Thẻ ẩn toàn màn hình -->
-<div class="UI-hidden">
+<!--<div class="UI-hidden">
     <div class="UI-hidden__content">
         <h1 class="title">THÔNG TIN TÀI KHOẢN:</h1>
         <div class="d-flex">
-            <img src="#" class="img-detail mr-5 mb-3" onclick="ShowImage(this)" id="obj_avatar"/>
-            <div class="user" id="obj_top">
-                <!-- Thông tin tài khoản hiển thị ở đây! -->
-            </div>
-        </div>
-        <div class="user" id="obj_bottom">
-            <!---->
-        </div>
-    </div>
+            <img src="#" class="img-detail mr-5 mb-3" onclick="ShowImage(this)" id="obj_avatar" />
+            <div class="user" id="obj_top">-->
+<!-- Thông tin tài khoản hiển thị ở đây! -->
+<!--</div>
 </div>
+<div class="user" id="obj_bottom">-->
+<!---->
+<!--</div>
+    </div>
+</div>-->
 
 <script>
-    const ctrl_Name = "/TaiKhoan/";
+    const ctrl_Name = "/Kho/";
     var action = 0;
 
-    var searchValue, mode, phanQuyen, size, orderBy, orderDes, page, maxPage;
+    var searchValue, mode, size, orderBy, orderDes, page, maxPage;
     var id, name;
     var startTime, endTime;
+    var heThongID;
+
+    function GetListHeThong() {
+        $.ajax({
+            url: "/HeThong/GetListCombobox",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List he thong: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn hệ thống --</option>";
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //
+                }
+                $('#sel_HeThong').html(htmlResult);
+            }
+        });
+    }
 
     function TransPage(index) {
         ShowLoading();
         //Làm mới đầu vào:
         searchValue = $('#txt_SearchValue').val();
         searchType = $('#sel_SearchType').val();
-        phanQuyen = $('#sel_PhanQuyen').val();
         size = $('#sel_Size').val();
         orderBy = $('#sel_OrderBy').val();
         orderDes = $('#sel_OrderDes').val();
@@ -148,13 +163,15 @@
         startTime = $('#txt_StartTime').val();
         endTime = $('#txt_EndTime').val();
 
+        heThongID = $('#sel_HeThong').val();
+
         //Bắt đầu tìm kiếm:
         $.ajax({
             url: ctrl_Name + "SearchPaging",
             method: "POST",
             data: {
-                searchValue, searchType, phanQuyen, size, orderBy, orderDes, page,
-                startTime, endTime
+                searchValue, searchType, size, orderBy, orderDes, page,
+                startTime, endTime, heThongID
             },
             success: function (result, status, xhr) {
                 let rs = JSON.parse(result);
@@ -167,12 +184,10 @@
                                 <th width='50px' style='cursor: pointer;' onclick='SelectAllRecord(this)'>#</th>\
                                 <th width='50px'>STT</th>\
                                 <th width='60px'>ID</th>\
-                                <th>Tên tài khoản</th>\
-                                <th>Họ và tên</th>\
-                                <th>Ngày sinh</th>\
-                                <th>Số điện thoại</th>\
-                                <th>Ngày lập</th>\
-                                <th>Phân quyền</th>\
+                                <th>Tên kho</th>\
+                                <th>Địa chỉ</th>\
+                                <th>Tên hệ thống</th>\
+                                <th>Ngày tạo</th>\
                                 <th>Thao tác</th>\
                             </tr>\
                         </thead>\
@@ -184,12 +199,10 @@
                             + "<td align='center'><input type='checkbox' class='is-selected custom-checkbox' /></div></td>"
                             + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
                             + "<td align='center' class='item-id'>" + item.ID + "</td>"
-                            + "<td class='item-name'>" + item.UserName + "</td>"
-                            + "<td>" + item.HoTen + "</td>"
-                            + "<td align='center'>" + ParseDate(item.NgaySinh) + "</td>"
-                            + "<td>" + item.SDT + "</td>"
-                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
-                            + "<td>" + item.PhanQuyen;
+                            + "<td class='item-name'>" + item.Ten + "</td>"
+                            + "<td align='center'>" + item.DiaChi + "</td>"
+                            + "<td>" + item.TenHeThong + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>";
                         htmlResult += "</td>"
                             + "<td align='center'>"
                             + "<button type='button' class='btn custom-btn-detail' onclick='GoDetail(" + item.ID + ")'><i class='fas fa-eye'></i></button>"
@@ -233,57 +246,10 @@
     }
 
     function GoDetail(id) {
-        ShowLoading();
-
-        $.ajax({
-            url: ctrl_Name + "GetDetail",
-            method: "POST",
-            data: { id },
-            success: function (result, status, xhr) {
-                let rs = JSON.parse(result);
-                console.log(rs);
-                if (rs.ErrCode == 2) {
-                    let user = rs.Data;
-
-                    let htmlResult = "<p><strong>Mã tài khoản:</strong> " + user.ID + "</p>"
-                        + "<p><strong>Tên tài khoản:</strong> " + user.UserName + "</p>"
-                        + "<p><strong>Phân quyền:</strong> " + user.PhanQuyen + "</p>";
-                    $("#obj_top").html(htmlResult);
-
-                    htmlResult = "<p><strong>Họ và tên:</strong> " + user.HoTen + "</p>"
-                        + "<p><strong>Ngày sinh:</strong> " + ParseDate(user.NgaySinh) + "</p>"
-                        + "<p><strong>Địa chỉ:</strong> " + user.DiaChi + "</p>"
-                        + "<p><strong>Số điện thoại:</strong> " + user.SDT + "</p>"
-                    htmlResult += "<div class='d-flex justify-content-end'>"
-                        + "<a href='/TaiKhoan/Edit?id=" + user.ID + "' class='btn btn-success'>"
-                        + "<i class='fas fa-user-edit'></i> Cập nhật thông tin"
-                        + "</a>"
-                        + "</div>";
-
-                    //Hiển thị kết quả:
-                    $('#obj_bottom').html(htmlResult);
-                    if (MyString.IsNullOrEmpty(user.Img)) {
-                        $('#obj_avatar').prop("src", errorImagePath);
-                    }
-                    else {
-                        $('#obj_avatar').prop("src", user.Img);
-                    }
-                    
-                    ShowUIHiddenContent();
-                }
-                else {
-                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy thông tin tài khoản, vui lòng thử lại sau ít phút!");
-                }
-            },
-            error: function (xhr, status, error) {
-                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
-            }
-        }).always(function () {
-            HideLoading();
-        });
+        window.location.href = ctrl_Name + "Detail?id=" + id;
     }
 
-    function GoEdit(id) {
+    function GoEdit(id) {;
         window.location.href = ctrl_Name + "Edit?id=" + id;
     }
 
@@ -325,36 +291,10 @@
         ShowUIContent("Xác nhận xuất dữ liệu ra file excel?");
     }
 
-    function GetListPhanQuyen() {
-        $.ajax({
-            url: "/PhanQuyen/GetListCombobox",
-            method: "POST",
-            success: function (result, status, xhr) {
-                let rs = JSON.parse(result);
-
-                let htmlResult = "<option value='-1'>-- Chọn nhóm quyền --</option>"
-                if (rs.ErrCode == 2) {
-                    rs.Data.forEach((item) => {
-                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
-                    });
-                }
-                else {
-                    //Error
-                }
-
-                $('#sel_PhanQuyen').html(htmlResult);
-            },
-            error: function () {
-                //Error
-            }
-        });
-    }
-
     //Ready
     $(function () {
         TransPage(1);
-
-        GetListPhanQuyen();
+        GetListHeThong();
 
         //Nhấn nút xác nhận:
         $('.UI-accept').click(function () {
@@ -390,7 +330,6 @@
                 case 1:
                     searchValue = $('#txt_SearchValue').val();
                     searchType = $('#sel_SearchType').val();
-                    phanQuyen = $('#sel_PhanQuyen').val();
                     orderBy = $('#sel_OrderBy').val();
                     orderDes = $('#sel_OrderDes').val();
 
@@ -458,7 +397,7 @@
         //$('[name=sel_Mode]').change(function () {
         //    TransPage(1);
         //});
-        $('#sel_PhanQuyen').change(function () {
+        $('#sel_HeThong').change(function () {
             TransPage(1);
         });
         $('#sel_Size').change(function () {

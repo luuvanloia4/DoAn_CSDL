@@ -18,6 +18,7 @@ namespace DoAn_CSDL.Controllers
                 var rs = wsv.GetCurrentUser(Session[Constants.LoginCode_SessionName].ToString());
                 if (rs.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
                 {
+                    Session[Constants.UserRole_SessionName] = rs.Data.PhanQuyenID;
                     return true;
                 }
             }

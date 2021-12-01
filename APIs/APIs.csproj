@@ -69,20 +69,29 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
+    <Content Include="View\HeThong_wsv.asmx" />
+    <Content Include="View\HopDong_wsv.asmx" />
+    <Content Include="View\Kho_wsv.asmx" />
     <Content Include="View\Menu_wsv.asmx" />
+    <Content Include="View\NhaCungCap_wsv.asmx" />
+    <Content Include="View\PhanQuyen_wsv.asmx" />
     <Content Include="View\TaiKhoan_wsv.asmx" />
+    <Content Include="View\ViTri_wsv.asmx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ctrls\HeThong_ctrl.cs" />
     <Compile Include="Ctrls\HopDong_ctrl.cs" />
+    <Compile Include="Ctrls\Kho_ctrl.cs" />
     <Compile Include="Ctrls\LoaiSP_ctrl.cs" />
     <Compile Include="Ctrls\Menu_ctrl.cs" />
     <Compile Include="Ctrls\NCC_ctrl.cs" />
     <Compile Include="Ctrls\Notify_ctrl.cs" />
+    <Compile Include="Ctrls\PhanQuyen_ctrl.cs" />
     <Compile Include="Ctrls\PhieuNhap_ctrl.cs" />
     <Compile Include="Ctrls\PhieuXuat_ctrl.cs" />
     <Compile Include="Ctrls\TaiKhoan_ctrl.cs" />
+    <Compile Include="Ctrls\ViTri_ctrl.cs" />
     <Compile Include="Models\API_Result.cs" />
     <Compile Include="Models\Database.designer.cs">
       <AutoGen>True</AutoGen>
@@ -95,16 +104,41 @@
     <Compile Include="Models\EnumErrCode.cs" />
     <Compile Include="Models\EnumOrderBy.cs" />
     <Compile Include="Models\EnumSearchType.cs" />
+    <Compile Include="Models\Form\ID_SL.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shareds\Authentication.cs" />
     <Compile Include="Shareds\Constants.cs" />
+    <Compile Include="View\HeThong_wsv.asmx.cs">
+      <DependentUpon>HeThong_wsv.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\HopDong_wsv.asmx.cs">
+      <DependentUpon>HopDong_wsv.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\Kho_wsv.asmx.cs">
+      <DependentUpon>Kho_wsv.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="View\Menu_wsv.asmx.cs">
       <DependentUpon>Menu_wsv.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="View\NhaCungCap_wsv.asmx.cs">
+      <DependentUpon>NhaCungCap_wsv.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\PhanQuyen_wsv.asmx.cs">
+      <DependentUpon>PhanQuyen_wsv.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="View\TaiKhoan_wsv.asmx.cs">
       <DependentUpon>TaiKhoan_wsv.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\ViTri_wsv.asmx.cs">
+      <DependentUpon>ViTri_wsv.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
