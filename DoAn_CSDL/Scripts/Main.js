@@ -86,6 +86,14 @@ $(function () {
         $(this).removeClass("input-required");
     });
 
+    $('textarea').change(function () {
+        $(this).removeClass("input-required");
+    });
+
+    $('select').change(function () {
+        $(this).removeClass("input-required");
+    });
+
     $('input[type=number]').change(function(ele){
         console.log("Message of " + this);
         let maxVal = parseInt($(this).prop("max"));
@@ -189,11 +197,39 @@ function PxConvert(str){
     }
 }
 
-function ShowImage(ele){
-    let src = $(ele).prop("src");
-
-    UIShowImage(src);
+function ParseImageURL(str){
+    if(str == null || str == undefined || str.length == 0){
+        return "/Data/System/Images/img_error.png";
+    }
+    else{
+        return str;
+    }
 }
+
+function ParseAvatarURL(str){
+    if(str == null || str == undefined || str.length == 0){
+        return "/Data/System/Images/default_image.jpg";
+    }
+    else{
+        return str;
+    }
+}
+
+//Parse HopDong
+function ParseTrangThaiHD(int){
+    switch(int){
+        case 0:
+            return "Đang thực hiện";
+            break;
+        case 1:
+            return "Đã hoàn thành";
+            break;
+        default:
+            return "Không xác định"; 
+    }
+}
+
+//End convert
 
 function ConvertFileToBase64(file, callback){
     let fileReader = new FileReader();
@@ -204,6 +240,12 @@ function ConvertFileToBase64(file, callback){
 }
 
 //Data display
+function ShowImage(ele){
+    let src = $(ele).prop("src");
+
+    UIShowImage(src);
+}
+
 function RenderPageButton(page, maxPage) {
     let htmlButton = "";
     if (page > 1) {

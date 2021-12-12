@@ -22,14 +22,16 @@ namespace DoAn_CSDL
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/lib/font-awesome/js/all.js",
-                      "~/Scripts/UIBlock.js"
+                      "~/Scripts/UIBlock.js",
+                      "~/Scripts/select2.min.js"
                       ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/lib/font-awesome/css/all.css",
-                      "~/Content/UIBlock.css"
+                      "~/Content/UIBlock.css",
+                      "~/Content/css/select2.min.css"
                       ));
         }
     }

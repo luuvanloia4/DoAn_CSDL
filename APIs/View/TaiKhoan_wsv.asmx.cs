@@ -92,5 +92,17 @@ namespace APIs.View
         {
             return ctrl.PhanQuyen(loginCode, listUserID, phanQuyenID);
         }
+
+        [WebMethod]
+        public API_Result<bool> GetGroupID(string loginCode)
+        {
+            return ctrl.GetGroupID(loginCode);
+        }
+
+        [WebMethod]
+        public API_Result<DashBoard_ett> GetDashBoardData(string loginCode, DateTime? startTime, DateTime? endTime)
+        {
+            return ctrl.GetDashBoardData(loginCode, startTime, endTime);
+        }
     }
 }

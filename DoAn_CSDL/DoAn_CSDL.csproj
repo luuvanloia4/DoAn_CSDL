@@ -123,10 +123,15 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CuaHangController.cs" />
     <Compile Include="Controllers\HeThongController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HopDongController.cs" />
     <Compile Include="Controllers\KhoController.cs" />
+    <Compile Include="Controllers\MatHangController.cs" />
+    <Compile Include="Controllers\NhaCungCapController.cs" />
     <Compile Include="Controllers\PhanQuyenController.cs" />
+    <Compile Include="Controllers\PhieuXuatController.cs" />
     <Compile Include="Controllers\TaiKhoanController.cs" />
     <Compile Include="Controllers\ViTriController.cs" />
     <Compile Include="Global.asax.cs">
@@ -140,7 +145,17 @@
     </Compile>
     <Compile Include="Shared\Constants.cs" />
     <Compile Include="Shared\SharedFunction.cs" />
+    <Compile Include="Web References\CuaHang_wsv\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\HeThong_wsv\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\HopDong_wsv\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -150,12 +165,32 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web References\LoaiMatHang_wsv\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\MatHang_wsv\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\Menu_wsv\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web References\NhaCungCap_wsv\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\PhanQuyen_wsv\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\PhieuXuat_wsv\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -172,12 +207,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\DA_CSDL_QLK_script_backup_2.sql" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\select2.css" />
+    <Content Include="Content\css\select2.min.css" />
     <Content Include="Content\Home\custom.css" />
     <Content Include="Content\Home\main.css" />
     <Content Include="Content\Login\Login.css" />
@@ -311,6 +349,65 @@
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
     <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\i18n\af.js" />
+    <Content Include="Scripts\i18n\ar.js" />
+    <Content Include="Scripts\i18n\az.js" />
+    <Content Include="Scripts\i18n\bg.js" />
+    <Content Include="Scripts\i18n\bn.js" />
+    <Content Include="Scripts\i18n\bs.js" />
+    <Content Include="Scripts\i18n\ca.js" />
+    <Content Include="Scripts\i18n\cs.js" />
+    <Content Include="Scripts\i18n\da.js" />
+    <Content Include="Scripts\i18n\de.js" />
+    <Content Include="Scripts\i18n\dsb.js" />
+    <Content Include="Scripts\i18n\el.js" />
+    <Content Include="Scripts\i18n\en.js" />
+    <Content Include="Scripts\i18n\es.js" />
+    <Content Include="Scripts\i18n\et.js" />
+    <Content Include="Scripts\i18n\eu.js" />
+    <Content Include="Scripts\i18n\fa.js" />
+    <Content Include="Scripts\i18n\fi.js" />
+    <Content Include="Scripts\i18n\fr.js" />
+    <Content Include="Scripts\i18n\gl.js" />
+    <Content Include="Scripts\i18n\he.js" />
+    <Content Include="Scripts\i18n\hi.js" />
+    <Content Include="Scripts\i18n\hr.js" />
+    <Content Include="Scripts\i18n\hsb.js" />
+    <Content Include="Scripts\i18n\hu.js" />
+    <Content Include="Scripts\i18n\hy.js" />
+    <Content Include="Scripts\i18n\id.js" />
+    <Content Include="Scripts\i18n\is.js" />
+    <Content Include="Scripts\i18n\it.js" />
+    <Content Include="Scripts\i18n\ja.js" />
+    <Content Include="Scripts\i18n\ka.js" />
+    <Content Include="Scripts\i18n\km.js" />
+    <Content Include="Scripts\i18n\ko.js" />
+    <Content Include="Scripts\i18n\lt.js" />
+    <Content Include="Scripts\i18n\lv.js" />
+    <Content Include="Scripts\i18n\mk.js" />
+    <Content Include="Scripts\i18n\ms.js" />
+    <Content Include="Scripts\i18n\nb.js" />
+    <Content Include="Scripts\i18n\ne.js" />
+    <Content Include="Scripts\i18n\nl.js" />
+    <Content Include="Scripts\i18n\pl.js" />
+    <Content Include="Scripts\i18n\ps.js" />
+    <Content Include="Scripts\i18n\pt-BR.js" />
+    <Content Include="Scripts\i18n\pt.js" />
+    <Content Include="Scripts\i18n\ro.js" />
+    <Content Include="Scripts\i18n\ru.js" />
+    <Content Include="Scripts\i18n\sk.js" />
+    <Content Include="Scripts\i18n\sl.js" />
+    <Content Include="Scripts\i18n\sq.js" />
+    <Content Include="Scripts\i18n\sr-Cyrl.js" />
+    <Content Include="Scripts\i18n\sr.js" />
+    <Content Include="Scripts\i18n\sv.js" />
+    <Content Include="Scripts\i18n\th.js" />
+    <Content Include="Scripts\i18n\tk.js" />
+    <Content Include="Scripts\i18n\tr.js" />
+    <Content Include="Scripts\i18n\uk.js" />
+    <Content Include="Scripts\i18n\vi.js" />
+    <Content Include="Scripts\i18n\zh-CN.js" />
+    <Content Include="Scripts\i18n\zh-TW.js" />
     <Content Include="Scripts\index.js.flow" />
     <Content Include="Scripts\esm\popper.min.js.map" />
     <Content Include="Scripts\esm\popper.js.map" />
@@ -338,6 +435,8 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\select2.js" />
+    <Content Include="Scripts\select2.min.js" />
     <Content Include="Scripts\src\index.js" />
     <Content Include="Scripts\src\methods\defaults.js" />
     <Content Include="Scripts\src\methods\destroy.js" />
@@ -421,6 +520,30 @@
     <Content Include="Views\Shared\Partial\_UIBlock.cshtml" />
     <Content Include="Views\Shared\Partial\_Header.cshtml" />
     <Content Include="Views\Shared\Partial\_Navbar.cshtml" />
+    <Content Include="Web References\CuaHang_wsv\API_ResultOfBoolean.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\CuaHang_wsv\API_ResultOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\CuaHang_wsv\API_ResultOfListOfListCombobox_ettOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\CuaHang_wsv\API_ResultOfListOfview_CuaHang.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\CuaHang_wsv\API_ResultOfString.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\CuaHang_wsv\API_ResultOfview_CuaHang.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Views\CuaHang\Index.cshtml" />
+    <Content Include="Views\CuaHang\Create.cshtml" />
+    <Content Include="Views\PhieuXuat\Index.cshtml" />
+    <Content Include="Views\PhieuXuat\Create.cshtml" />
+    <Content Include="Views\PhieuXuat\Detail.cshtml" />
+    <None Include="Web References\CuaHang_wsv\CuaHang_wsv.disco" />
     <Content Include="Web References\HeThong_wsv\API_ResultOfBoolean.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
@@ -448,7 +571,56 @@
     <Content Include="Views\Kho\Detail.cshtml" />
     <Content Include="Views\ViTri\Index.cshtml" />
     <Content Include="Views\Kho\Edit.cshtml" />
+    <Content Include="Views\NhaCungCap\Index.cshtml" />
+    <Content Include="Views\NhaCungCap\Create.cshtml" />
+    <Content Include="Views\NhaCungCap\Detail.cshtml" />
+    <Content Include="Views\NhaCungCap\Edit.cshtml" />
+    <Content Include="Views\MatHang\Index.cshtml" />
+    <Content Include="Views\MatHang\Edit.cshtml" />
+    <Content Include="Views\HopDong\Index.cshtml" />
+    <Content Include="Views\HopDong\Create.cshtml" />
+    <Content Include="Views\HopDong\Detail.cshtml" />
+    <Content Include="Views\HopDong\Edit.cshtml" />
+    <None Include="Web References\CuaHang_wsv\CuaHang_wsv.wsdl" />
+    <None Include="Web References\CuaHang_wsv\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <None Include="Web References\HeThong_wsv\HeThong_wsv.disco" />
+    <Content Include="Web References\HopDong_wsv\API_ResultOfBoolean.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfListOfListCombobox_ettOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfListOfview_HopDong.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfString.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfview_HopDong.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfListOfview_ChiTietHD.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfSingle.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfListOfview_ChiTietPN.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfListOfview_PhieuNhap.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\HopDong_wsv\API_ResultOfview_PhieuNhap.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\HopDong_wsv\HopDong_wsv.disco" />
     <Content Include="Web References\Kho_wsv\API_ResultOfBoolean.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
@@ -467,7 +639,41 @@
     <Content Include="Web References\Kho_wsv\API_ResultOfview_Kho.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
+    <None Include="Web References\HopDong_wsv\HopDong_wsv.wsdl" />
+    <None Include="Web References\HopDong_wsv\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <None Include="Web References\Kho_wsv\Kho_wsv.disco" />
+    <Content Include="Web References\LoaiMatHang_wsv\API_ResultOfBoolean.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\LoaiMatHang_wsv\API_ResultOfListOfListCombobox_ettOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\LoaiMatHang_wsv\LoaiMatHang_wsv.disco" />
+    <Content Include="Web References\MatHang_wsv\API_ResultOfBoolean.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfListOfListCombobox_ettOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfListOfview_MatHang.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfString.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfview_MatHang.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfListOfview_MH_HT.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\MatHang_wsv\MatHang_wsv.disco" />
     <Content Include="Web References\Menu_wsv\API_ResultOfListOfview_Menu.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
@@ -485,7 +691,36 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Web References\LoaiMatHang_wsv\LoaiMatHang_wsv.wsdl" />
+    <None Include="Web References\LoaiMatHang_wsv\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\MatHang_wsv\MatHang_wsv.wsdl" />
+    <None Include="Web References\MatHang_wsv\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <None Include="Web References\Menu_wsv\Menu_wsv.disco" />
+    <Content Include="Web References\NhaCungCap_wsv\API_ResultOfBoolean.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\NhaCungCap_wsv\API_ResultOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\NhaCungCap_wsv\API_ResultOfListOfListCombobox_ettOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\NhaCungCap_wsv\API_ResultOfListOfview_NhaCungCap.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\NhaCungCap_wsv\API_ResultOfString.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\NhaCungCap_wsv\API_ResultOfview_NhaCungCap.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\NhaCungCap_wsv\NhaCungCap_wsv.disco" />
     <Content Include="Web References\PhanQuyen_wsv\API_ResultOfBoolean.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
@@ -501,7 +736,34 @@
     <Content Include="Web References\PhanQuyen_wsv\API_ResultOfview_PhanQuyen.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
+    <None Include="Web References\NhaCungCap_wsv\NhaCungCap_wsv.wsdl" />
+    <None Include="Web References\NhaCungCap_wsv\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <None Include="Web References\PhanQuyen_wsv\PhanQuyen_wsv.disco" />
+    <Content Include="Web References\PhieuXuat_wsv\API_ResultOfBoolean.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\PhieuXuat_wsv\API_ResultOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\PhieuXuat_wsv\API_ResultOfListOfListCombobox_ettOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\PhieuXuat_wsv\API_ResultOfListOfview_ChiTietPX.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\PhieuXuat_wsv\API_ResultOfListOfview_PhieuXuat.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\PhieuXuat_wsv\API_ResultOfString.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\PhieuXuat_wsv\API_ResultOfview_PhieuXuat.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\PhieuXuat_wsv\PhieuXuat_wsv.disco" />
     <Content Include="Web References\TaiKhoan_wsv\API_ResultOfBoolean.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
@@ -522,6 +784,14 @@
     </Content>
     <None Include="Web References\PhanQuyen_wsv\PhanQuyen_wsv.wsdl" />
     <None Include="Web References\PhanQuyen_wsv\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Web References\TaiKhoan_wsv\API_ResultOfDashBoard_ett.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\PhieuXuat_wsv\PhieuXuat_wsv.wsdl" />
+    <None Include="Web References\PhieuXuat_wsv\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -576,7 +846,6 @@
     <None Include="Web References\ViTri_wsv\ViTri_wsv.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Views\PhanQuyen\" />
   </ItemGroup>
@@ -597,6 +866,17 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="https://localhost:44377/View/CuaHang_wsv.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\CuaHang_wsv\</RelPath>
+      <UpdateFromURL>https://localhost:44377/View/CuaHang_wsv.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DoAn_CSDL_CuaHang_wsv_CuaHang_wsv</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="https://localhost:44377/View/HeThong_wsv.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\HeThong_wsv\</RelPath>
@@ -607,6 +887,17 @@
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>DoAn_CSDL_HeThong_wsv_HeThong_wsv</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://localhost:44377/View/HopDong_wsv.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\HopDong_wsv\</RelPath>
+      <UpdateFromURL>https://localhost:44377/View/HopDong_wsv.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DoAn_CSDL_HopDong_wsv_HopDong_wsv</CachedSettingsPropName>
     </WebReferenceUrl>
     <WebReferenceUrl Include="https://localhost:44377/View/Kho_wsv.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
@@ -619,6 +910,28 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>DoAn_CSDL_Kho_wsv_Kho_wsv</CachedSettingsPropName>
     </WebReferenceUrl>
+    <WebReferenceUrl Include="https://localhost:44377/View/LoaiMatHang_wsv.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\LoaiMatHang_wsv\</RelPath>
+      <UpdateFromURL>https://localhost:44377/View/LoaiMatHang_wsv.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DoAn_CSDL_LoaiMatHang_wsv_LoaiMatHang_wsv</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://localhost:44377/View/MatHang_wsv.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\MatHang_wsv\</RelPath>
+      <UpdateFromURL>https://localhost:44377/View/MatHang_wsv.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DoAn_CSDL_MatHang_wsv_MatHang_wsv</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="https://localhost:44377/View/Menu_wsv.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\Menu_wsv\</RelPath>
@@ -630,6 +943,17 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>DoAn_CSDL_Menu_wsv_Menu_wsv</CachedSettingsPropName>
     </WebReferenceUrl>
+    <WebReferenceUrl Include="https://localhost:44377/View/NhaCungCap_wsv.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\NhaCungCap_wsv\</RelPath>
+      <UpdateFromURL>https://localhost:44377/View/NhaCungCap_wsv.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DoAn_CSDL_NhaCungCap_wsv_NhaCungCap_wsv</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="https://localhost:44377/View/PhanQuyen_wsv.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\PhanQuyen_wsv\</RelPath>
@@ -640,6 +964,17 @@
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>DoAn_CSDL_PhanQuyen_wsv_PhanQuyen_wsv</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://localhost:44377/View/PhieuXuat_wsv.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\PhieuXuat_wsv\</RelPath>
+      <UpdateFromURL>https://localhost:44377/View/PhieuXuat_wsv.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DoAn_CSDL_PhieuXuat_wsv_PhieuXuat_wsv</CachedSettingsPropName>
     </WebReferenceUrl>
     <WebReferenceUrl Include="https://localhost:44377/View/TaiKhoan_wsv.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>

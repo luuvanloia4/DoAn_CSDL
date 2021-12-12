@@ -20,7 +20,7 @@ namespace APIs.Ctrls
                 view_TaiKhoan curUser = Authentication.GetUser(loginCode).Data;
                 if(curUser != null)
                 {
-                    List<view_Menu> listMenu = db.view_Menus.Where(u => u.PhanQuyen.Equals(curUser.PhanQuyenID)).ToList();
+                    List<view_Menu> listMenu = db.view_Menus.Where(u => u.PhanQuyen.Equals(curUser.PhanQuyenID)).OrderBy(u => u.Order).ToList();
 
                     rs.ErrCode = EnumErrCode.Success;
                     rs.Data = listMenu;

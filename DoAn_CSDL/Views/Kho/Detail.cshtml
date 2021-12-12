@@ -3,7 +3,8 @@
     ViewBag.Title = "Thông tin kho hàng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     int id = SharedFunction.ParseID(Request["id"]);
-    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = (phanQuyen == 0 || phanQuyen == 1);
 
     //For search paging
     string alias = "vitri_kho";

@@ -101,6 +101,16 @@ img.img-detail{
     background-color: rgb(210, 244, 255);
 }
 
+.custom-table .img-detail{
+    width: auto;
+    height: 5rem;
+    cursor: pointer;
+    display: block;
+    margin: 0.5rem 1rem;
+    box-shadow: none;
+    border-radius: 0;
+}
+
 .menu-paging{
     display: flex;
     justify-content: center;
@@ -160,6 +170,11 @@ img.img-detail{
     border-color: var(--danger);
 }
 
+.custom-form textarea.form-text{
+    height: 10rem;
+    font-size: var(--input-font-size);
+}
+
 span.required{
     color: red;
 }
@@ -185,6 +200,12 @@ span.required{
     color: var(--input-text-color);
     background-color: var(--input-bg-color);
     cursor: pointer;
+}
+
+.custom-form .select2-container{
+    min-width: 20rem;
+    max-width: 100%;
+    width: 100% !important;
 }
 
     /* custom input file */

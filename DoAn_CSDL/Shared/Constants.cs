@@ -11,7 +11,9 @@ namespace DoAn_CSDL.Shared
         public const string LoginCode_SessionName = "LoginCode";
         public const string UserID_SessionName = "UseID";
         public const string UserRole_SessionName = "UserRole";
-        public const string ListSP_SessionName = "ListSP";
+        public const string NCCID_SessionName = "NCCID";
+        public const string HeThongID_SessionName = "HeThongID";
+        public const string CuaHangID_SessionName = "CuaHangID";
 
         //File location
         //Default file:

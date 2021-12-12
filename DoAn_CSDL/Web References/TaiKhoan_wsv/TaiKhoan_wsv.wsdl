@@ -51,6 +51,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="heThongID" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="obj" type="tns:tbl_TaiKhoan" />
           </s:sequence>
         </s:complexType>
@@ -99,6 +100,7 @@
           <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="HeThongID" nillable="true" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuXuats" type="tns:ArrayOfTbl_PhieuXuat" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
         </s:sequence>
@@ -143,11 +145,11 @@
           <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="MoTa" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="Gia" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="SoLuong" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="NhaCungCapID" nillable="true" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Img" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietHDs" type="tns:ArrayOfTbl_ChiTietHD" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPNs" type="tns:ArrayOfTbl_ChiTietPN" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPXes" type="tns:ArrayOfTbl_ChiTietPX" />
@@ -165,6 +167,7 @@
           <s:element minOccurs="1" maxOccurs="1" name="HopDongID" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="MatHangID" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="SoLuong" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SoLuongDaGiao" nillable="true" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_HopDong" type="tns:tbl_HopDong" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_MatHang" type="tns:tbl_MatHang" />
         </s:sequence>
@@ -177,11 +180,12 @@
           <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="NguoiLap" nillable="true" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="NhaCungCapID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="HeThongID" nillable="true" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietHDs" type="tns:ArrayOfTbl_ChiTietHD" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuNhaps" type="tns:ArrayOfTbl_PhieuNhap" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_NhaCungCap" type="tns:tbl_NhaCungCap" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_NhaCungCap" type="tns:tbl_NhaCungCap" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="ArrayOfTbl_PhieuNhap">
@@ -214,76 +218,8 @@
           <s:element minOccurs="1" maxOccurs="1" name="MatHangID" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="SoLuong" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="ViTriID" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_ViTri" type="tns:tbl_ViTri" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_MatHang" type="tns:tbl_MatHang" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_PhieuNhap" type="tns:tbl_PhieuNhap" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="tbl_ViTri">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="HangID" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="CotID" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="KhoID" nillable="true" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_ChiTietPNs" type="tns:ArrayOfTbl_ChiTietPN" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_Kho" type="tns:tbl_Kho" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="tbl_Kho">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="HeTHongID" nillable="true" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
-          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_ViTris" type="tns:ArrayOfTbl_ViTri" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_HeThong" type="tns:tbl_HeThong" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ArrayOfTbl_ViTri">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_ViTri" nillable="true" type="tns:tbl_ViTri" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="tbl_HeThong">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="STK" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="NganHang" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" nillable="true" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
-          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_HT_TKs" type="tns:ArrayOfTbl_HT_TK" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_Khos" type="tns:ArrayOfTbl_Kho" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ArrayOfTbl_HT_TK">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_HT_TK" nillable="true" type="tns:tbl_HT_TK" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="tbl_HT_TK">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="HeTHongID" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_HeThong" type="tns:tbl_HeThong" />
-          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ArrayOfTbl_Kho">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_Kho" nillable="true" type="tns:tbl_Kho" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="tbl_NhaCungCap">
@@ -342,6 +278,72 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_HeThong" nillable="true" type="tns:tbl_HeThong" />
         </s:sequence>
       </s:complexType>
+      <s:complexType name="tbl_HeThong">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="STK" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NganHang" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HT_TKs" type="tns:ArrayOfTbl_HT_TK" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_Khos" type="tns:ArrayOfTbl_Kho" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_HT_TK">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_HT_TK" nillable="true" type="tns:tbl_HT_TK" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_HT_TK">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TaiKhoanID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="HeTHongID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HeThong" type="tns:tbl_HeThong" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoan" type="tns:tbl_TaiKhoan" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_Kho">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_Kho" nillable="true" type="tns:tbl_Kho" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_Kho">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ten" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HeThongID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_ViTris" type="tns:ArrayOfTbl_ViTri" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_HeThong" type="tns:tbl_HeThong" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTbl_ViTri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_ViTri" nillable="true" type="tns:tbl_ViTri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tbl_ViTri">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="HangID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CotID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TrangThai" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="KhoID" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayTao" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="tbl_Kho" type="tns:tbl_Kho" />
+        </s:sequence>
+      </s:complexType>
       <s:complexType name="ArrayOfTbl_NhaCungCap">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="unbounded" name="tbl_NhaCungCap" nillable="true" type="tns:tbl_NhaCungCap" />
@@ -370,7 +372,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="GhiChu" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="NgayTao" nillable="true" type="s:dateTime" />
           <s:element minOccurs="1" maxOccurs="1" name="NgayCapNhat" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="0" maxOccurs="1" name="IsDelete" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDelete" nillable="true" type="s:boolean" />
           <s:element minOccurs="0" maxOccurs="1" name="tbl_TaiKhoans" type="tns:ArrayOfTbl_TaiKhoan" />
         </s:sequence>
       </s:complexType>
@@ -519,6 +521,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="heThongID" type="s:int" />
             <s:element minOccurs="1" maxOccurs="1" name="startTime" type="s:dateTime" />
             <s:element minOccurs="1" maxOccurs="1" name="endTime" type="s:dateTime" />
             <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
@@ -578,7 +581,7 @@
           <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="HoTen" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Avatar" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Img" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="NgaySinh" type="s:dateTime" />
           <s:element minOccurs="0" maxOccurs="1" name="DiaChi" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="SDT" type="s:string" />
@@ -658,6 +661,57 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetGroupID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGroupIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetGroupIDResult" type="tns:API_ResultOfBoolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDashBoardData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="startTime" nillable="true" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="endTime" nillable="true" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDashBoardDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDashBoardDataResult" type="tns:API_ResultOfDashBoard_ett" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="API_ResultOfDashBoard_ett">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="tns:DashBoard_ett" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="tns:EnumErrCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DashBoard_ett">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TongSoHD" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TongSoHDCho" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TongSoHDHoanThanh" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TongSoYC" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TongSoYCCho" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TongSoYCPheDuyet" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TongSoYCHoanThanh" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PhanQuyenID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="LoginSoapIn">
@@ -732,6 +786,18 @@
   <wsdl:message name="PhanQuyenSoapOut">
     <wsdl:part name="parameters" element="tns:PhanQuyenResponse" />
   </wsdl:message>
+  <wsdl:message name="GetGroupIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetGroupID" />
+  </wsdl:message>
+  <wsdl:message name="GetGroupIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetGroupIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDashBoardDataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDashBoardData" />
+  </wsdl:message>
+  <wsdl:message name="GetDashBoardDataSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDashBoardDataResponse" />
+  </wsdl:message>
   <wsdl:portType name="TaiKhoan_wsvSoap">
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
@@ -780,6 +846,14 @@
     <wsdl:operation name="PhanQuyen">
       <wsdl:input message="tns:PhanQuyenSoapIn" />
       <wsdl:output message="tns:PhanQuyenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupID">
+      <wsdl:input message="tns:GetGroupIDSoapIn" />
+      <wsdl:output message="tns:GetGroupIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDashBoardData">
+      <wsdl:input message="tns:GetDashBoardDataSoapIn" />
+      <wsdl:output message="tns:GetDashBoardDataSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="TaiKhoan_wsvSoap" type="tns:TaiKhoan_wsvSoap">
@@ -892,6 +966,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetGroupID">
+      <soap:operation soapAction="http://tempuri.org/GetGroupID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDashBoardData">
+      <soap:operation soapAction="http://tempuri.org/GetDashBoardData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="TaiKhoan_wsvSoap12" type="tns:TaiKhoan_wsvSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -996,6 +1088,24 @@
     </wsdl:operation>
     <wsdl:operation name="PhanQuyen">
       <soap12:operation soapAction="http://tempuri.org/PhanQuyen" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupID">
+      <soap12:operation soapAction="http://tempuri.org/GetGroupID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDashBoardData">
+      <soap12:operation soapAction="http://tempuri.org/GetDashBoardData" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

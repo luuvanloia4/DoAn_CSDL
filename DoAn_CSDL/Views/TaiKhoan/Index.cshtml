@@ -158,6 +158,7 @@
             },
             success: function (result, status, xhr) {
                 let rs = JSON.parse(result);
+                console.log("Json list: ", result);
                 console.log(rs);
                 if (rs.ErrCode == 2) {
                     let listTaiKhoan = rs.Data;

@@ -1,0 +1,1133 @@
+﻿@using DoAn_CSDL.Shared
+@{
+    ViewBag.Title = "Thông tin hệ thống";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    int id = SharedFunction.ParseID(Request["id"]);
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = (phanQuyen == 0 || phanQuyen == 1);
+
+    //For search paging
+    string alias = "chitiet_hopdong";
+    int size = (Session[alias + "_Size"] == null) ? 5 : int.Parse(Session[alias + "_Size"].ToString());
+    int page = (Session[alias + "_Page"] == null) ? 1 : int.Parse(Session[alias + "_Page"].ToString());
+    int searchType = (Session[alias + "_SearchType"] == null) ? 0 : int.Parse(Session[alias + "_SearchType"].ToString());
+    string searchValue = (Session[alias + "_SearchValue"] == null) ? "" : Session[alias + "_SearchValue"].ToString();
+    int orderBy = (Session[alias + "_OrderBy"] == null) ? 0 : int.Parse(Session[alias + "_OrderBy"].ToString());
+    bool isDes = (Session[alias + "_IsDes"] == null) ? false : bool.Parse(Session[alias + "_IsDes"].ToString());
+}
+
+<div class="main__inner">
+    <div class="main__content @Html.Raw(isAdmin? "w-100": "")">
+        <h2 class="main__title">THÔNG TIN HỢP ĐỒNG</h2>
+        <div class="custom-detail">
+            <div class="d-none">
+                <input type="text" name="txt_ID" id="txt_ID" class="form-control" value="@id" hidden />
+            </div>
+
+            <div class="custom-detail__content">
+                <table class="custom-detail__table" id="detail-printer" align="center">
+                    <!---->
+                </table>
+
+                <div id="progress-chart">
+                    <!-- Progress chart -->
+                </div>
+
+                <hr />
+
+                <div class="@Html.Raw(isAdmin? "d-flex": "d-none") justify-content-between">
+                    <button type="button" class="btn btn-primary custom-btn-func" onclick="GoPhieuNhap(this)">
+                        <i class="fas fa-shipping-fast"></i> Danh sách phiếu nhập
+                    </button>
+
+                    <button type="button" class="btn btn-success custom-btn-func" onclick="window.location.href = ctrlName + 'Edit?id=' + @id;">
+                        <i class="fas fa-sync"></i> Cập nhật dữ liệu
+                    </button>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 4rem; display: none;" id="phieunhap-container">
+                <h2 class="card-title" style="font-size: 2rem;">Danh sách phiếu nhập</h2>
+                <div class="card-body">
+                    <div class="row pb-3">
+                        <div class="col-12 d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary" onclick="ShowAddPhieuNhap(this)">
+                                <i class="fas fa-plus"></i> Thêm phiếu nhập
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-hover table-bordered table-striped custom-table" id="phieunhap-printer">
+                            <!-- Search result show up here -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card @Html.Raw(isAdmin? "": "d-none")" style="margin-top: 4rem">
+                <h2 class="card-title" style="font-size: 2rem;">Chi tiết hợp đồng</h2>
+                <div class="card-body">
+                    <div class="row pb-3">
+                        <div class="col-12 d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary" onclick="ShowAddIem(this)">
+                                <i class="fas fa-plus"></i> Thêm chi tiết hợp đồng
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-hover table-bordered table-striped custom-table" id="result-printer">
+                            <!-- Search result show up here -->
+                        </table>
+                    </div>
+                </div>
+                <div class="@Html.Raw(isAdmin? "d-flex": "d-none") justify-content-end mt-3">
+                    <button type="button" class="btn btn-primary custom-btn-func" onclick="GoSave(this)">
+                        <i class="fas fa-save"></i> Lưu chỉnh sửa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="UI-add-item" id="phieunhap-add">
+    <div class="UI-add-item__content" style="min-width: 140rem;">
+        <h1 class="title">TẠO PHIẾU NHẬP CHO HỢP ĐỒNG:</h1>
+        <div class="row mb-3">
+            <div class="col-12 col-sm-8 col-md-6 position-relative form-group custom-form">
+                <label for="txt_NguoiGiao">Người giao hàng<span class="required">*</span></label>
+                <input type="text" class="form-control" name="txt_NguoiGiao" id="txt_NguoiGiao" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="table table-hover table-bordered table-striped custom-table" id="phieunhap-add-printer">
+                <!-- Search result show up here -->
+            </table>
+        </div>
+        <div class="d-flex mt-3 justify-content-between">
+            <button type="button" class="btn btn-danger" onclick="HideAddPhieuNhap(this)">
+                <i class="fas fa-times"></i> Hủy bỏ
+            </button>
+            <button type="button" class="btn btn-primary" onclick="GoAddPhieuNhap(this)">
+                <i class="fas fa-save"></i> Tạo phiếu nhập
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="UI-add-item" id="phieunhap-chitiet">
+    <div class="UI-add-item__content" style="min-width: 130rem;">
+        <h1 class="title">CHI TIẾT PHIẾU NHẬP:</h1>
+        <div class="table-container">
+            <table class="table table-hover table-bordered table-striped custom-table" id="phieunhap-chitiet-printer">
+                <!-- Search result show up here -->
+            </table>
+        </div>
+        <div class="d-flex mt-3 justify-content-between">
+            <button type="button" class="btn btn-danger" onclick="HideListCTPN(this)">
+                <i class="fas fa-times"></i> Đóng
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="UI-add-item" id="add-item">
+    <div class="UI-add-item__content" style="min-width: 130rem;">
+        <h1 class="title">THÊM MẶT HÀNG VÀO HỢP ĐỒNG:</h1>
+        <div class="row">
+            <div class="col-6 col-sm-2 form-group position-relative">
+                <label for="sel_Size">
+                    Hiển thị
+                    <select name="sel_Size" id="sel_Size" class="form-control custom-select w-auto">
+                        <option value="1" @Html.Raw((size == 1) ? "selected" : "")>1</option>
+                        <option value="5" @Html.Raw((size == 5) ? "selected" : "")>5</option>
+                        <option value="10" @Html.Raw((size == 10) ? "selected" : "")>10</option>
+                        <option value="25" @Html.Raw((size == 25) ? "selected" : "")>25</option>
+                        <option value="50" @Html.Raw((size == 50) ? "selected" : "")>50</option>
+                        <option value="100" @Html.Raw((size == 100) ? "selected" : "")>100</option>
+                    </select>
+                    bản ghi
+                </label>
+            </div>
+            <div class="col-12 col-sm-4 form-group position-relative text-right">
+                <label for="sel_OrderBy">
+                    Sắp xếp:
+                    <select name="sel_OrderBy" id="sel_OrderBy" class="form-control custom-select w-auto">
+                        <option value="0" @Html.Raw((orderBy == 0) ? "selected" : "")>Ngày tạo</option>
+                        <option value="1" @Html.Raw((orderBy == 1) ? "selected" : "")>Mã mặt hàng</option>
+                        <option value="3" @Html.Raw((orderBy == 3) ? "selected" : "")>Tên mặt hàng</option>
+                    </select>
+                </label>
+                <label for="sel_OrderDes">
+                    theo thứ tự:
+                    <select name="sel_OrderDes" id="sel_OrderDes" class="form-control custom-select w-auto">
+                        <option value="false" @Html.Raw(isDes ? "" : "selected") )>Tăng dần</option>
+                        <option value="true" @Html.Raw(isDes ? "selected" : "")>Giảm dần</option>
+                    </select>
+                </label>
+            </div>
+            <div class="col-12 col-sm-6 form-group position-relative text-right">
+                <label for="txt_SearchValue">
+                    Tìm kiếm
+                    <select name="sel_SearchType" id="sel_SearchType" class="form-control custom-select w-auto">
+                        <option value="0" @Html.Raw((searchType == 0) ? "selected" : "")>Tất cả</option>
+                        <option value="1" @Html.Raw((searchType == 1) ? "selected" : "")>Mã mặt hàng</option>
+                        <option value="2" @Html.Raw((searchType == 2) ? "selected" : "")>Tên mặt hàng</option>
+                    </select>
+                    với từ khóa
+                    <input type="search" name="txt_SearchValue" id="txt_SearchValue" class="form-control custom-search-input" autocomplete="on" maxlength="200" value="@searchValue" />
+                    <button type="button" class="btn custom-btn-search text-primary" onclick="TransPage(1)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </label>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-hover table-bordered table-striped custom-table" id="add-item-printer">
+                <!-- Search result show up here -->
+            </table>
+
+            <div class="menu-paging">
+                <div class="menu-paging__content" id="menu_paging">
+                    <!---->
+                </div>
+            </div>
+        </div>
+        <div class="d-flex mt-3 justify-content-between">
+            <button type="button" class="btn btn-danger" onclick="HideAddItem(this)">
+                <i class="fas fa-times"></i> Hủy bỏ
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Thẻ ẩn toàn màn hình -->
+<div class="UI-hidden">
+    <div class="UI-hidden__content">
+        <h1 class="title">THÔNG TIN MẶT HÀNG:</h1>
+        <div class="d-flex">
+            <img src="#" class="img-detail mr-5 mb-3" onclick="ShowImage(this)" id="obj_avatar" />
+            <div class="user" id="obj_top">
+                <!-- Thông tin tài khoản hiển thị ở đây! -->
+            </div>
+        </div>
+        <div class="user" id="obj_bottom">
+            <!---->
+        </div>
+    </div>
+</div>
+
+<script>
+    var detailObj;
+    const ctrlName = "/HopDong/";
+    var id;
+    var isAdmin = @isAdmin;
+    var listUpdateItem;
+    loadingCount = 0; //For multiple loading progress
+
+    function FillData(obj) {
+        htmlResult = "<tbody>"
+        htmlResult += "\
+        <tr>\
+            <th>Mã hợp đồng:</th>\
+            <td>" + obj.ID + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Tên nhà cung cấp:</th>\
+            <td>" + obj.TenNCC + "</td>\
+            <td style='width: 150px;'></td>\
+            <th>Tên hệ thống:</th>\
+            <td>" + obj.TenHT + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Địa chỉ:</th>\
+            <td>" + obj.DiaChiNCC + "</td>\
+            <td></td>\
+            <th>Địa chỉ:</th>\
+            <td>" + obj.DiaChiHT + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Số điện thoại:</th>\
+            <td>" + obj.SDTNCC + "</td>\
+            <td></td>\
+            <th>Số điện thoại:</th>\
+            <td>" + obj.SDTHT + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Người lập hợp đồng:</th>\
+            <td>" + obj.HoTen + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Tài khoản người lập:</th>\
+            <td>" + obj.UserName + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Ngày lập:</th>\
+            <td>" + ParseHDate(obj.NgayLap) + "</td>\
+        </tr>";
+        //htmlResult += "\
+        //<tr>\
+        //    <th>Trạng thái:</th>\
+        //    <td>" + ParseTrangThaiHD(obj.TrangThai) + "</td>\
+        //</tr>";
+
+        htmlResult += "</tbody>";
+        $('#detail-printer').html(htmlResult);
+    }
+
+    function GetObject() {
+        ShowLoading();
+        id = $('#txt_ID').val();
+        console.log("ID: ", id);
+
+        $.ajax({
+            url: ctrlName + "GetDetail",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("Detail: ", rs);
+
+                if (rs.ErrCode == 2) {
+                    detailObj = rs.Data;
+                    FillData(detailObj);
+                    LoadProgressChart();
+                    GetListCTHD();
+                    TransPage(1);
+                }
+                else if (rs.ErrCode == 0) {
+                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu, vui lòng thử lại sau!");
+                }
+                else {
+                    ShowFailMessage(rs.ErrDes);
+                }
+            },
+            error: function () {
+                ShowFailMessage("Mất kết nối với máy chủ!");
+            }
+        }).always(function () {
+            CheckLoadingCount();
+        });
+    }
+
+    var progressChart;
+    function LoadProgressChart() {
+        $.ajax({
+            url: ctrlName + "GetProgress",
+            method: "POST",
+            data: { id: detailObj.ID },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+
+                if (rs.ErrCode == 2) {
+                    var options = {
+                        chart: {
+                            height: 300,
+                            type: "radialBar",
+                        },
+                        series: [rs.Data],
+                        plotOptions: {
+                            radialBar: {
+                                hollow: {
+                                    margin: 5,
+                                    size: "70%",
+                                    background: (detailObj.TrangThai == 0 ? "#007bff" : (detailObj.TrangThai == 1) ? "#28a745" : "lightgray")
+                                },
+
+                                dataLabels: {
+                                    showOn: "always",
+                                    name: {
+                                        offsetY: 40,
+                                        show: true,
+                                        color: "white",
+                                        fontSize: "1.6rem"
+                                    },
+                                    value: {
+                                        offsetY: -10,
+                                        color: "white",
+                                        fontSize: "30px",
+                                        show: true
+                                    }
+                                }
+                            }
+                        },
+                        colors: [function () {
+                            switch (detailObj.TrangThai) {
+                                case 0:
+                                    return "#007bff";
+                                case 1:
+                                    return "#28a745";
+                            }
+                            return "lightgray";
+                        }],
+                        stroke: {
+                            lineCap: "round",
+                        },
+                        labels: [ParseTrangThaiHD(detailObj.TrangThai)]
+                    };
+                    progressChart = new ApexCharts($('#progress-chart')[0], options);
+                    progressChart.render();
+                }
+                else {
+                    //
+                }
+            },
+            error: function () {
+                //
+            }
+        });
+    }
+
+    //Phieu nhap
+    function GoPhieuNhap() {
+        let divPhieuNhap = $('#phieunhap-container');
+
+        if (divPhieuNhap.css("display") != "none") {
+            return;
+        }
+
+        $.ajax({
+            url: ctrlName + "GetListPhieuNhap",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List phieu nhap:", rs);
+                if (rs.ErrCode == 2) {
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Người giao</th>\
+                                <th>Ngày giao</th>\
+                                <th>Người lập</th>\
+                                <th>Tài khoản người lập</th>\
+                                <th>Trạng thái</th>\
+                                <th>Thao tác</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    let stt = 1;
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.ID + "</td>"
+                            + "<td>" + item.NguoiGiao + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayLap) + "</td>"
+                            + "<td>" + item.HoTen + "</td>"
+                            + "<td>" + item.UserName + "</td>"
+                            + "<td align='center'>" + (item.TrangThai ? "Còn trong kho" : "Đã xuất đi");
+
+                        htmlResult += "</td>"
+                            + "<td align='center'>"
+                            + "<button type='button' class='btn custom-btn-detail' onclick='GetListCTPN(" + item.ID + ")'><i class='fas fa-eye'></i></button>"
+                            + "<button type='button' class='btn custom-btn-delete' onclick='GoDeletePhieuNhap(" + item.ID +")'><i class='fas fa-trash-alt'></i></button>"
+                            + "</td>";
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#phieunhap-printer').html(htmlResult);
+                    divPhieuNhap.show();
+                }
+                else if (rs.ErrCode == 3) {
+                    ShowFailMessage("Không tìm phiếu nhập phù hợp với hợp đồng!");
+                    let htmlResult = "<tbody><tr><td>Không tìm phiếu nhập phù hợp với hợp đồng!</td></tr></tbody>";
+                    $('#phieunhap-printer').html(htmlResult);
+                    divPhieuNhap.show();
+                }
+                else {
+                    ShowFailMessage("Lấy kết quả tìm kiếm thất bại!");
+                    divPhieuNhap.hide();
+                }
+            },
+            error: function (xhr, status, error) {
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+                divPhieuNhap.hide();
+            }
+        });
+    }
+
+    function ShowAddPhieuNhap(ele) {
+        $.ajax({
+            url: ctrlName + "GetListCTHD",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List cthd: ", rs);
+                if (rs.ErrCode == 2) {
+                    let listTaiKhoan = rs.Data;
+                    //Danh sách tài khoản
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Hình ảnh</th>\
+                                <th>Tên mặt hàng</th>\
+                                <th>Đơn giá</th>\
+                                <th>Loại mặt hàng</th>\
+                                <th>Ngày tạo</th>\
+                                <th width='120px'>Số lượng</th>\
+                                <th width='150px'>Số lượng đã giao</th>\
+                                <th width='150px'>Số lượng giao</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    let stt = 1;
+                    listTaiKhoan.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.MatHangID + "</td>"
+                            + "<td align='center'><img class='img-detail' src='" + ParseImageURL(item.Img) + "' onclick='ShowImage(this)'></img></td>"
+                            + "<td class='item-name'>" + item.Ten + "</td>"
+                            + "<td align='center'>" + item.Gia + "</td>"
+                            + "<td>" + item.TenLMH + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
+                            + "<td align='center'>" + item.SoLuong + "</td>"
+                            + "<td align='center' class='item-soluongdone'>" + item.SoLuongDaGiao + "</td>"
+                            + "<td align='center' class='custom-form'><input type='number' class='item-soluong form-control' min='0' max='" + (item.SoLuong - item.SoLuongDaGiao) + "' value='0' onchange='AutoCorrectNumber(this)' /></td>";
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#phieunhap-add-printer').html(htmlResult);
+                }
+                else {
+                    if (rs.ErrCode == 3) {
+                        //
+                        ShowFailMessage("Không tìm thấy kết quả với từ khóa '" + searchValue + "'!");
+                    }
+                    else {
+                        ShowFailMessage("Lấy kết quả tìm kiếm thất bại, vui lòng kiểm tra đầu vào và thử lại!");
+                    }
+
+                    let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
+                    $('#phieunhap-add-printer').html(htmlResult);
+                }
+                $('#phieunhap-add').addClass("d-flex");
+            },
+            error: function (xhr, status, error) {
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            //
+        });
+    }
+
+    function HideAddPhieuNhap(ele) {
+        $('#phieunhap-add').removeClass("d-flex");
+    }
+
+    var listAddCTPN = new Array();
+    var txt_NguoiGiao;
+    function GoAddPhieuNhap(ele) {
+        hasFocus = false;
+
+        txt_NguoiGiao = $('#txt_NguoiGiao').val();
+        listAddCTPN = new Array();
+        let tbody = $('#phieunhap-add-printer tbody');
+        tbody.children("tr").each(function () {
+            let curItemID = $(this).find('.item-id').text();
+            let curItemSL = $(this).find('.item-soluong').val();
+            if (curItemSL != null && curItemSL != undefined && curItemSL > 0) {
+                listAddCTPN.push({ ID: curItemID, SL: curItemSL });
+            }
+        });
+
+        if (txt_NguoiGiao.length == 0) {
+            TryFocus($('#txt_NguoiGiao'), "Không được để trống tên người giao hàng!");
+        }
+        else if (listAddCTPN.length > 0) {
+            action = 7;
+            ShowUIContent("Xác nhận tạo phiếu nhập?");
+        }
+        else {
+            ShowFailMessage("Không thể tạo phiếu nhập trống!");
+        }
+    }
+
+    function GetListCTPN(id) {
+        $.ajax({
+            url: ctrlName + "GetListCTPN",
+            method: "POST",
+            data: { pnID: id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List ctpn " + id + ": ", rs);
+                if (rs.ErrCode == 2) {
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Hình ảnh</th>\
+                                <th>Tên mặt hàng</th>\
+                                <th>Đơn giá</th>\
+                                <th>Loại mặt hàng</th>\
+                                <th>Ngày tạo</th>\
+                                <th width='150px'>Số lượng giao</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    let stt = 1;
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.MatHangID + "</td>"
+                            + "<td align='center'><img class='img-detail' src='" + ParseImageURL(item.Img) + "' onclick='ShowImage(this)'></img></td>"
+                            + "<td class='item-name'>" + item.Ten + "</td>"
+                            + "<td align='center'>" + item.Gia + "</td>"
+                            + "<td>" + item.TenLMH + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
+                            + "<td align='center'>" + item.SoLuong + "</td>";
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#phieunhap-chitiet-printer').html(htmlResult);
+                }
+                else {
+                    if (rs.ErrCode == 3) {
+                        //
+                        ShowFailMessage("Không tìm thấy kết quả với từ khóa '" + searchValue + "'!");
+                    }
+                    else {
+                        ShowFailMessage("Lấy kết quả tìm kiếm thất bại, vui lòng kiểm tra đầu vào và thử lại!");
+                    }
+                    let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
+                    $('#phieunhap-chitiet-printer').html(htmlResult);
+                }
+                $('#phieunhap-chitiet').addClass("d-flex");
+            },
+            error: function () {
+                ShowFailMessage("Mất kết nối với máy chủ!");
+            }
+        }).always(function () {
+            //
+        });
+    }
+
+    function HideListCTPN() {
+        $('#phieunhap-chitiet').removeClass("d-flex");
+    }
+
+    var pnID;
+    function GoDeletePhieuNhap(id) {
+        pnID = id;
+        action = 8;
+        ShowUIContent("Xác nhận xóa phiếu nhập có mã '" + id + "'?");
+    }
+    //End phieu nhap
+
+    //Chi tiet hop dong
+    function GetListCTHD() {
+        //Bắt đầu tìm kiếm:
+        $.ajax({
+            url: ctrlName + "GetListCTHD",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List mat hang: ", rs);
+                if (rs.ErrCode == 2) {
+                    let listTaiKhoan = rs.Data;
+                    //Danh sách tài khoản
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Hình ảnh</th>\
+                                <th>Tên mặt hàng</th>\
+                                <th>Đơn giá</th>\
+                                <th>Loại mặt hàng</th>\
+                                <th>Ngày tạo</th>\
+                                <th width='120px'>Số lượng</th>\
+                                <th width='150px'>Số lượng đã giao</th>\
+                                <th>Thao tác</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    maxPage = rs.PageCount;
+                    let stt = 1;
+                    listTaiKhoan.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.MatHangID + "</td>"
+                            + "<td align='center'><img class='img-detail' src='" + ParseImageURL(item.Img) + "' onclick='ShowImage(this)'></img></td>"
+                            + "<td class='item-name'>" + item.Ten + "</td>"
+                            + "<td align='center'>" + item.Gia + "</td>"
+                            + "<td>" + item.TenLMH + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
+                            + "<td align='center' class='custom-form'><input type='number' class='item-soluong form-control' min='" + item.SoLuongDaGiao + "' value='" + item.SoLuong + "' onchange='AutoCorrectNumber(this)' /></td>"
+                            + "<td align='center' class='item-soluongdone'>" + item.SoLuongDaGiao;
+
+                        htmlResult += "</td>"
+                            + "<td align='center'>"
+                            + "<button type='button' class='btn custom-btn-delete' onclick='GoDelete(this)'><i class='fas fa-trash-alt'></i></button>"
+                            + "</td>";
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#result-printer').html(htmlResult);
+                }
+                else {
+                    if (rs.ErrCode == 3) {
+                        //
+                        ShowFailMessage("Không tìm thấy kết quả với từ khóa '" + searchValue + "'!");
+                        let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
+                        $('#result-printer').html(htmlResult);
+                    }
+                    else {
+                        ShowFailMessage("Lấy kết quả tìm kiếm thất bại, vui lòng kiểm tra đầu vào và thử lại!");
+                    }
+                }
+            },
+            error: function (xhr, status, error) {
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            //
+        });
+    }
+
+    function GoDelete(ele) {
+        let tr = $(ele).parents('tr');
+        itemName = tr.find(".item-name").text();
+        itemID = tr.find('.item-id').text();
+
+        action = 4;
+        ShowUIContent("Xác nhận xóa mặt hàng " + itemName + "?");
+    }
+
+    function GoSave(ele) {
+        listUpdateItem = new Array();
+        let tbody = $('#result-printer tbody');
+        tbody.children("tr").each(function () {
+            let curItemID = $(this).find('.item-id').text()
+            let curItemSL = $(this).find('.item-soluong').val();
+            if (curItemSL != null && curItemSL != undefined && curItemSL > 0) {
+                listUpdateItem.push({ ID: curItemID, SL: curItemSL });
+            }
+        });
+
+        if (listUpdateItem.length > 0) {
+            action = 5;
+            ShowUIContent("Xác nhận lưu danh sách chi tiết hợp đồng?");
+        }
+        else {
+            ShowFailMessage("Không có bản ghi nào được chọn!");
+        }
+    }
+    //End chi tiet hop dong
+
+    //For add CTHD
+    const ctrl_Name_Second = "/MatHang/";
+    var action = 0;
+
+    var searchValue, mode, size, orderBy, orderDes, page, maxPage;
+    var itemID, itemName, itemSL;
+    var startTime, endTime;
+
+    function TransPage(index) {
+        ShowLoading();
+        //Làm mới đầu vào:
+        searchValue = $('#txt_SearchValue').val();
+        searchType = $('#sel_SearchType').val();
+        size = $('#sel_Size').val();
+        orderBy = $('#sel_OrderBy').val();
+        orderDes = $('#sel_OrderDes').val();
+        page = parseInt(index);
+
+        startTime = $('#txt_StartTime').val();
+        endTime = $('#txt_EndTime').val();
+
+        //Bắt đầu tìm kiếm:
+        $.ajax({
+            url: ctrl_Name_Second + "SearchPagingHD",
+            method: "POST",
+            data: {
+                searchValue, searchType, size, orderBy, orderDes, page,
+                startTime, endTime, hdID: id
+            },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List mat hang: ", rs);
+                if (rs.ErrCode == 2) {
+                    let listTaiKhoan = rs.Data;
+                    //Danh sách tài khoản
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Hình ảnh</th>\
+                                <th>Tên mặt hàng</th>\
+                                <th>Đơn giá</th>\
+                                <th>Loại mặt hàng</th>\
+                                <th>Ngày tạo</th>\
+                                <th width='120px'>Số lượng</th>\
+                                <th>Thao tác</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    maxPage = rs.PageCount;
+                    let stt = 1;
+                    listTaiKhoan.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.ID + "</td>"
+                            + "<td align='center'><img class='img-detail' src='" + ParseImageURL(item.Img) + "' onclick='ShowImage(this)'></img></td>"
+                            + "<td class='item-name'>" + item.Ten + "</td>"
+                            + "<td align='center'>" + item.Gia + "</td>"
+                            + "<td>" + item.TenLMH + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
+                            + "<td align='center' class='custom-form'><input type='number' class='item-soluong form-control' min='0' value='0' onchange='AutoCorrectNumber(this)' />"
+
+                        htmlResult += "</td>"
+                            + "<td align='center'>"
+                            + "<button type='button' class='btn custom-btn-detail' onclick='GoDetail(" + item.ID + ")'><i class='fas fa-eye'></i></button>"
+                            + "<button type='button' class='btn custom-btn-edit' onclick='GoAddItem(this)'><i class='fas fa-plus'></i></button>"
+                            + "</td>";
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#add-item-printer').html(htmlResult);
+                    $('#menu_paging').html(RenderPageButton(page, maxPage));
+                }
+                else {
+                    $('#menu_paging').html("");
+                    if (rs.ErrCode == 3) {
+                        //
+                    }
+                    else {
+                        //
+                    }
+                    let htmlResult = "<tbody><tr><td>Không có mặt hàng nào phù hợp!</td></tr></tbody>";
+                    $('#add-item-printer').html(htmlResult);
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#menu_paging').html("");
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            HideLoading();
+        });
+    }
+
+    function ShowAddIem(ele) {
+        $('#add-item').addClass("d-flex");
+    }
+
+    function HideAddItem(ele) {
+        $('#add-item').removeClass("d-flex");
+    }
+
+    function GoAddItem(ele) {
+        let tr = $(ele).parents('tr');
+        itemName = tr.find(".item-name").text();
+        itemID = tr.find('.item-id').text();
+        itemSL = tr.find('.item-soluong').val();
+
+        if (itemSL > 0) {
+            action = 0;
+            ShowUIContent("Xác nhận thêm " + itemSL + " " + itemName + " vào chi tiết hợp đồng?");
+        }
+        else {
+            ShowFailMessage("Vui lòng nhập số lượng trước khi thêm!");  
+        }
+    }
+
+    //Ham thao tac voi du lieu
+    //function GoDetail(id) {
+    //    ShowLoading();
+
+    //    $.ajax({
+    //        url: ctrl_Name_Second + "GetDetail",
+    //        method: "POST",
+    //        data: { id },
+    //        success: function (result, status, xhr) {
+    //            let rs = JSON.parse(result);
+    //            console.log(rs);
+    //            if (rs.ErrCode == 2) {
+    //                let user = rs.Data;
+
+    //                let htmlResult = "<p><strong>Mã mặt hàng:</strong> " + user.ID + "</p>"
+    //                    + "<p><strong>Tên mặt hàng:</strong> " + user.Ten + "</p>"
+    //                    + "<p><strong>Đơn giá:</strong> " + user.Gia + "</p>";
+    //                $("#obj_top").html(htmlResult);
+
+    //                htmlResult = "<p><strong>Mô tả:</strong> " + user.MoTa + "</p>"
+    //                    + "<p><strong>Nhà cung cấp:</strong> " + user.TenNCC + "</p>"
+    //                //Hiển thị kết quả:
+    //                $('#obj_bottom').html(htmlResult);
+    //                if (MyString.IsNullOrEmpty(user.Img)) {
+    //                    $('#obj_avatar').prop("src", errorImagePath);
+    //                }
+    //                else {
+    //                    $('#obj_avatar').prop("src", user.Img);
+    //                }
+
+    //                ShowUIHiddenContent();
+    //            }
+    //            else {
+    //                ShowFailMessage("Có lỗi xảy ra trong quá trình lấy thông mặt hàng, vui lòng thử lại sau ít phút!");
+    //            }
+    //        },
+    //        error: function (xhr, status, error) {
+    //            ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+    //        }
+    //    }).always(function () {
+    //        HideLoading();
+    //    });
+    //}
+
+    //Ready
+    $(function () {
+        GetObject();
+
+        if (isAdmin) {
+            //Nhấn nút xác nhận:
+            $('.UI-accept').click(function () {
+                UIContentToLoading();
+                switch (action) {
+                    case 0:
+                        $.ajax({
+                            url: ctrlName + "AddCTHD",
+                            method: "POST",
+                            data: { hdID: id, mhID: itemID, SL: itemSL },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                console.log(rs);
+                                if (rs.ErrCode == 2) {
+                                    window.location.reload();
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Thêm bản ghi thất bại, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+
+                    case 1:
+                        searchValue = $('#txt_SearchValue').val();
+                        searchType = $('#sel_SearchType').val();
+                        phanQuyen = $('#sel_PhanQuyen').val();
+                        orderBy = $('#sel_OrderBy').val();
+                        orderDes = $('#sel_OrderDes').val();
+
+                        startTime = $('#txt_StartTime').val();
+                        endTime = $('#txt_EndTime').val();
+
+                        $.ajax({
+                            url: ctrl_Name_Second + "ExportFileExcel",
+                            method: "POST",
+                            data: { searchValue, searchType, phanQuyen, orderBy, orderDes, startTime, endTime, heThongID: id },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                console.log(rs);
+                                if (rs.ErrCode == 2) {
+                                    window.location.href = rs.Data;
+                                    ShowSuccessMessage("Xuất dữ liệu thành công!");
+                                }
+                                else if (rs.ErrCode == 3) {
+                                    ShowFailResult("Không thể xuất file với dữ liệu trống!");
+                                }
+                                else {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình xuất dữ liệu, vui lòng thử lại sau ít phút!");
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+                    case 2:
+
+                        $.ajax({
+                            url: ctrl_Name + "DeleteAll",
+                            method: "POST",
+                            data: { ListID: jsonListID },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+
+                                if (rs.ErrCode == 2) {
+                                    TransPage(page);
+                                    ShowSuccessMessage(rs.ErrDes);
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình xóa danh sách bản ghi, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+                    case 4:
+                        $.ajax({
+                            url: ctrlName + "DeleteCTHD",
+                            method: "POST",
+                            data: { hdID: id, mhID: itemID },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                if (rs.ErrCode == 2) {
+                                    window.location.reload();
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình xóa chi tiết hợp đồng, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+                    case 5:
+                        $.ajax({
+                            url: ctrlName + "UpdateCTHD",
+                            method: "POST",
+                            data: { hdID: id, ListCTHD: JSON.stringify(listUpdateItem) },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+
+                                if (rs.ErrCode == 2) {
+                                    window.location.reload();
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình cập nhật chi tiết hợp đồng, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+
+                    case 7:
+                        $.ajax({
+                            url: ctrlName + "CreatePhieuNhap",
+                            method: "POST",
+                            data: { hdID: id, txt_NguoiGiao, ListCTPN: JSON.stringify(listAddCTPN) },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+
+                                if (rs.ErrCode == 2) {
+                                    ShowSuccessMessage("Thêm phiếu nhập thành công!", function () { window.location.reload(); });
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình tạo phiếu nhập, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+
+                    case 8:
+                        $.ajax({
+                            url: ctrlName + "DeletePhieuNhap",
+                            method: "POST",
+                            data: { pnID },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                if (rs.ErrCode == 2) {
+                                    ShowSuccessMessage("Xóa phiếu nhập thành công!", function () { window.location.reload(); });
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình xóa phiếu nhập, vui lòng thử lại sau ít phút!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                ShowFailMessage("Mất kết nối với máy chủ!");
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+                    default:
+                        HideLoading();
+                }
+            });
+
+            //Thay đổi điều kiện:
+            //$('[name=sel_Mode]').change(function () {
+            //    TransPage(1);
+            //});
+            $('#sel_PhanQuyen').change(function () {
+                TransPage(1);
+            });
+            $('#sel_Size').change(function () {
+                TransPage(1);
+            });
+
+            $('#sel_OrderBy').change(function () {
+                TransPage(page);
+            });
+            $('#sel_OrderDes').change(function () {
+                TransPage(page);
+            });
+
+            //Enter
+            $('#txt_SearchValue').keydown(function (event) {
+                if (event.key == "Enter") {
+                    TransPage(1);
+                }
+            })
+        }
+    });
+</script>
+
+

@@ -82,5 +82,65 @@ namespace DoAn_CSDL.Properties {
                 return ((string)(this["DoAn_CSDL_ViTri_wsv_ViTri_wsv"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/NhaCungCap_wsv.asmx")]
+        public string DoAn_CSDL_NhaCungCap_wsv_NhaCungCap_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_NhaCungCap_wsv_NhaCungCap_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/HopDong_wsv.asmx")]
+        public string DoAn_CSDL_HopDong_wsv_HopDong_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_HopDong_wsv_HopDong_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/LoaiMatHang_wsv.asmx")]
+        public string DoAn_CSDL_LoaiMatHang_wsv_LoaiMatHang_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_LoaiMatHang_wsv_LoaiMatHang_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/MatHang_wsv.asmx")]
+        public string DoAn_CSDL_MatHang_wsv_MatHang_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_MatHang_wsv_MatHang_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/CuaHang_wsv.asmx")]
+        public string DoAn_CSDL_CuaHang_wsv_CuaHang_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_CuaHang_wsv_CuaHang_wsv"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/PhieuXuat_wsv.asmx")]
+        public string DoAn_CSDL_PhieuXuat_wsv_PhieuXuat_wsv {
+            get {
+                return ((string)(this["DoAn_CSDL_PhieuXuat_wsv_PhieuXuat_wsv"]));
+            }
+        }
     }
 }

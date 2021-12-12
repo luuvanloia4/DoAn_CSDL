@@ -11,13 +11,14 @@
     int orderBy = (Session[alias + "_OrderBy"] == null) ? 0 : int.Parse(Session[alias + "_OrderBy"].ToString());
     bool isDes = (Session[alias + "_IsDes"] == null) ? false : bool.Parse(Session[alias + "_IsDes"].ToString());
 
-    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = (phanQuyen == 0 || phanQuyen == 1);
 }
 
 <div class="main__content w-100">
     <h2 class="main__title">DANH SÁCH KHO HÀNG:</h2>
 
-    <div class="row pb-5 px-4 justify-content-between">
+    <div class="row pb-5 px-4 justify-content-between @Html.Raw(isAdmin? "": "d-none")">
         <button type="button" class="btn custom-btn-func btn-primary float-right" onclick="GoCreate(this)">
             <i class="fas fa-plus"></i> Thêm mới
         </button>

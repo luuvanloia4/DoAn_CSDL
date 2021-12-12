@@ -3,7 +3,8 @@
     ViewBag.Title = "Thêm mới hệ thống";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
-    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = phanQuyen == 0;
 }
 
 <div class="main__content">
@@ -167,11 +168,11 @@
             TryFocus(STK, "Số tài khoản chỉ chứa các ký tự 0-9!");
         }
 
-        let DaiDien = $('#sel_DaiDien');
-        let DaiDien_val = DaiDien.val();
-        if (DaiDien_val == null || DaiDien_val == undefined || DaiDien_val < 0) {
-            TryFocus(DaiDien, "Không được để trống người đại diện!");
-        }
+        //let DaiDien = $('#sel_DaiDien');
+        //let DaiDien_val = DaiDien.val();
+        //if (DaiDien_val == null || DaiDien_val == undefined || DaiDien_val < 0) {
+        //    TryFocus(DaiDien, "Không được để trống người đại diện!");
+        //}
 
         //Khi dữ liệu đã đúng:
         if (!hasFocus) {

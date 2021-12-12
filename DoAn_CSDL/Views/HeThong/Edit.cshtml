@@ -3,7 +3,8 @@
     ViewBag.Title = "Cập nhật hệ thống";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
-    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = phanQuyen == 0;
     int id = SharedFunction.ParseID(Request["id"]);
 }
 

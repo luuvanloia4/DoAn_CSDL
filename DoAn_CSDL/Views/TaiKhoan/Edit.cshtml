@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
     int id = SharedFunction.ParseID(Request["id"]);
+    if(id <= 0)
+    {
+        id = SharedFunction.ParseID(Session[Constants.UserID_SessionName].ToString());
+    }
 }
 
 <div class="main__content">

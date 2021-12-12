@@ -1,0 +1,253 @@
+﻿@using DoAn_CSDL.Shared
+@{
+    ViewBag.Title = "Thêm mới hợp đồng";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+
+    string alias = "hopdong_ncc";
+    int size = (Session[alias + "_Size"] == null) ? 5 : int.Parse(Session[alias + "_Size"].ToString());
+    int page = (Session[alias + "_Page"] == null) ? 1 : int.Parse(Session[alias + "_Page"].ToString());
+    int searchType = (Session[alias + "_SearchType"] == null) ? 0 : int.Parse(Session[alias + "_SearchType"].ToString());
+    string searchValue = (Session[alias + "_SearchValue"] == null) ? "" : Session[alias + "_SearchValue"].ToString();
+    int orderBy = (Session[alias + "_OrderBy"] == null) ? 0 : int.Parse(Session[alias + "_OrderBy"].ToString());
+    bool isDes = (Session[alias + "_IsDes"] == null) ? false : bool.Parse(Session[alias + "_IsDes"].ToString());
+}
+
+<div class="main__content w-100">
+    <h2 class="main__title">THÊM MỚI HỢP ĐỒNG:</h2>
+
+    <div class="row">
+        <div class="col-6 col-sm-2 form-group position-relative">
+            <label for="sel_Size">
+                Hiển thị
+                <select name="sel_Size" id="sel_Size" class="form-control custom-select w-auto">
+                    <option value="1" @Html.Raw((size == 1) ? "selected" : "")>1</option>
+                    <option value="5" @Html.Raw((size == 5) ? "selected" : "")>5</option>
+                    <option value="10" @Html.Raw((size == 10) ? "selected" : "")>10</option>
+                    <option value="25" @Html.Raw((size == 25) ? "selected" : "")>25</option>
+                    <option value="50" @Html.Raw((size == 50) ? "selected" : "")>50</option>
+                    <option value="100" @Html.Raw((size == 100) ? "selected" : "")>100</option>
+                </select>
+                bản ghi
+            </label>
+        </div>
+        <div class="col-12 col-sm-4 form-group position-relative text-right">
+            <label for="sel_OrderBy">
+                Sắp xếp:
+                <select name="sel_OrderBy" id="sel_OrderBy" class="form-control custom-select w-auto">
+                    <option value="0" @Html.Raw((orderBy == 0) ? "selected" : "")>Ngày tạo</option>
+                    <option value="1" @Html.Raw((orderBy == 1) ? "selected" : "")>Mã nhà cung cấp</option>
+                    <option value="2" @Html.Raw((orderBy == 2) ? "selected" : "")>Tên nhà cung cấp</option>
+                </select>
+            </label>
+            <label for="sel_OrderDes">
+                theo thứ tự:
+                <select name="sel_OrderDes" id="sel_OrderDes" class="form-control custom-select w-auto">
+                    <option value="false" @Html.Raw(isDes ? "" : "selected") )>Tăng dần</option>
+                    <option value="true" @Html.Raw(isDes ? "selected" : "")>Giảm dần</option>
+                </select>
+            </label>
+        </div>
+        <div class="col-12 col-sm-6 form-group position-relative text-right">
+            <label for="txt_SearchValue">
+                Tìm kiếm
+                <select name="sel_SearchType" id="sel_SearchType" class="form-control custom-select w-auto">
+                    <option value="0" @Html.Raw((searchType == 0) ? "selected" : "")>Tất cả</option>
+                    <option value="1" @Html.Raw((searchType == 1) ? "selected" : "")>Mã nhà cung cấp</option>
+                    <option value="2" @Html.Raw((searchType == 2) ? "selected" : "")>Tên nhà cung cấp</option>
+                    <option value="3" @Html.Raw((searchType == 3) ? "selected" : "")>Tên người đại diện</option>
+                    <option value="5" @Html.Raw((searchType == 5) ? "selected" : "")>Số điện thoại</option>
+                </select>
+                với từ khóa
+                <input type="search" name="txt_SearchValue" id="txt_SearchValue" class="form-control custom-search-input" autocomplete="on" maxlength="200" value="@searchValue" />
+                <button type="button" class="btn custom-btn-search text-primary" onclick="TransPage(1)">
+                    <i class="fas fa-search"></i>
+                </button>
+            </label>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="table table-hover table-bordered table-striped custom-table" id="result-printer">
+            <!-- Search result show up here -->
+        </table>
+
+        <div class="menu-paging">
+            <div class="menu-paging__content" id="menu_paging">
+                <!---->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctrl_Name = "/NhaCungCap/";
+    var action = 0;
+
+    var searchValue, mode, size, orderBy, orderDes, page, maxPage;
+    var id, name;
+    var startTime, endTime;
+
+    function TransPage(index) {
+        ShowLoading();
+        //Làm mới đầu vào:
+        searchValue = $('#txt_SearchValue').val();
+        searchType = $('#sel_SearchType').val();
+        size = $('#sel_Size').val();
+        orderBy = $('#sel_OrderBy').val();
+        orderDes = $('#sel_OrderDes').val();
+        page = parseInt(index);
+
+        startTime = $('#txt_StartTime').val();
+        endTime = $('#txt_EndTime').val();
+
+        //Bắt đầu tìm kiếm:
+        $.ajax({
+            url: ctrl_Name + "SearchPaging",
+            method: "POST",
+            data: {
+                searchValue, searchType, size, orderBy, orderDes, page,
+                startTime, endTime
+            },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log(rs);
+                if (rs.ErrCode == 2) {
+                    let listTaiKhoan = rs.Data;
+                    //Danh sách tài khoản
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Tên nhà cung cấp</th>\
+                                <th>Tên người đại diện</th>\
+                                <th>Địa chỉ</th>\
+                                <th>Số điện thoại</th>\
+                                <th>Ngày tạo</th>\
+                                <th>Thao tác</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    maxPage = rs.PageCount;
+                    let stt = 1;
+                    listTaiKhoan.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.ID + "</td>"
+                            + "<td class='item-name'>" + item.Ten + "</td>"
+                            + "<td>" + item.HoTen + "</td>"
+                            + "<td align='center'>" + item.DiaChi + "</td>"
+                            + "<td>" + item.SDT + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>";
+                        htmlResult += "</td>"
+                            + "<td align='center'>"
+                            + "<button type='button' class='btn custom-btn-detail' onclick='GoDetail(" + item.ID + ")'><i class='fas fa-eye'></i></button>"
+                            + "<button type='button' class='btn custom-btn-edit' onclick='GoCreate(this)'><i class='fas fa-plus'></i></button>"
+                            + "</td>";
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#result-printer').html(htmlResult);
+                    $('#menu_paging').html(RenderPageButton(page, maxPage));
+                }
+                else {
+                    $('#menu_paging').html("");
+                    if (rs.ErrCode == 3) {
+                        //
+                        ShowFailMessage("Không tìm thấy kết quả với từ khóa '" + searchValue + "'!");
+                        let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
+                        $('#result-printer').html(htmlResult);
+                    }
+                    else {
+                        ShowFailMessage("Lấy kết quả tìm kiếm thất bại, vui lòng kiểm tra đầu vào và thử lại!");
+                    }
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#menu_paging').html("");
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            HideLoading();
+        });
+    }
+
+    //Ham thao tac voi du lieu
+    function GoCreate(ele) {
+        let tr = $(ele).parents('tr');
+        name = tr.find(".item-name").text();
+        id = tr.find('.item-id').text();
+        action = 0;
+        ShowUIContent("Xác nhận tạo mới hợp đồng với nhà cung cấp " + name + "?");
+    }
+
+    function GoDetail(id) {
+        window.location.href = ctrl_Name + "Detail?id=" + id;
+    }
+
+    //Ready
+    $(function () {
+        TransPage(1);
+
+        //Nhấn nút xác nhận:
+        $('.UI-accept').click(function () {
+            UIContentToLoading();
+            switch (action) {
+                case 0:
+                    $.ajax({
+                        url: "/HopDong/PostCreate",
+                        method: "POST",
+                        data: { id },
+                        success: function (result, status, xhr) {
+                            let rs = JSON.parse(result);
+                            console.log(rs);
+                            if (rs.ErrCode == 2) {
+                                window.location.href = "/HopDong/Detail?id=" + rs.Data;
+                            }
+                            else if (rs.ErrCode == 0) {
+                                ShowFailMessage("Thêm mới hợp đồng thất bại, vui lòng thử lại sau ít phút!");
+                            }
+                            else {
+                                ShowFailMessage(rs.ErrDes);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+                        }
+                    }).always(function () {
+                        HideLoading();
+                    });
+                    break;
+                default:
+                    HideLoading();
+            }
+        });
+
+        //Thay đổi điều kiện:
+        //$('[name=sel_Mode]').change(function () {
+        //    TransPage(1);
+        //});
+        $('#sel_PhanQuyen').change(function () {
+            TransPage(1);
+        });
+        $('#sel_Size').change(function () {
+            TransPage(1);
+        });
+
+        $('#sel_OrderBy').change(function () {
+            TransPage(page);
+        });
+        $('#sel_OrderDes').change(function () {
+            TransPage(page);
+        });
+
+        //Enter
+        $('#txt_SearchValue').keydown(function (event) {
+            if (event.key == "Enter") {
+                TransPage(1);
+            }
+        })
+    });
+</script>

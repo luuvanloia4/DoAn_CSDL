@@ -29,9 +29,27 @@ namespace APIs.View
         }
 
         [WebMethod]
-        public API_Result<int> Create(string loginCode, tbl_HopDong obj, List<ID_SL> listCTHD)
+        public API_Result<int> Create(string loginCode, tbl_HopDong obj)
         {
-            return ctrl.Create(loginCode, obj, listCTHD);
+            return ctrl.Create(loginCode, obj);
+        }
+
+        [WebMethod]
+        public API_Result<bool> AddChiTietHD(string loginCode, int hdID, ID_SL cthd)
+        {
+            return ctrl.AddChiTietHD(loginCode, hdID, cthd);
+        }
+
+        [WebMethod]
+        public API_Result<string> UpdateChiTietHD(string loginCode, int hdID, List<ID_SL> listCTHD)
+        {
+            return ctrl.UpdateChiTietHD(loginCode, hdID, listCTHD);
+        }
+
+        [WebMethod]
+        public API_Result<bool> DeleteChiTietHD(string loginCode, int hdID, int mhID)
+        {
+            return ctrl.DeleteChiTietHD(loginCode, hdID, mhID);
         }
 
         [WebMethod]
@@ -53,9 +71,9 @@ namespace APIs.View
         }
 
         [WebMethod]
-        public API_Result<List<view_HopDong>> SearchPaging(string loginCode, DateTime startTime, DateTime endTime, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
+        public API_Result<List<view_HopDong>> SearchPaging(string loginCode, int htID, int nccID, int trangThai, DateTime startTime, DateTime endTime, string searchValue = "", EnumSearchType searchType = EnumSearchType.All, int curPage = 1, int pageSize = 10, EnumOrderBy orderBy = EnumOrderBy.Newest, bool isDescending = false)
         {
-            return ctrl.SearchPaging(loginCode, startTime, endTime, searchValue, searchType, curPage, pageSize, orderBy, isDescending);
+            return ctrl.SearchPaging(loginCode, htID, nccID, trangThai, startTime, endTime, searchValue, searchType, curPage, pageSize, orderBy, isDescending);
         }
 
         [WebMethod]
@@ -68,6 +86,49 @@ namespace APIs.View
         public API_Result<view_HopDong> GetByID(int id)
         {
             return ctrl.GetByID(id);
+        }
+
+        [WebMethod]
+        public API_Result<float> GetProgress(int id)
+        {
+            return ctrl.GetProgress(id);
+        }
+
+        [WebMethod]
+        public API_Result<List<view_ChiTietHD>> GetListCTHD(string loginCode, int hdID)
+        {
+            return ctrl.GetListCTHD(loginCode, hdID);
+        }
+
+        //Phieu nhap
+        [WebMethod]
+        public API_Result<int> CreatePhieuNhap(string loginCode, tbl_PhieuNhap obj, List<ID_SL> listCTPN)
+        {
+            return ctrl.CreatePhieuNhap(loginCode, obj, listCTPN);
+        }
+
+        [WebMethod]
+        public API_Result<bool> DeletePhieuNhap(string loginCode, int pnID)
+        {
+            return ctrl.DeletePhieuNhap(loginCode, pnID);
+        }
+
+        [WebMethod]
+        public API_Result<List<view_PhieuNhap>> GetListPhieuNhap(int hdID)
+        {
+            return ctrl.GetListPhieuNhap(hdID);
+        }
+
+        [WebMethod]
+        public API_Result<view_PhieuNhap> GetPhieuNhap(int pnID)
+        {
+            return ctrl.GetPhieuNhap(pnID);
+        }
+
+        [WebMethod]
+        public API_Result<List<view_ChiTietPN>> GetListCTPN(int pnID)
+        {
+            return ctrl.GetListCTPN(pnID);
         }
     }
 }

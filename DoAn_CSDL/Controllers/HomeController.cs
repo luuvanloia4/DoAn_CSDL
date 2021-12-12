@@ -19,6 +19,7 @@ namespace DoAn_CSDL.Controllers
                 if (rs.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
                 {
                     Session[Constants.UserRole_SessionName] = rs.Data.PhanQuyenID;
+                    Session[Constants.UserID_SessionName] = rs.Data.ID;
                     return true;
                 }
             }
@@ -42,6 +43,23 @@ namespace DoAn_CSDL.Controllers
             if(rs.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
             {
                 Session[Constants.LoginCode_SessionName] = rs.Data;
+                Session[Constants.HeThongID_SessionName] = "";
+                Session[Constants.NCCID_SessionName] = "";
+                Session[Constants.CuaHangID_SessionName] = "";
+                var groupID = wsv.GetGroupID(rs.Data);
+                switch (groupID.PageCount)
+                {
+                    case 1:
+                    case 2:
+                        Session[Constants.HeThongID_SessionName] = groupID.RecordCount;
+                        break;
+                    case 3:
+                        Session[Constants.CuaHangID_SessionName] = groupID.RecordCount;
+                        break;
+                    case 4:
+                        Session[Constants.NCCID_SessionName] = groupID.RecordCount;
+                        break;
+                }
                 Session.Timeout = 60;
             }
 
@@ -54,30 +72,24 @@ namespace DoAn_CSDL.Controllers
             {
                 return RedirectToAction("Login");
             }
-            //Current menu active
+
+            return View();
+        }
+
+        [HttpPost]
+        public string GetDashBoardData()
+        {
+            //Chưa code bộ lọc nên để ngày tháng null
+            string txt_StartTime = Request["txt_StartTime"];
+            string txt_EndTime = Request["txt_EndTime"];
+            DateTime startTime = new DateTime();
+            DateTime endTime = new DateTime();
+            SharedFunction.ParseDualTime(txt_StartTime, txt_EndTime, ref startTime, ref endTime);
+
             TaiKhoan_wsv.TaiKhoan_wsv tk_wsv = new TaiKhoan_wsv.TaiKhoan_wsv();
+            var rs = tk_wsv.GetDashBoardData(Session[Constants.LoginCode_SessionName].ToString(), startTime, endTime);
 
-            TempData["curMenuID"] = 1;
-
-            //HopDong_wsv.HopDong_wsv hd_wsv = new HopDong_wsv.HopDong_wsv();
-            //PhieuXuat_wsv.PhieuXuat_wsv px_wsv = new PhieuXuat_wsv.PhieuXuat_wsv();
-
-            //int[] arrHD = hd_wsv.GetStatus(Authentication.loginCode).Data;
-            //int[] arrPX = px_wsv.GetStatus(Authentication.loginCode).Data;
-            var userResult = tk_wsv.GetCurrentUser(Session[Constants.LoginCode_SessionName].ToString());
-            if(userResult.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
-            {
-                TaiKhoan_wsv.TaiKhoan_ett curUser = userResult.Data;
-                //List<int> list = new List<int>(new int[] { arrHD[0], arrHD[1], arrHD[2], arrPX[0], arrPX[1], arrPX[2],  curUser.PhanQuyen});
-
-                List<int> list = new List<int>(new int[] { 0, 0, 0, 0, 0, 0, curUser.PhanQuyenID });
-
-                return View(list);
-            }
-            else
-            {
-                return RedirectToAction("Login");
-            }    
+            return JsonConvert.SerializeObject(rs);
         }
 
         #region Message control

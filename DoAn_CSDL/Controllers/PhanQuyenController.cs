@@ -19,6 +19,7 @@ namespace DoAn_CSDL.Controllers
                 if (rs.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
                 {
                     Session[Constants.UserRole_SessionName] = rs.Data.PhanQuyenID;
+                    Session[Constants.UserID_SessionName] = rs.Data.ID;
                     return true;
                 }
             }

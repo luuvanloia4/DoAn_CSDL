@@ -1,0 +1,264 @@
+﻿@using DoAn_CSDL.Shared
+@{
+    ViewBag.Title = "Cập nhật mặt hàng";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+
+    int id = SharedFunction.ParseID(Request["id"]);
+}
+
+<div class="main__content">
+    <h1 class="main__title">CẬP NHẬT MẶT HÀNG</h1>
+
+    <div class="card">
+        <p class="card-title">Thông tin mặt hàng:</p>
+        <div class="card-body">
+            <form class="form-group custom-form" id="input-form" onsubmit="return false;">
+                <div class="row">
+                    @*<div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+            <label for="file_avatar">Ảnh đại diện:</label>
+            <img src="~/Data/System/Images/default_image.jpg" class="mt-1 mb-3 img-detail" onclick="ShowImage(this)" id="avatar-review" />
+            <input type="text" name="txt_ImgName" id="txt_ImgName" class="form-control" hidden />
+            <label class="custom-input-file" id="file_Image">
+                <input type="file" name="file_Upload" class="form-control-file" accept="image/*" onchange="SingleImageChange(this)" />
+                <input type="text" class="form-control" placeholder="Chọn tệp. . . " tabindex="-1" />
+                <span>File browser</span>
+            </label>
+        </div>
+        <div class="col-4 d-none d-sm-block"></div>*@
+
+                    <div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+                        <label for="file_avatar">Ảnh đại diện:</label>
+                        <img src="~/Data/System/Images/img_error.png" class="mt-1 mb-3 img-detail" onclick="ShowImage(this)" id="avatar-review" />
+                        <input type="text" name="txt_ImgName" id="txt_ImgName" class="form-control" hidden />
+                        <label class="custom-input-file" id="file_Image">
+                            <input type="file" name="file_Upload" class="form-control-file" accept="image/*" onchange="SingleImageChange(this)" />
+                            <input type="text" class="form-control" placeholder="Chọn tệp. . . " tabindex="-1" />
+                            <span>File browser</span>
+                        </label>
+                    </div>
+                    <div class="col-4 d-none d-sm-block"></div>
+
+                    <div class="col-12 col-sm-4 col-md-3 form-group position-relative">
+                        <label for="txt_ID">Mã mặt hàng:</label>
+                        <input type="text" name="txt_ID" id="txt_ID" class="form-control" autocomplete="off" maxlength="500" value="@id" readonly />
+                    </div>
+                    <div class="col-8 d-none d-sm-block"></div>
+
+                    <div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+                        <label for="txt_Ten">Tên mặt hàng<span class="required">*</span>:</label>
+                        <input type="text" name="txt_Ten" id="txt_Ten" class="form-control" autocomplete="off" maxlength="200" autofocus />
+                    </div>
+
+                    <div class="col-12 form-group position-relative">
+                        <label for="txt_DiaChi">Mô tả<span class="required">*</span>:</label>
+                        <textarea name="txt_MoTa" id="txt_MoTa" class="form-control form-text" autocomplete="off"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4 form-group position-relative">
+                        <label for="txt_DonGia">Đơn giá (VNĐ)<span class="required">*</span>:</label>
+                        <input type="number" name="txt_DonGia" id="txt_DonGia" class="form-control" autocomplete="off" maxlength="11" value="0" min="0" />
+                    </div>
+                    <div class="col-6 d-none d-md-block"></div>
+
+                    <div class="col-12 form-group position-relative">
+                        <label for="sel_LoaiMatHang">Loại mặt hàng:</label>
+                        <select name="sel_LoaiMatHang" id="sel_LoaiMatHang" multiple="multiple">
+                            <!---->
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-bottom">
+            <p class="card-bottom__note" id="card-note"><strong>Lưu ý:</strong> Những trường có dấu <span class="required">*</span> bắt buộc phải có giá trị!</p>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-danger custom-btn-func" onclick="Back()">
+            <i class="fas fa-backspace"></i> Nhà cung cấp
+        </button>
+        <button type="button" class="btn btn-success custom-btn-func" onclick="Edit()">
+            <i class="fas fa-sync"></i> Cập nhật dữ liệu
+        </button>
+    </div>
+</div>
+
+<script>
+    var editObj;
+    const ctrl_Name = "/MatHang/";
+    loadingCount = 0;
+    var editListLMH_ID;
+
+    function FillData(obj) {
+        $('#txt_Ten').val(obj.Ten);
+        $('#txt_MoTa').val(obj.MoTa);
+        $('#txt_DonGia').val(obj.Gia);
+        $('#avatar-review').prop("src", ParseImageURL(obj.Img));
+    }
+
+    function GetObject() {
+        let id = $('#txt_ID').val();
+        ShowLoading();
+
+        $.ajax({
+            url: ctrl_Name + "GetDetail",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+
+                if (rs.ErrCode == 2) {
+                    editObj = rs.Data;
+                    FillData(editObj);
+                    GetListLMH_ID();
+                }
+                else if (rs.ErrCode == 0) {
+                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu, vui lòng thử lại sau ít phút!");
+                }
+                else {
+                    ShowFailMessage(rs.Des);
+                }
+            },
+            error: function () {
+                ShowFailMessage("Mất kết nối với máy chủ!");
+            }
+        }).always(function () {
+            CheckLoadingCount();
+        });
+    }
+
+    //For add mat hang
+    function GetListLMH_ID() {
+        $.ajax({
+            url: ctrl_Name + "GetListLMH_ID",
+            method: "POST",
+            data: { id: editObj.ID },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                if (rs.ErrCode == 2) {
+                    editListLMH_ID = rs.Data;
+                }
+                else {
+                    //
+                }
+            },
+            error: function () {
+                //
+            }
+        }).always(function () {
+            GetListComboboxLMH();
+        });
+    }
+
+    function GetListComboboxLMH() {
+        $.ajax({
+            url: ctrl_Name + "GetListComboboxLMH",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+
+                if (rs.ErrCode == 2) {
+                    let htmlResult = "";
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "'";
+                        editListLMH_ID.forEach((val) => {
+                            if (val.Data == item.Data) {
+                                htmlResult += "selected";
+                            }
+                        });
+                        htmlResult += ">" + item.DisplayData + "</option>";
+                    });
+
+                    $('#sel_LoaiMatHang').html(htmlResult);
+                }
+            }
+        }).always(function () {
+            $('#sel_LoaiMatHang').select2();
+        });
+    }
+
+    function Edit(ele) {
+        hasFocus = false;
+
+        let name = $('#txt_Ten');
+        let name_val = name.val();
+        if (name_val.length == 0) {
+            TryFocus(name, "Không được để trống tên mặt hàng!");
+        }
+        else if (name_val.length > 200) {
+            TryFocus(name, "Tên mặt hàng không vượt quá 200 ký tự!");
+        }
+
+        let moTa = $('#txt_MoTa');
+        let moTa_val = moTa.val();
+        if (moTa_val.length == 0) {
+            TryFocus(moTa, "Không được để trống mô tả mặt hàng!");
+        }
+
+        let gia = $('#txt_DonGia');
+        let gia_val = gia.val();
+        if (gia_val == null || gia_val == undefined || gia_val <= 0) {
+            TryFocus(gia, "Không được để trống giá mặt hàng!");
+        }
+
+        let loaiMatHang = $('#sel_LoaiMatHang');
+        let listLMH_ID = loaiMatHang.val();
+        if (listLMH_ID == null || listLMH_ID == undefined || listLMH_ID.length == 0) {
+            TryFocus(loaiMatHang, "Không được để trống loại mặt hàng!");
+        }
+
+        if (!hasFocus) {
+            ShowUIContent("Xác nhận cập nhật dữ liệu?");
+        }
+    }
+
+    function Back() {
+        window.location.href = "/NhaCungCap/Detail?id=" + editObj.NhaCungCapID;
+    }
+
+    $(function () {
+        GetObject();
+
+        $('.UI-accept').click(function () {
+            UIContentToLoading();
+
+            let listLMH_ID = $('#sel_LoaiMatHang').val();
+            let form = $('#input-form')[0];
+            let dataForm = new FormData(form);
+            dataForm.append("ListLMH_ID", JSON.stringify(listLMH_ID));
+
+            $.ajax({
+                url: ctrl_Name + "PostEdit",
+                method: "POST",
+                processData: false,
+                contentType: false,
+                data: dataForm,
+                success: function (result, status, xhr) {
+                    let rs = JSON.parse(result);
+                    if (rs.ErrCode == 2) {
+                        window.location.reload();
+                    }
+                    else if (rs.ErrCode == 0) {
+                        ShowFailMessage("Có lỗi xảy ra trong quá trình cập nhật dữ liệu, vui lòng thử lại sau ít phút!");
+                    }
+                    else {
+                        ShowFailMessage(rs.ErrDes);
+                    }
+                },
+                error: function () {
+                    ShowFailMessage("Mất kết nối với máy chủ!");
+                }
+            }).always(function () {
+                HideLoading();
+            });
+        });
+    });
+
+    function SingleImageChange(ele) {
+        let image = ele.files[0];
+        let src = (image != null && image != undefined) ? URL.createObjectURL(image) : errorImagePath;
+        $('#avatar-review').prop("src", src);
+        $('#txt_ImgName').val($(ele).val().split('\\').pop());
+    }
+</script>

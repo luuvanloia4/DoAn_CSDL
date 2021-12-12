@@ -11,7 +11,6 @@ namespace DoAn_CSDL.Controllers
 {
     public class TaiKhoanController : Controller
     {
-
         public bool IsLogin()
         {
             TaiKhoan_wsv.TaiKhoan_wsv wsv = new TaiKhoan_wsv.TaiKhoan_wsv();
@@ -21,6 +20,7 @@ namespace DoAn_CSDL.Controllers
                 if (rs.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
                 {
                     Session[Constants.UserRole_SessionName] = rs.Data.PhanQuyenID;
+                    Session[Constants.UserID_SessionName] = rs.Data.ID;
                     return true;
                 }
             }
@@ -74,6 +74,11 @@ namespace DoAn_CSDL.Controllers
         public string GetDetail()
         {
             int id = SharedFunction.ParseID(Request["id"]);
+            if(id <= 0)
+            {
+                id = SharedFunction.ParseID(Session[Constants.UserID_SessionName].ToString());
+            }
+
             TaiKhoan_wsv.TaiKhoan_wsv tk_wsv = new TaiKhoan_wsv.TaiKhoan_wsv();
             var rs = tk_wsv.GetByID(Session[Constants.LoginCode_SessionName].ToString(), id);
 

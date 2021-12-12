@@ -20,6 +20,7 @@ namespace DoAn_CSDL.Controllers
                 if (rs.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
                 {
                     Session[Constants.UserRole_SessionName] = rs.Data.PhanQuyenID;
+                    Session[Constants.UserID_SessionName] = rs.Data.ID;
                     return true;
                 }
             }
@@ -158,7 +159,16 @@ namespace DoAn_CSDL.Controllers
         [HttpPost]
         public string GetDetail()
         {
-            int id = SharedFunction.ParseID(Request["id"]);
+            int id;
+            if (Session[Constants.HeThongID_SessionName] == null)
+            {
+                id = SharedFunction.ParseID(Request["id"]);
+            }
+            else
+            {
+                id = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
+            }
+             
             HeThong_wsv.HeThong_wsv ht_wsv = new HeThong_wsv.HeThong_wsv();
             var rs = ht_wsv.GetByID(id);
 

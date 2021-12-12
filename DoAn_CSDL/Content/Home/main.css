@@ -38,7 +38,9 @@ a:link, a:hover, a:visited, a:active {
     
     /* */
     --normal-border-radius: .3rem;
-    --normal-box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    /*--normal-box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;*/
+    --normal-box-shadow: 0 0.46875rem 2.1875rem rgb(4 9 20 / 3%), 0 0.9375rem 1.40625rem rgb(4 9 20 / 3%), 0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%);
+    --x-box-shadow: 0 0.46875rem 2.1875rem rgb(4 9 20 / 3%), 0 0.9375rem 1.40625rem rgb(4 9 20 / 3%), 0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%);
 }
 
 /* header */
@@ -50,7 +52,7 @@ header {
     width: 100vw;
     top: 0;
     left: 0;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    box-shadow: 0 0.46875rem 2.1875rem rgb(4 9 20 / 3%), 0 0.9375rem 1.40625rem rgb(4 9 20 / 3%), 0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%);
     z-index: 10;
 }
 
@@ -98,6 +100,7 @@ header {
 .header-logo img{
     width: auto;
     height: calc(var(--header-height) - 1rem);
+    border-radius: var(--normal-border-radius);
 }
 
 /* button menu */
@@ -557,7 +560,7 @@ main {
     min-height: 100vh;
     padding-top: var(--header-height);
     padding-left: var(--nav-collapse-width);
-    background-color: whitesmoke;
+    background-color: rgb(233, 236, 238);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -607,7 +610,7 @@ main {
 /* card */
 .card{
     --card-border-radius: .3rem;
-    --card-box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    --card-box-shadow: 0 0.46875rem 2.1875rem rgb(4 9 20 / 3%), 0 0.9375rem 1.40625rem rgb(4 9 20 / 3%), 0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%);
 }
 
 .card{
@@ -616,7 +619,8 @@ main {
     background-color: white;
     box-shadow: var(--card-box-shadow);
     padding: 2rem 1.5rem;
-    margin: 1rem 1rem 2rem 1rem;
+    /* margin: 1rem 1rem 2rem 1rem; */
+    margin: 1rem 0 2rem 0;
 }
 
 .card-title{

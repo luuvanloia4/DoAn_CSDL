@@ -183,12 +183,60 @@ namespace APIs.Shareds
         }
 
         //Extra phan quyen ...
+        //HeThong
+        public static bool IsOwnHeThong(int userID, int htID)
+        {
+            try
+            {
+                DatabaseDataContext db = new DatabaseDataContext();
+                var obj = (from tk in db.tbl_TaiKhoans
+                           join ht_tk in db.tbl_HT_TKs on tk.ID equals ht_tk.TaiKhoanID
+                           where tk.ID.Equals(userID) && (tk.IsDelete == null || tk.IsDelete == false)
+                           && tk.PhanQuyenID.Equals(qAdmin) && ht_tk.HeTHongID.Equals(htID)
+                           select tk
+                           ).FirstOrDefault();
+                return obj != null;
+            }
+            catch(Exception ex)
+            {
+                //
+            }
+
+            return false;
+        }
+
         //Kho
         public static bool IsOwnKho(int userID, int khoID)
         {
             DatabaseDataContext db = new DatabaseDataContext();
 
             return db.fn_IsOwnKho(userID, khoID).Value; 
+        }
+
+        //Nha cung cap
+        public static bool IsOwnNCC(int userID, int nccID)
+        {
+            DatabaseDataContext db = new DatabaseDataContext();
+            tbl_NhaCungCap obj = db.tbl_NhaCungCaps.Where(u => u.ID.Equals(nccID)).FirstOrDefault();
+            if(obj != null)
+            {
+                return obj.TaiKhoanID.Equals(userID);
+            }
+
+            return false;
+        }
+
+        //Cua hang
+        public static bool IsOwnCuaHang(int userID, int cuaHangID)
+        {
+            DatabaseDataContext db = new DatabaseDataContext();
+            tbl_CuaHang obj = db.tbl_CuaHangs.Where(u => u.ID.Equals(cuaHangID)).FirstOrDefault();
+            if(obj != null)
+            {
+                return obj.TaiKhoanID.Equals(userID);
+            }
+
+            return false;
         }
     }
 }

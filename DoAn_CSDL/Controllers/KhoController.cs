@@ -19,6 +19,7 @@ namespace DoAn_CSDL.Controllers
                 if (rs.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
                 {
                     Session[Constants.UserRole_SessionName] = rs.Data.PhanQuyenID;
+                    Session[Constants.UserID_SessionName] = rs.Data.ID;
                     return true;
                 }
             }
@@ -51,6 +52,10 @@ namespace DoAn_CSDL.Controllers
             SharedFunction.ParseDualTime(Request["startTime"], Request["endTime"], ref startTime, ref endTime);
 
             int heThongID = SharedFunction.ParseID(Request["heThongID"]);
+            if(heThongID <= 0)
+            {
+                heThongID = SharedFunction.ParseID((Session[Constants.HeThongID_SessionName] == null) ? "" : Session[Constants.HeThongID_SessionName].ToString());
+            }
 
             //Cache to current session
             string alias = "kho";

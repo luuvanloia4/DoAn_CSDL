@@ -53,6 +53,10 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private System.Threading.SendOrPostCallback PhanQuyenOperationCompleted;
         
+        private System.Threading.SendOrPostCallback GetGroupIDOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetDashBoardDataOperationCompleted;
+        
         private bool useDefaultCredentialsSetExplicitly;
         
         /// <remarks/>
@@ -128,6 +132,12 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         public event PhanQuyenCompletedEventHandler PhanQuyenCompleted;
         
         /// <remarks/>
+        public event GetGroupIDCompletedEventHandler GetGroupIDCompleted;
+        
+        /// <remarks/>
+        public event GetDashBoardDataCompletedEventHandler GetDashBoardDataCompleted;
+        
+        /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Login", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public API_ResultOfString Login(string userName, string password) {
             object[] results = this.Invoke("Login", new object[] {
@@ -160,25 +170,27 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Create", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public API_ResultOfBoolean Create(string loginCode, tbl_TaiKhoan obj) {
+        public API_ResultOfBoolean Create(string loginCode, int heThongID, tbl_TaiKhoan obj) {
             object[] results = this.Invoke("Create", new object[] {
                         loginCode,
+                        heThongID,
                         obj});
             return ((API_ResultOfBoolean)(results[0]));
         }
         
         /// <remarks/>
-        public void CreateAsync(string loginCode, tbl_TaiKhoan obj) {
-            this.CreateAsync(loginCode, obj, null);
+        public void CreateAsync(string loginCode, int heThongID, tbl_TaiKhoan obj) {
+            this.CreateAsync(loginCode, heThongID, obj, null);
         }
         
         /// <remarks/>
-        public void CreateAsync(string loginCode, tbl_TaiKhoan obj, object userState) {
+        public void CreateAsync(string loginCode, int heThongID, tbl_TaiKhoan obj, object userState) {
             if ((this.CreateOperationCompleted == null)) {
                 this.CreateOperationCompleted = new System.Threading.SendOrPostCallback(this.OnCreateOperationCompleted);
             }
             this.InvokeAsync("Create", new object[] {
                         loginCode,
+                        heThongID,
                         obj}, this.CreateOperationCompleted, userState);
         }
         
@@ -346,9 +358,10 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/SearchPaging", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public API_ResultOfListOfTaiKhoan_ett SearchPaging(string loginCode, System.DateTime startTime, System.DateTime endTime, int status, string searchValue, EnumSearchType searchType, int curPage, int pageSize, EnumOrderBy orderBy, bool isDescending) {
+        public API_ResultOfListOfTaiKhoan_ett SearchPaging(string loginCode, int heThongID, System.DateTime startTime, System.DateTime endTime, int status, string searchValue, EnumSearchType searchType, int curPage, int pageSize, EnumOrderBy orderBy, bool isDescending) {
             object[] results = this.Invoke("SearchPaging", new object[] {
                         loginCode,
+                        heThongID,
                         startTime,
                         endTime,
                         status,
@@ -362,17 +375,18 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         }
         
         /// <remarks/>
-        public void SearchPagingAsync(string loginCode, System.DateTime startTime, System.DateTime endTime, int status, string searchValue, EnumSearchType searchType, int curPage, int pageSize, EnumOrderBy orderBy, bool isDescending) {
-            this.SearchPagingAsync(loginCode, startTime, endTime, status, searchValue, searchType, curPage, pageSize, orderBy, isDescending, null);
+        public void SearchPagingAsync(string loginCode, int heThongID, System.DateTime startTime, System.DateTime endTime, int status, string searchValue, EnumSearchType searchType, int curPage, int pageSize, EnumOrderBy orderBy, bool isDescending) {
+            this.SearchPagingAsync(loginCode, heThongID, startTime, endTime, status, searchValue, searchType, curPage, pageSize, orderBy, isDescending, null);
         }
         
         /// <remarks/>
-        public void SearchPagingAsync(string loginCode, System.DateTime startTime, System.DateTime endTime, int status, string searchValue, EnumSearchType searchType, int curPage, int pageSize, EnumOrderBy orderBy, bool isDescending, object userState) {
+        public void SearchPagingAsync(string loginCode, int heThongID, System.DateTime startTime, System.DateTime endTime, int status, string searchValue, EnumSearchType searchType, int curPage, int pageSize, EnumOrderBy orderBy, bool isDescending, object userState) {
             if ((this.SearchPagingOperationCompleted == null)) {
                 this.SearchPagingOperationCompleted = new System.Threading.SendOrPostCallback(this.OnSearchPagingOperationCompleted);
             }
             this.InvokeAsync("SearchPaging", new object[] {
                         loginCode,
+                        heThongID,
                         startTime,
                         endTime,
                         status,
@@ -512,6 +526,68 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             if ((this.PhanQuyenCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.PhanQuyenCompleted(this, new PhanQuyenCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetGroupID", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public API_ResultOfBoolean GetGroupID(string loginCode) {
+            object[] results = this.Invoke("GetGroupID", new object[] {
+                        loginCode});
+            return ((API_ResultOfBoolean)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetGroupIDAsync(string loginCode) {
+            this.GetGroupIDAsync(loginCode, null);
+        }
+        
+        /// <remarks/>
+        public void GetGroupIDAsync(string loginCode, object userState) {
+            if ((this.GetGroupIDOperationCompleted == null)) {
+                this.GetGroupIDOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetGroupIDOperationCompleted);
+            }
+            this.InvokeAsync("GetGroupID", new object[] {
+                        loginCode}, this.GetGroupIDOperationCompleted, userState);
+        }
+        
+        private void OnGetGroupIDOperationCompleted(object arg) {
+            if ((this.GetGroupIDCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetGroupIDCompleted(this, new GetGroupIDCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetDashBoardData", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public API_ResultOfDashBoard_ett GetDashBoardData(string loginCode, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] System.Nullable<System.DateTime> startTime, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] System.Nullable<System.DateTime> endTime) {
+            object[] results = this.Invoke("GetDashBoardData", new object[] {
+                        loginCode,
+                        startTime,
+                        endTime});
+            return ((API_ResultOfDashBoard_ett)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetDashBoardDataAsync(string loginCode, System.Nullable<System.DateTime> startTime, System.Nullable<System.DateTime> endTime) {
+            this.GetDashBoardDataAsync(loginCode, startTime, endTime, null);
+        }
+        
+        /// <remarks/>
+        public void GetDashBoardDataAsync(string loginCode, System.Nullable<System.DateTime> startTime, System.Nullable<System.DateTime> endTime, object userState) {
+            if ((this.GetDashBoardDataOperationCompleted == null)) {
+                this.GetDashBoardDataOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetDashBoardDataOperationCompleted);
+            }
+            this.InvokeAsync("GetDashBoardData", new object[] {
+                        loginCode,
+                        startTime,
+                        endTime}, this.GetDashBoardDataOperationCompleted, userState);
+        }
+        
+        private void OnGetDashBoardDataOperationCompleted(object arg) {
+            if ((this.GetDashBoardDataCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetDashBoardDataCompleted(this, new GetDashBoardDataCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -667,6 +743,180 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class DashBoard_ett {
+        
+        private int tongSoHDField;
+        
+        private int tongSoHDChoField;
+        
+        private int tongSoHDHoanThanhField;
+        
+        private int tongSoYCField;
+        
+        private int tongSoYCChoField;
+        
+        private int tongSoYCPheDuyetField;
+        
+        private int tongSoYCHoanThanhField;
+        
+        private int phanQuyenIDField;
+        
+        /// <remarks/>
+        public int TongSoHD {
+            get {
+                return this.tongSoHDField;
+            }
+            set {
+                this.tongSoHDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int TongSoHDCho {
+            get {
+                return this.tongSoHDChoField;
+            }
+            set {
+                this.tongSoHDChoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int TongSoHDHoanThanh {
+            get {
+                return this.tongSoHDHoanThanhField;
+            }
+            set {
+                this.tongSoHDHoanThanhField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int TongSoYC {
+            get {
+                return this.tongSoYCField;
+            }
+            set {
+                this.tongSoYCField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int TongSoYCCho {
+            get {
+                return this.tongSoYCChoField;
+            }
+            set {
+                this.tongSoYCChoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int TongSoYCPheDuyet {
+            get {
+                return this.tongSoYCPheDuyetField;
+            }
+            set {
+                this.tongSoYCPheDuyetField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int TongSoYCHoanThanh {
+            get {
+                return this.tongSoYCHoanThanhField;
+            }
+            set {
+                this.tongSoYCHoanThanhField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int PhanQuyenID {
+            get {
+                return this.phanQuyenIDField;
+            }
+            set {
+                this.phanQuyenIDField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class API_ResultOfDashBoard_ett {
+        
+        private DashBoard_ett dataField;
+        
+        private EnumErrCode errCodeField;
+        
+        private string errDesField;
+        
+        private int recordCountField;
+        
+        private int pageCountField;
+        
+        /// <remarks/>
+        public DashBoard_ett Data {
+            get {
+                return this.dataField;
+            }
+            set {
+                this.dataField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public EnumErrCode ErrCode {
+            get {
+                return this.errCodeField;
+            }
+            set {
+                this.errCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string ErrDes {
+            get {
+                return this.errDesField;
+            }
+            set {
+                this.errDesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int RecordCount {
+            get {
+                return this.recordCountField;
+            }
+            set {
+                this.recordCountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int PageCount {
+            get {
+                return this.pageCountField;
+            }
+            set {
+                this.pageCountField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
     public partial class API_ResultOfTaiKhoan_ett {
         
         private TaiKhoan_ett dataField;
@@ -744,7 +994,7 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private string hoTenField;
         
-        private string avatarField;
+        private string imgField;
         
         private System.DateTime ngaySinhField;
         
@@ -793,12 +1043,12 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         }
         
         /// <remarks/>
-        public string Avatar {
+        public string Img {
             get {
-                return this.avatarField;
+                return this.imgField;
             }
             set {
-                this.avatarField = value;
+                this.imgField = value;
             }
         }
         
@@ -1243,7 +1493,7 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private System.Nullable<System.DateTime> ngayCapNhatField;
         
-        private string isDeleteField;
+        private System.Nullable<bool> isDeleteField;
         
         private tbl_TaiKhoan[] tbl_TaiKhoansField;
         
@@ -1300,7 +1550,8 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         }
         
         /// <remarks/>
-        public string IsDelete {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<bool> IsDelete {
             get {
                 return this.isDeleteField;
             }
@@ -1634,6 +1885,8 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private bool isDeleteField;
         
+        private System.Nullable<int> heThongIDField;
+        
         private tbl_PhieuXuat[] tbl_PhieuXuatsField;
         
         private tbl_TaiKhoan tbl_TaiKhoanField;
@@ -1737,6 +1990,17 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             }
             set {
                 this.isDeleteField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<int> HeThongID {
+            get {
+                return this.heThongIDField;
+            }
+            set {
+                this.heThongIDField = value;
             }
         }
         
@@ -1992,8 +2256,6 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private int giaField;
         
-        private int soLuongField;
-        
         private System.Nullable<int> nhaCungCapIDField;
         
         private System.DateTime ngayTaoField;
@@ -2001,6 +2263,8 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         private System.Nullable<System.DateTime> ngayCapNhatField;
         
         private bool isDeleteField;
+        
+        private string imgField;
         
         private tbl_ChiTietHD[] tbl_ChiTietHDsField;
         
@@ -2053,16 +2317,6 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         }
         
         /// <remarks/>
-        public int SoLuong {
-            get {
-                return this.soLuongField;
-            }
-            set {
-                this.soLuongField = value;
-            }
-        }
-        
-        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<int> NhaCungCapID {
             get {
@@ -2101,6 +2355,16 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             }
             set {
                 this.isDeleteField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string Img {
+            get {
+                return this.imgField;
+            }
+            set {
+                this.imgField = value;
             }
         }
         
@@ -2169,6 +2433,8 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private int soLuongField;
         
+        private System.Nullable<int> soLuongDaGiaoField;
+        
         private tbl_HopDong tbl_HopDongField;
         
         private tbl_MatHang tbl_MatHangField;
@@ -2200,6 +2466,17 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             }
             set {
                 this.soLuongField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<int> SoLuongDaGiao {
+            get {
+                return this.soLuongDaGiaoField;
+            }
+            set {
+                this.soLuongDaGiaoField = value;
             }
         }
         
@@ -2244,15 +2521,17 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private System.Nullable<int> nhaCungCapIDField;
         
+        private System.Nullable<int> heThongIDField;
+        
         private System.Nullable<bool> isDeleteField;
         
         private tbl_ChiTietHD[] tbl_ChiTietHDsField;
         
         private tbl_PhieuNhap[] tbl_PhieuNhapsField;
         
-        private tbl_NhaCungCap tbl_NhaCungCapField;
-        
         private tbl_TaiKhoan tbl_TaiKhoanField;
+        
+        private tbl_NhaCungCap tbl_NhaCungCapField;
         
         /// <remarks/>
         public int ID {
@@ -2319,6 +2598,17 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<int> HeThongID {
+            get {
+                return this.heThongIDField;
+            }
+            set {
+                this.heThongIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<bool> IsDelete {
             get {
                 return this.isDeleteField;
@@ -2349,22 +2639,22 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         }
         
         /// <remarks/>
-        public tbl_NhaCungCap tbl_NhaCungCap {
-            get {
-                return this.tbl_NhaCungCapField;
-            }
-            set {
-                this.tbl_NhaCungCapField = value;
-            }
-        }
-        
-        /// <remarks/>
         public tbl_TaiKhoan tbl_TaiKhoan {
             get {
                 return this.tbl_TaiKhoanField;
             }
             set {
                 this.tbl_TaiKhoanField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_NhaCungCap tbl_NhaCungCap {
+            get {
+                return this.tbl_NhaCungCapField;
+            }
+            set {
+                this.tbl_NhaCungCapField = value;
             }
         }
     }
@@ -2517,8 +2807,6 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private int viTriIDField;
         
-        private tbl_ViTri tbl_ViTriField;
-        
         private tbl_MatHang tbl_MatHangField;
         
         private tbl_PhieuNhap tbl_PhieuNhapField;
@@ -2564,16 +2852,6 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         }
         
         /// <remarks/>
-        public tbl_ViTri tbl_ViTri {
-            get {
-                return this.tbl_ViTriField;
-            }
-            set {
-                this.tbl_ViTriField = value;
-            }
-        }
-        
-        /// <remarks/>
         public tbl_MatHang tbl_MatHang {
             get {
                 return this.tbl_MatHangField;
@@ -2590,483 +2868,6 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             }
             set {
                 this.tbl_PhieuNhapField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
-    public partial class tbl_ViTri {
-        
-        private int idField;
-        
-        private int hangIDField;
-        
-        private int cotIDField;
-        
-        private bool trangThaiField;
-        
-        private System.Nullable<int> khoIDField;
-        
-        private System.Nullable<System.DateTime> ngayTaoField;
-        
-        private System.Nullable<System.DateTime> ngayCapNhatField;
-        
-        private System.Nullable<bool> isDeleteField;
-        
-        private tbl_ChiTietPN[] tbl_ChiTietPNsField;
-        
-        private tbl_Kho tbl_KhoField;
-        
-        /// <remarks/>
-        public int ID {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public int HangID {
-            get {
-                return this.hangIDField;
-            }
-            set {
-                this.hangIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public int CotID {
-            get {
-                return this.cotIDField;
-            }
-            set {
-                this.cotIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public bool TrangThai {
-            get {
-                return this.trangThaiField;
-            }
-            set {
-                this.trangThaiField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<int> KhoID {
-            get {
-                return this.khoIDField;
-            }
-            set {
-                this.khoIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<System.DateTime> NgayTao {
-            get {
-                return this.ngayTaoField;
-            }
-            set {
-                this.ngayTaoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<System.DateTime> NgayCapNhat {
-            get {
-                return this.ngayCapNhatField;
-            }
-            set {
-                this.ngayCapNhatField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<bool> IsDelete {
-            get {
-                return this.isDeleteField;
-            }
-            set {
-                this.isDeleteField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_ChiTietPN[] tbl_ChiTietPNs {
-            get {
-                return this.tbl_ChiTietPNsField;
-            }
-            set {
-                this.tbl_ChiTietPNsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_Kho tbl_Kho {
-            get {
-                return this.tbl_KhoField;
-            }
-            set {
-                this.tbl_KhoField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
-    public partial class tbl_Kho {
-        
-        private int idField;
-        
-        private string tenField;
-        
-        private string diaChiField;
-        
-        private System.Nullable<int> heTHongIDField;
-        
-        private System.DateTime ngayTaoField;
-        
-        private System.Nullable<System.DateTime> ngayCapNhatField;
-        
-        private System.Nullable<bool> isDeleteField;
-        
-        private tbl_ViTri[] tbl_ViTrisField;
-        
-        private tbl_HeThong tbl_HeThongField;
-        
-        /// <remarks/>
-        public int ID {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string Ten {
-            get {
-                return this.tenField;
-            }
-            set {
-                this.tenField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string DiaChi {
-            get {
-                return this.diaChiField;
-            }
-            set {
-                this.diaChiField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<int> HeTHongID {
-            get {
-                return this.heTHongIDField;
-            }
-            set {
-                this.heTHongIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public System.DateTime NgayTao {
-            get {
-                return this.ngayTaoField;
-            }
-            set {
-                this.ngayTaoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<System.DateTime> NgayCapNhat {
-            get {
-                return this.ngayCapNhatField;
-            }
-            set {
-                this.ngayCapNhatField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<bool> IsDelete {
-            get {
-                return this.isDeleteField;
-            }
-            set {
-                this.isDeleteField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_ViTri[] tbl_ViTris {
-            get {
-                return this.tbl_ViTrisField;
-            }
-            set {
-                this.tbl_ViTrisField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_HeThong tbl_HeThong {
-            get {
-                return this.tbl_HeThongField;
-            }
-            set {
-                this.tbl_HeThongField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
-    public partial class tbl_HeThong {
-        
-        private int idField;
-        
-        private string tenField;
-        
-        private string diaChiField;
-        
-        private string sDTField;
-        
-        private string sTKField;
-        
-        private string nganHangField;
-        
-        private System.Nullable<int> taiKhoanIDField;
-        
-        private System.DateTime ngayTaoField;
-        
-        private System.Nullable<System.DateTime> ngayCapNhatField;
-        
-        private bool isDeleteField;
-        
-        private tbl_HT_TK[] tbl_HT_TKsField;
-        
-        private tbl_Kho[] tbl_KhosField;
-        
-        private tbl_TaiKhoan tbl_TaiKhoanField;
-        
-        /// <remarks/>
-        public int ID {
-            get {
-                return this.idField;
-            }
-            set {
-                this.idField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string Ten {
-            get {
-                return this.tenField;
-            }
-            set {
-                this.tenField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string DiaChi {
-            get {
-                return this.diaChiField;
-            }
-            set {
-                this.diaChiField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string SDT {
-            get {
-                return this.sDTField;
-            }
-            set {
-                this.sDTField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string STK {
-            get {
-                return this.sTKField;
-            }
-            set {
-                this.sTKField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string NganHang {
-            get {
-                return this.nganHangField;
-            }
-            set {
-                this.nganHangField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<int> TaiKhoanID {
-            get {
-                return this.taiKhoanIDField;
-            }
-            set {
-                this.taiKhoanIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public System.DateTime NgayTao {
-            get {
-                return this.ngayTaoField;
-            }
-            set {
-                this.ngayTaoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public System.Nullable<System.DateTime> NgayCapNhat {
-            get {
-                return this.ngayCapNhatField;
-            }
-            set {
-                this.ngayCapNhatField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public bool IsDelete {
-            get {
-                return this.isDeleteField;
-            }
-            set {
-                this.isDeleteField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_HT_TK[] tbl_HT_TKs {
-            get {
-                return this.tbl_HT_TKsField;
-            }
-            set {
-                this.tbl_HT_TKsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_Kho[] tbl_Khos {
-            get {
-                return this.tbl_KhosField;
-            }
-            set {
-                this.tbl_KhosField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_TaiKhoan tbl_TaiKhoan {
-            get {
-                return this.tbl_TaiKhoanField;
-            }
-            set {
-                this.tbl_TaiKhoanField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
-    public partial class tbl_HT_TK {
-        
-        private int taiKhoanIDField;
-        
-        private int heTHongIDField;
-        
-        private tbl_HeThong tbl_HeThongField;
-        
-        private tbl_TaiKhoan tbl_TaiKhoanField;
-        
-        /// <remarks/>
-        public int TaiKhoanID {
-            get {
-                return this.taiKhoanIDField;
-            }
-            set {
-                this.taiKhoanIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public int HeTHongID {
-            get {
-                return this.heTHongIDField;
-            }
-            set {
-                this.heTHongIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_HeThong tbl_HeThong {
-            get {
-                return this.tbl_HeThongField;
-            }
-            set {
-                this.tbl_HeThongField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public tbl_TaiKhoan tbl_TaiKhoan {
-            get {
-                return this.tbl_TaiKhoanField;
-            }
-            set {
-                this.tbl_TaiKhoanField = value;
             }
         }
     }
@@ -3386,6 +3187,471 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             }
             set {
                 this.tbl_MH_LMHsField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class tbl_HeThong {
+        
+        private int idField;
+        
+        private string tenField;
+        
+        private string diaChiField;
+        
+        private string sDTField;
+        
+        private string sTKField;
+        
+        private string nganHangField;
+        
+        private System.Nullable<int> taiKhoanIDField;
+        
+        private System.DateTime ngayTaoField;
+        
+        private System.Nullable<System.DateTime> ngayCapNhatField;
+        
+        private bool isDeleteField;
+        
+        private tbl_HT_TK[] tbl_HT_TKsField;
+        
+        private tbl_Kho[] tbl_KhosField;
+        
+        private tbl_TaiKhoan tbl_TaiKhoanField;
+        
+        /// <remarks/>
+        public int ID {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string Ten {
+            get {
+                return this.tenField;
+            }
+            set {
+                this.tenField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string DiaChi {
+            get {
+                return this.diaChiField;
+            }
+            set {
+                this.diaChiField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string SDT {
+            get {
+                return this.sDTField;
+            }
+            set {
+                this.sDTField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string STK {
+            get {
+                return this.sTKField;
+            }
+            set {
+                this.sTKField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string NganHang {
+            get {
+                return this.nganHangField;
+            }
+            set {
+                this.nganHangField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<int> TaiKhoanID {
+            get {
+                return this.taiKhoanIDField;
+            }
+            set {
+                this.taiKhoanIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public System.DateTime NgayTao {
+            get {
+                return this.ngayTaoField;
+            }
+            set {
+                this.ngayTaoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<System.DateTime> NgayCapNhat {
+            get {
+                return this.ngayCapNhatField;
+            }
+            set {
+                this.ngayCapNhatField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool IsDelete {
+            get {
+                return this.isDeleteField;
+            }
+            set {
+                this.isDeleteField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_HT_TK[] tbl_HT_TKs {
+            get {
+                return this.tbl_HT_TKsField;
+            }
+            set {
+                this.tbl_HT_TKsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_Kho[] tbl_Khos {
+            get {
+                return this.tbl_KhosField;
+            }
+            set {
+                this.tbl_KhosField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_TaiKhoan tbl_TaiKhoan {
+            get {
+                return this.tbl_TaiKhoanField;
+            }
+            set {
+                this.tbl_TaiKhoanField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class tbl_HT_TK {
+        
+        private int taiKhoanIDField;
+        
+        private int heTHongIDField;
+        
+        private tbl_HeThong tbl_HeThongField;
+        
+        private tbl_TaiKhoan tbl_TaiKhoanField;
+        
+        /// <remarks/>
+        public int TaiKhoanID {
+            get {
+                return this.taiKhoanIDField;
+            }
+            set {
+                this.taiKhoanIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int HeTHongID {
+            get {
+                return this.heTHongIDField;
+            }
+            set {
+                this.heTHongIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_HeThong tbl_HeThong {
+            get {
+                return this.tbl_HeThongField;
+            }
+            set {
+                this.tbl_HeThongField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_TaiKhoan tbl_TaiKhoan {
+            get {
+                return this.tbl_TaiKhoanField;
+            }
+            set {
+                this.tbl_TaiKhoanField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class tbl_Kho {
+        
+        private int idField;
+        
+        private string tenField;
+        
+        private string diaChiField;
+        
+        private System.Nullable<int> heThongIDField;
+        
+        private System.DateTime ngayTaoField;
+        
+        private System.Nullable<System.DateTime> ngayCapNhatField;
+        
+        private System.Nullable<bool> isDeleteField;
+        
+        private tbl_ViTri[] tbl_ViTrisField;
+        
+        private tbl_HeThong tbl_HeThongField;
+        
+        /// <remarks/>
+        public int ID {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string Ten {
+            get {
+                return this.tenField;
+            }
+            set {
+                this.tenField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string DiaChi {
+            get {
+                return this.diaChiField;
+            }
+            set {
+                this.diaChiField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<int> HeThongID {
+            get {
+                return this.heThongIDField;
+            }
+            set {
+                this.heThongIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public System.DateTime NgayTao {
+            get {
+                return this.ngayTaoField;
+            }
+            set {
+                this.ngayTaoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<System.DateTime> NgayCapNhat {
+            get {
+                return this.ngayCapNhatField;
+            }
+            set {
+                this.ngayCapNhatField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<bool> IsDelete {
+            get {
+                return this.isDeleteField;
+            }
+            set {
+                this.isDeleteField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_ViTri[] tbl_ViTris {
+            get {
+                return this.tbl_ViTrisField;
+            }
+            set {
+                this.tbl_ViTrisField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_HeThong tbl_HeThong {
+            get {
+                return this.tbl_HeThongField;
+            }
+            set {
+                this.tbl_HeThongField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class tbl_ViTri {
+        
+        private int idField;
+        
+        private int hangIDField;
+        
+        private int cotIDField;
+        
+        private bool trangThaiField;
+        
+        private System.Nullable<int> khoIDField;
+        
+        private System.Nullable<System.DateTime> ngayTaoField;
+        
+        private System.Nullable<System.DateTime> ngayCapNhatField;
+        
+        private System.Nullable<bool> isDeleteField;
+        
+        private tbl_Kho tbl_KhoField;
+        
+        /// <remarks/>
+        public int ID {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int HangID {
+            get {
+                return this.hangIDField;
+            }
+            set {
+                this.hangIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int CotID {
+            get {
+                return this.cotIDField;
+            }
+            set {
+                this.cotIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool TrangThai {
+            get {
+                return this.trangThaiField;
+            }
+            set {
+                this.trangThaiField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<int> KhoID {
+            get {
+                return this.khoIDField;
+            }
+            set {
+                this.khoIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<System.DateTime> NgayTao {
+            get {
+                return this.ngayTaoField;
+            }
+            set {
+                this.ngayTaoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<System.DateTime> NgayCapNhat {
+            get {
+                return this.ngayCapNhatField;
+            }
+            set {
+                this.ngayCapNhatField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<bool> IsDelete {
+            get {
+                return this.isDeleteField;
+            }
+            set {
+                this.isDeleteField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public tbl_Kho tbl_Kho {
+            get {
+                return this.tbl_KhoField;
+            }
+            set {
+                this.tbl_KhoField = value;
             }
         }
     }
@@ -3845,6 +4111,58 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((API_ResultOfString)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    public delegate void GetGroupIDCompletedEventHandler(object sender, GetGroupIDCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetGroupIDCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetGroupIDCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public API_ResultOfBoolean Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((API_ResultOfBoolean)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    public delegate void GetDashBoardDataCompletedEventHandler(object sender, GetDashBoardDataCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetDashBoardDataCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetDashBoardDataCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public API_ResultOfDashBoard_ett Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((API_ResultOfDashBoard_ett)(this.results[0]));
             }
         }
     }

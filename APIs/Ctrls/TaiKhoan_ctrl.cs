@@ -217,7 +217,7 @@ namespace APIs.Ctrls
                                     rs.ErrDes = Constants.MSG_Permission_Denied;
                                 }
                             }
-                            else if(curUser.PhanQuyenID == Authentication.qAdmin && (obj.PhanQuyenID == Authentication.qAdmin || obj.PhanQuyenID == Authentication.qSuperAdmin))
+                            else if(curUser.PhanQuyenID == Authentication.qAdmin && (obj.PhanQuyenID == Authentication.qAdmin || obj.PhanQuyenID == Authentication.qSuperAdmin) && !obj.ID.Equals(curUser.ID))
                                     {
                                 rs.ErrCode = EnumErrCode.PermissionDenied;
                                 rs.ErrDes = Constants.MSG_Permission_Denied;
@@ -569,16 +569,22 @@ namespace APIs.Ctrls
             {
                 if (Authentication.CheckLogin(loginCode))
                 {
+                    List<int> listDaiDienID;
                     IQueryable<view_TaiKhoan> qrs = db.view_TaiKhoans.Where(u => u.PhanQuyenID != 0 && (u.IsDelete == null || u.IsDelete == false));
-                    if (phanQuyenID == Authentication.qSuperAdmin)
+                    if (phanQuyenID.Equals(Authentication.qAdmin))
                     {
-                        //Không được chọn quyền superadmin
-                        qrs = qrs.Where(u => !u.PhanQuyenID.Equals(0));
-                        
+                        listDaiDienID = db.tbl_HeThongs.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
+                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID) && !listDaiDienID.Contains(u.ID));
                     }
-                    else
+                    else if (phanQuyenID.Equals(Authentication.qNCC))
                     {
-                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID));
+                        listDaiDienID = db.tbl_NhaCungCaps.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
+                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID) && !listDaiDienID.Contains(u.ID));
+                    }
+                    else if (phanQuyenID.Equals(Authentication.qCuaHang))
+                    {
+                        listDaiDienID = db.tbl_CuaHangs.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
+                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID) && !listDaiDienID.Contains(u.ID));
                     }
 
                     List<ListCombobox_ett<int>> listCB = new List<ListCombobox_ett<int>>();
@@ -613,14 +619,22 @@ namespace APIs.Ctrls
             {
                 if (Authentication.CheckLogin(loginCode))
                 {
+                    List<int> listDaiDienID;
                     IQueryable<view_TaiKhoan> qrs = db.view_TaiKhoans.Where(u => u.PhanQuyenID != 0 && (u.IsDelete == null || u.IsDelete == false));
-                    if (phanQuyenID == Authentication.qSuperAdmin)
+                    if (phanQuyenID.Equals(Authentication.qAdmin))
                     {
-                        qrs = qrs.Where(u => !u.PhanQuyenID.Equals(0));
+                        listDaiDienID = db.tbl_HeThongs.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
+                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID) && !listDaiDienID.Contains(u.ID));
                     }
-                    else
+                    else if (phanQuyenID.Equals(Authentication.qNCC))
                     {
-                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID));
+                        listDaiDienID = db.tbl_NhaCungCaps.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
+                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID) && !listDaiDienID.Contains(u.ID));
+                    }
+                    else if (phanQuyenID.Equals(Authentication.qCuaHang))
+                    {
+                        listDaiDienID = db.tbl_CuaHangs.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
+                        qrs = qrs.Where(u => u.PhanQuyenID.Equals(phanQuyenID) && !listDaiDienID.Contains(u.ID));
                     }
 
                     List<ListCombobox_ett<string>> listCB = new List<ListCombobox_ett<string>>();
@@ -906,6 +920,91 @@ namespace APIs.Ctrls
                 else
                 {
                     rs.ErrCode = EnumErrCode.NotYetLogin;
+                }
+            }
+            catch(Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
+
+            return rs;
+        }
+
+        //Extension
+        public API_Result<bool> GetGroupID(string loginCode)
+        {
+            API_Result<bool> rs = new API_Result<bool>();
+            try
+            {
+                var curUser = Authentication.GetUser(loginCode).Data;
+                if(curUser != null)
+                {
+                    rs.PageCount = curUser.PhanQuyenID;
+                    switch (curUser.PhanQuyenID)
+                    {
+                        case 1:
+                        case 2:
+                            tbl_HeThong obj = (from ht in db.tbl_HeThongs
+                                               join httk in db.tbl_HT_TKs on ht.ID equals httk.HeTHongID
+                                               where httk.TaiKhoanID.Equals(curUser.ID) && (ht.IsDelete == null || ht.IsDelete == false)
+                                               select ht).First();
+                            rs.RecordCount = obj.ID;
+                            break;
+                        case 3:
+                            tbl_CuaHang ch = db.tbl_CuaHangs.Where(u => u.TaiKhoanID.Equals(curUser.ID) && (u.IsDelete == null || u.IsDelete == false)).First();
+                            rs.RecordCount = ch.ID;
+                            break;
+                        case 4:
+                            tbl_NhaCungCap ncc = db.tbl_NhaCungCaps.Where(u => u.TaiKhoanID.Equals(curUser.ID) && (u.IsDelete == null || u.IsDelete == false)).First();
+                            rs.RecordCount = ncc.ID;
+                            break;
+                    }
+                    rs.ErrCode = EnumErrCode.Success;
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
+                }
+            }
+            catch(Exception ex)
+            {
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
+
+            return rs;
+        }
+
+        public API_Result<DashBoard_ett> GetDashBoardData(string loginCode, DateTime? startTime, DateTime? endTime)
+        {
+            API_Result<DashBoard_ett> rs = new API_Result<DashBoard_ett>();
+            try
+            {
+                var curUser = Authentication.GetUser(loginCode).Data;
+                if(curUser != null)
+                {
+                    rs.Data = new DashBoard_ett();
+                    rs.Data.PhanQuyenID = curUser.PhanQuyenID;
+                    var procResult = db.pr_DashBoard_GetData(curUser.ID, startTime, endTime);
+                    foreach(var item in procResult)
+                    {
+                        rs.Data.TongSoHD = (item.TongSoHD == null) ? 0 : item.TongSoHD.Value;
+                        rs.Data.TongSoHDCho = (item.TongSoHDCho == null) ? 0 : item.TongSoHDCho.Value;
+                        rs.Data.TongSoHDHoanThanh = (item.TongSoHDHoanThanh == null) ? 0 : item.TongSoHDHoanThanh.Value;
+                        rs.Data.TongSoYC = (item.TongSoYC == null) ? 0 : item.TongSoYC.Value;
+                        rs.Data.TongSoYCCho = (item.TongSoYCCho == null) ? 0 : item.TongSoYCCho.Value;
+                        rs.Data.TongSoYCPheDuyet = (item.TongSoYCPheDuyet == null) ? 0 : item.TongSoYCPheDuyet.Value;
+                        rs.Data.TongSoYCHoanThanh = (item.TongSoYCHoanThanh == null) ? 0 : item.TongSoYCHoanThanh.Value;
+                    }
+
+                    rs.ErrCode = EnumErrCode.Success;
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.NotYetLogin;
+                    rs.ErrDes = Constants.MSG_Not_Login;
                 }
             }
             catch(Exception ex)
