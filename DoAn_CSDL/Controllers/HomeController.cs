@@ -47,18 +47,11 @@ namespace DoAn_CSDL.Controllers
                 Session[Constants.NCCID_SessionName] = "";
                 Session[Constants.CuaHangID_SessionName] = "";
                 var groupID = wsv.GetGroupID(rs.Data);
-                switch (groupID.PageCount)
+                if(groupID.ErrCode == TaiKhoan_wsv.EnumErrCode.Success)
                 {
-                    case 1:
-                    case 2:
-                        Session[Constants.HeThongID_SessionName] = groupID.RecordCount;
-                        break;
-                    case 3:
-                        Session[Constants.CuaHangID_SessionName] = groupID.RecordCount;
-                        break;
-                    case 4:
-                        Session[Constants.NCCID_SessionName] = groupID.RecordCount;
-                        break;
+                    Session[Constants.HeThongID_SessionName] = groupID.Data.HeThongID;
+                    Session[Constants.CuaHangID_SessionName] = groupID.Data.CuaHangID;
+                    Session[Constants.NCCID_SessionName] = groupID.Data.NhaCungCapID;
                 }
                 Session.Timeout = 60;
             }

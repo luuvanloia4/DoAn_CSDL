@@ -124,6 +124,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CuaHangController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HeThongController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HopDongController.cs" />
@@ -216,6 +217,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.min.css" />
+    <Content Include="Content\Error\CustomError.css" />
     <Content Include="Content\Home\custom.css" />
     <Content Include="Content\Home\main.css" />
     <Content Include="Content\Login\Login.css" />
@@ -543,6 +545,9 @@
     <Content Include="Views\PhieuXuat\Index.cshtml" />
     <Content Include="Views\PhieuXuat\Create.cshtml" />
     <Content Include="Views\PhieuXuat\Detail.cshtml" />
+    <Content Include="Views\CuaHang\Detail.cshtml" />
+    <None Include="Views\CuaHang\Edit.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
     <None Include="Web References\CuaHang_wsv\CuaHang_wsv.disco" />
     <Content Include="Web References\HeThong_wsv\API_ResultOfBoolean.datasource">
       <DependentUpon>Reference.map</DependentUpon>
@@ -795,6 +800,9 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Web References\TaiKhoan_wsv\API_ResultOfGroupID_ett.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
     <None Include="Web References\TaiKhoan_wsv\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

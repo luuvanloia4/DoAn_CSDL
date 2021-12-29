@@ -22,7 +22,6 @@ namespace DoAn_CSDL
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/lib/font-awesome/js/all.js",
-                      "~/Scripts/UIBlock.js",
                       "~/Scripts/select2.min.js"
                       ));
 

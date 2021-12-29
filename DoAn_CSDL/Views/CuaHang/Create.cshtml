@@ -5,6 +5,7 @@
 
     int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
     bool isAdmin = (phanQuyen == 0 || phanQuyen == 3);
+    int htID = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
 }
 
 <div class="main__content">
@@ -62,6 +63,13 @@
                     </div>
 
                     <div class="col-12 col-sm-4 col-lg-3 @Html.Raw(isAdmin? "": "d-none")">
+                        <label for="sel_HeThong">Thuộc hệ thống</label>
+                        <select name="sel_HeThong" id="sel_HeThong" class="form-control">
+                            <option value="-1">-- Chọn hệ thống --</option>
+                            <!---->
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-4 col-lg-3 @Html.Raw(isAdmin? "": "d-none")">
                         <label for="sel_DaiDien">Người đại diện<span class="required">*</span>: </label>
                         <select name="sel_DaiDien" id="sel_DaiDien" class="form-control">
                             <option value="-1">-- Chọn người đại diện --</option>
@@ -85,13 +93,41 @@
 
 <script>
     var editObj;
-    const ctrl_Name = "/NhaCungCap/";
+    const ctrl_Name = "/CuaHang/";
+
+    function GetListHeThong() {
+        $.ajax({
+            url: "/HeThong/GetListCombobox",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List nha cung cap: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn hệ thống --</option>";
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //Error;
+                }
+
+                $('#sel_HeThong').html(htmlResult);
+            },
+            error: function () {
+                //
+            }
+        }).done(function(){
+            GetListDaiDien();
+        });
+    }
 
     function GetListDaiDien() {
         $.ajax({
             url: "/TaiKhoan/GetListCombobox",
             method: "POST",
-            data: {role: "nhacungcap"},
+            data: { role: "cuahang", htID: $('#sel_HeThong').val() },
             success: function (result, status, xhr) {
                 let rs = JSON.parse(result);
                 console.log("List tai khoan: ", rs);
@@ -161,8 +197,8 @@
         if (STK_val.length == 0) {
             TryFocus(STK, "Không được để trống tài khoản!");
         }
-        else if (STK_val.length > 11) {
-            TryFocus(STK, "Số tài khoản không vượt quá 11 ký tự!");
+        else if (STK_val.length > 20) {
+            TryFocus(STK, "Số tài khoản không vượt quá 20 ký tự!");
         }
         else if (!ValidSDT(STK_val)) {
             TryFocus(STK, "Số tài khoản chỉ chứa các ký tự 0-9!");
@@ -181,7 +217,11 @@
     }
 
     $(function () {
-        GetListDaiDien();
+        GetListHeThong();
+
+        $('#sel_HeThong').change(function () {
+            GetListDaiDien();
+        });
 
         $('.UI-accept').click(function () {
             UIContentToLoading();

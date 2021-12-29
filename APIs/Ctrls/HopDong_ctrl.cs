@@ -47,7 +47,6 @@ namespace APIs.Ctrls
 
                     oldObj.SoLuong = cthd.SL;
                     db.SubmitChanges();
-                    return true;
                 }
                 else
                 {
@@ -59,8 +58,34 @@ namespace APIs.Ctrls
 
                     db.tbl_ChiTietHDs.InsertOnSubmit(newObj);
                     db.SubmitChanges();
-                    return true;
                 }
+
+                tbl_HopDong hopDong = db.tbl_HopDongs.Where(u => u.ID.Equals(hdID)).FirstOrDefault();
+                int htID = (hopDong == null) ? -1 : hopDong.HeThongID.Value;
+
+                if (htID > 0)
+                {
+                    tbl_MH_HT mh_htObj = db.tbl_MH_HTs.Where(u => u.HeThongID.Equals(htID) && u.MatHangID.Equals(cthd.ID)).FirstOrDefault();
+                    if (mh_htObj != null)
+                    {
+                        try
+                        {
+                            mh_htObj = new tbl_MH_HT();
+                            mh_htObj.HeThongID = htID;
+                            mh_htObj.MatHangID = cthd.ID;
+                            mh_htObj.SoLuong = 0;
+
+                            db.tbl_MH_HTs.InsertOnSubmit(mh_htObj);
+                            db.SubmitChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            //Không thêm đc thì chịu
+                        }
+                    }
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -687,7 +712,6 @@ namespace APIs.Ctrls
                 {
                     oldObj.SoLuong = ctpn.SL;
                     db.SubmitChanges();
-                    return true;
                 }
                 else
                 {
@@ -699,8 +723,9 @@ namespace APIs.Ctrls
 
                     db.tbl_ChiTietPNs.InsertOnSubmit(newObj);
                     db.SubmitChanges();
-                    return true;
                 }
+
+                return true;
             }
             catch (Exception ex)
             {

@@ -296,26 +296,28 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetListComboboxID", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public API_ResultOfListOfListCombobox_ettOfInt32 GetListComboboxID(string loginCode, int phanQuyenID) {
+        public API_ResultOfListOfListCombobox_ettOfInt32 GetListComboboxID(string loginCode, int phanQuyenID, int heThongID) {
             object[] results = this.Invoke("GetListComboboxID", new object[] {
                         loginCode,
-                        phanQuyenID});
+                        phanQuyenID,
+                        heThongID});
             return ((API_ResultOfListOfListCombobox_ettOfInt32)(results[0]));
         }
         
         /// <remarks/>
-        public void GetListComboboxIDAsync(string loginCode, int phanQuyenID) {
-            this.GetListComboboxIDAsync(loginCode, phanQuyenID, null);
+        public void GetListComboboxIDAsync(string loginCode, int phanQuyenID, int heThongID) {
+            this.GetListComboboxIDAsync(loginCode, phanQuyenID, heThongID, null);
         }
         
         /// <remarks/>
-        public void GetListComboboxIDAsync(string loginCode, int phanQuyenID, object userState) {
+        public void GetListComboboxIDAsync(string loginCode, int phanQuyenID, int heThongID, object userState) {
             if ((this.GetListComboboxIDOperationCompleted == null)) {
                 this.GetListComboboxIDOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetListComboboxIDOperationCompleted);
             }
             this.InvokeAsync("GetListComboboxID", new object[] {
                         loginCode,
-                        phanQuyenID}, this.GetListComboboxIDOperationCompleted, userState);
+                        phanQuyenID,
+                        heThongID}, this.GetListComboboxIDOperationCompleted, userState);
         }
         
         private void OnGetListComboboxIDOperationCompleted(object arg) {
@@ -327,26 +329,28 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetListComboboxName", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public API_ResultOfListOfListCombobox_ettOfString GetListComboboxName(string loginCode, int phanQuyenID) {
+        public API_ResultOfListOfListCombobox_ettOfString GetListComboboxName(string loginCode, int phanQuyenID, int heThongID) {
             object[] results = this.Invoke("GetListComboboxName", new object[] {
                         loginCode,
-                        phanQuyenID});
+                        phanQuyenID,
+                        heThongID});
             return ((API_ResultOfListOfListCombobox_ettOfString)(results[0]));
         }
         
         /// <remarks/>
-        public void GetListComboboxNameAsync(string loginCode, int phanQuyenID) {
-            this.GetListComboboxNameAsync(loginCode, phanQuyenID, null);
+        public void GetListComboboxNameAsync(string loginCode, int phanQuyenID, int heThongID) {
+            this.GetListComboboxNameAsync(loginCode, phanQuyenID, heThongID, null);
         }
         
         /// <remarks/>
-        public void GetListComboboxNameAsync(string loginCode, int phanQuyenID, object userState) {
+        public void GetListComboboxNameAsync(string loginCode, int phanQuyenID, int heThongID, object userState) {
             if ((this.GetListComboboxNameOperationCompleted == null)) {
                 this.GetListComboboxNameOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetListComboboxNameOperationCompleted);
             }
             this.InvokeAsync("GetListComboboxName", new object[] {
                         loginCode,
-                        phanQuyenID}, this.GetListComboboxNameOperationCompleted, userState);
+                        phanQuyenID,
+                        heThongID}, this.GetListComboboxNameOperationCompleted, userState);
         }
         
         private void OnGetListComboboxNameOperationCompleted(object arg) {
@@ -531,10 +535,10 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetGroupID", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public API_ResultOfBoolean GetGroupID(string loginCode) {
+        public API_ResultOfGroupID_ett GetGroupID(string loginCode) {
             object[] results = this.Invoke("GetGroupID", new object[] {
                         loginCode});
-            return ((API_ResultOfBoolean)(results[0]));
+            return ((API_ResultOfGroupID_ett)(results[0]));
         }
         
         /// <remarks/>
@@ -862,6 +866,120 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         public DashBoard_ett Data {
+            get {
+                return this.dataField;
+            }
+            set {
+                this.dataField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public EnumErrCode ErrCode {
+            get {
+                return this.errCodeField;
+            }
+            set {
+                this.errCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string ErrDes {
+            get {
+                return this.errDesField;
+            }
+            set {
+                this.errDesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int RecordCount {
+            get {
+                return this.recordCountField;
+            }
+            set {
+                this.recordCountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int PageCount {
+            get {
+                return this.pageCountField;
+            }
+            set {
+                this.pageCountField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class GroupID_ett {
+        
+        private int heThongIDField;
+        
+        private int nhaCungCapIDField;
+        
+        private int cuaHangIDField;
+        
+        /// <remarks/>
+        public int HeThongID {
+            get {
+                return this.heThongIDField;
+            }
+            set {
+                this.heThongIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int NhaCungCapID {
+            get {
+                return this.nhaCungCapIDField;
+            }
+            set {
+                this.nhaCungCapIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int CuaHangID {
+            get {
+                return this.cuaHangIDField;
+            }
+            set {
+                this.cuaHangIDField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class API_ResultOfGroupID_ett {
+        
+        private GroupID_ett dataField;
+        
+        private EnumErrCode errCodeField;
+        
+        private string errDesField;
+        
+        private int recordCountField;
+        
+        private int pageCountField;
+        
+        /// <remarks/>
+        public GroupID_ett Data {
             get {
                 return this.dataField;
             }
@@ -4133,10 +4251,10 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         }
         
         /// <remarks/>
-        public API_ResultOfBoolean Result {
+        public API_ResultOfGroupID_ett Result {
             get {
                 this.RaiseExceptionIfNecessary();
-                return ((API_ResultOfBoolean)(this.results[0]));
+                return ((API_ResultOfGroupID_ett)(this.results[0]));
             }
         }
     }

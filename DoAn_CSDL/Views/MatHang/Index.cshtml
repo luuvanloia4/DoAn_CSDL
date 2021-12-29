@@ -91,7 +91,7 @@
 </div>
 
 <!-- Thẻ ẩn toàn màn hình -->
-<div class="UI-hidden">
+<div class="UI-hidden" id="detail">
     <div class="UI-hidden__content">
         <h1 class="title">THÔNG TIN MẶT HÀNG:</h1>
         <div class="d-flex">
@@ -251,7 +251,7 @@
                         $('#obj_avatar').prop("src", user.Img);
                     }
 
-                    ShowUIHiddenContent();
+                    $('#detail').addClass("show");
                 }
                 else {
                     ShowFailMessage("Có lỗi xảy ra trong quá trình lấy thông mặt hàng, vui lòng thử lại sau ít phút!");

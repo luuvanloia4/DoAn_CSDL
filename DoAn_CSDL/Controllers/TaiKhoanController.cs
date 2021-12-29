@@ -256,8 +256,14 @@ namespace DoAn_CSDL.Controllers
                     break;
             }
 
+            int htID = SharedFunction.ParseID(Request["htID"]);
+            if(htID <= 0)
+            {
+                htID = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
+            }
+
             TaiKhoan_wsv.TaiKhoan_wsv tk_wsv = new TaiKhoan_wsv.TaiKhoan_wsv();
-            var rs = tk_wsv.GetListComboboxID(Session[Constants.LoginCode_SessionName].ToString(), roleID);
+            var rs = tk_wsv.GetListComboboxID(Session[Constants.LoginCode_SessionName].ToString(), roleID, htID);
 
             return JsonConvert.SerializeObject(rs);
         }

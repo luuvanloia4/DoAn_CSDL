@@ -103,7 +103,7 @@
 </div>
 
 <!-- Thẻ ẩn toàn màn hình --> 
-<div class="UI-hidden">
+<div class="UI-hidden" id="detail">
     <div class="UI-hidden__content">
         <h1 class="title">THÔNG TIN VỊ TRÍ:</h1>
         <div class="d-flex">
@@ -271,6 +271,8 @@
         else {
             $('#obj_avatar').prop("src", user.Img);
         }
+
+        $('#detail').addClass("show");
     }
 
     function GoDetail(id) {

@@ -1,7 +1,567 @@
-﻿
+﻿@using DoAn_CSDL.Shared
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Thêm mới yêu cầu xuất hàng";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = (phanQuyen == 0 || phanQuyen == 3);
+
+    int htID = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
+    int chID = SharedFunction.ParseID(Session[Constants.CuaHangID_SessionName].ToString());
 }
 
-<h2>Create</h2>
+<div class="main__content w-100">
+    <h1 class="main__title">THÊM YÊU CẦU XUẤT HÀNG</h1>
 
+    <div class="card @Html.Raw((chID < 0) ? "" : "d-none")">
+        <p class="card-title">Thêm mặt yêu cầu xuất hàng cho cửa hàng:</p>
+        <div class="card-body">
+            <form class="form-group custom-form" id="input-form" onsubmit="return false;">
+                <div class="row">
+                    <div class="col-12 col-sm-4 form-group position-relative d-none">
+                        <input type="text" name="txt_HeThong" id="txt_HeThong" class="form-control" readonly value="@htID" />
+                        <input type="text" name="txt_ID" id="txt_ID" class="form-control" readonly value="@chID" />
+                    </div>
+
+                    <div class="col-12 col-sm-8 col-md-6 form-group position-relative @Html.Raw((chID < 0)? "": "d-none")">
+                        <label for="sel_MaCH">Mã hệ thống<span class="required">*</span>:</label>
+                        <select id="sel_HeThong" name="sel_HeThong" class="form-control">
+                            <option value="-1">-- Chọn hệ thống --</option>
+                            <!--  -->
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-8 col-md-6 form-group position-relative">
+                        <label for="sel_MaCH">Mã cửa hàng<span class="required">*</span>:</label>
+                        <select id="sel_CuaHang" name="sel_CuaHang" class="form-control">
+                            <option value="-1">-- Chọn cửa hàng --</option>
+                            <!--  -->
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <p class="card-title">Danh sách mặt hàng trong yêu cầu:</p>
+        <div class="card-body">
+            <div class="table-container">
+                <table class="table table-hover table-bordered table-striped custom-table" id="tbl-items">
+                    <tbody>
+                        <tr>
+                            <td>Danh sách mặt hàng trong yêu cầu đang trống!</td>
+                        </tr>
+                    </tbody>
+                    <!-- Table items show up here -->
+                </table>
+            </div>
+            <div class="d-flex justify-content-between align-items-center px-5">
+                <button type="button" class="btn btn-danger custom-btn-func" onclick="GoDeleteAll(this)">
+                    <i class="fas fa-trash"></i> Xóa bản ghi đã chọn
+                </button>
+                <button type="button" class="btn btn-success custom-btn-func" onclick="ShowAddItem(this)">
+                    <i class="fas fa-plus"></i> Thêm mặt hàng
+                </button>
+            </div>
+        </div>
+        <div class="card-bottom">
+            <p class="card-bottom__note" id="card-note"><strong>Lưu ý:</strong> Những trường có dấu <span class="required">*</span> bắt buộc phải có giá trị!</p>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary custom-btn-func" onclick="Create()">
+            <i class="fas fa-plus"></i> Thêm mới
+        </button>
+    </div>
+</div>
+
+<div class="UI-add-item" id="add-item">
+    <div class="UI-add-item__content" style="min-width: 130rem;">
+        <h1 class="title">THÊM MẶT HÀNG VÀO YÊU CẦU XUẤT HÀNG:</h1>
+        <div class="row">
+            <div class="col-6 col-sm-2 form-group position-relative">
+                <label for="sel_Size">
+                    Hiển thị
+                    <select name="sel_Size" id="sel_Size" class="form-control custom-select w-auto">
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    bản ghi
+                </label>
+            </div>
+            <div class="col-12 col-sm-4 form-group position-relative text-right">
+                <label for="sel_OrderBy">
+                    Sắp xếp:
+                    <select name="sel_OrderBy" id="sel_OrderBy" class="form-control custom-select w-auto">
+                        <option value="0" selected>Ngày tạo</option>
+                        <option value="1">Mã mặt hàng</option>
+                        <option value="3">Tên mặt hàng</option>
+                    </select>
+                </label>
+                <label for="sel_OrderDes">
+                    theo thứ tự:
+                    <select name="sel_OrderDes" id="sel_OrderDes" class="form-control custom-select w-auto">
+                        <option value="false" selected>Tăng dần</option>
+                        <option value="true">Giảm dần</option>
+                    </select>
+                </label>
+            </div>
+            <div class="col-12 col-sm-6 form-group position-relative text-right">
+                <label for="txt_SearchValue">
+                    Tìm kiếm
+                    <select name="sel_SearchType" id="sel_SearchType" class="form-control custom-select w-auto">
+                        <option value="0" selected>Tất cả</option>
+                        <option value="1" >Mã mặt hàng</option>
+                        <option value="2" >Tên mặt hàng</option>
+                    </select>
+                    với từ khóa
+                    <input type="search" name="txt_SearchValue" id="txt_SearchValue" class="form-control custom-search-input" autocomplete="on" maxlength="200" value="" />
+                    <button type="button" class="btn custom-btn-search text-primary" onclick="TransPage(1)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </label>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-hover table-bordered table-striped custom-table" id="add-item-printer">
+                <!-- Search result show up here -->
+            </table>
+
+            <div class="menu-paging">
+                <div class="menu-paging__content" id="menu_paging">
+                    <!---->
+                </div>
+            </div>
+        </div>
+        <div class="d-flex mt-3 justify-content-between">
+            <button type="button" class="btn btn-danger" onclick="HideAddItem(this)">
+                <i class="fas fa-times"></i> Hủy bỏ
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var detaiObj;
+    var id, htID;
+    const ctrl_Name = "/PhieuXuat/";
+
+    function GetListHeThong() {
+        htID = $('#txt_HeThong').val();
+        $.ajax({
+            url: "/HeThong/GetListCombobox",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List he thong: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn hệ thống --</option>";
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "' " + (item.Data == htID? "selected": "") + " >" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //Error;
+                }
+
+                $('#sel_HeThong').html(htmlResult);
+            },
+            error: function () {
+                //
+            }
+        }).done(function () {
+            GetListCuaHang();
+        });
+    }
+
+    function GetListCuaHang() {
+        htID = $('#sel_HeThong').val();
+        id = $('#txt_ID').val();
+
+        $.ajax({
+            url: "/CuaHang/GetListCombobox",
+            method: "POST",
+            data: { htID },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List cửa hàng: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn cửa hàng --</option>";
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "' " + (item.Data == id? "selected": "") + " >" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //Error;
+                }
+
+                $('#sel_CuaHang').html(htmlResult);
+            },
+            error: function () {
+                //
+            }
+        });
+    }
+
+    //Add list mặt hàng
+    var listAddItem = new Array();
+    function CheckItemAdded(itemID) {
+        let isAdded = false;
+        if (listAddItem != null && listAddItem != undefined && listAddItem.length > 0) {
+            listAddItem.forEach((item) => {
+                if (item.ID == itemID) {
+                    isAdded = true;
+                }
+            });
+        }
+
+        return isAdded;
+    }
+
+    var isSearch = false;
+    function TransPage(index) {
+        ShowLoading();
+        //Làm mới đầu vào:
+        searchValue = $('#txt_SearchValue').val();
+        searchType = $('#sel_SearchType').val();
+        size = $('#sel_Size').val();
+        orderBy = $('#sel_OrderBy').val();
+        orderDes = $('#sel_OrderDes').val();
+        page = parseInt(index);
+
+        startTime = $('#txt_StartTime').val();
+        endTime = $('#txt_EndTime').val();
+
+        //Bắt đầu tìm kiếm:
+        $.ajax({
+            url: "/MatHang/SearchPagingHT",
+            method: "POST",
+            data: {
+                searchValue, searchType, size, orderBy, orderDes, page,
+                startTime, endTime
+            },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List mat hang: ", rs);
+                if (rs.ErrCode == 2) {
+                    let listTaiKhoan = rs.Data;
+                    //Danh sách tài khoản
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Hình ảnh</th>\
+                                <th>Tên mặt hàng</th>\
+                                <th>Đơn giá</th>\
+                                <th>Loại mặt hàng</th>\
+                                <th>Ngày tạo</th>\
+                                <th width='120px'>Số lượng</th>\
+                                <th>Thao tác</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    maxPage = rs.PageCount;
+                    let stt = 1;
+                    let isFill = false;
+                    listTaiKhoan.forEach((item) => {
+                        if (!CheckItemAdded(item.ID)) {
+                            htmlResult += "<tr>"
+                                + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
+                                + "<td align='center' class='item-id'>" + item.ID + "</td>"
+                                + "<td align='center' class='item-image'><img class='img-detail' src='" + ParseImageURL(item.Img) + "' onclick='ShowImage(this)'></img></td>"
+                                + "<td class='item-name'>" + item.Ten + "</td>"
+                                + "<td align='center' class='item-gia'>" + item.Gia + "</td>"
+                                + "<td align='' class='iteme-lmh'>" + item.TenLMH + "</td>"
+                                + "<td align='center' class='item-ngaytao'>" + ParseHDate(item.NgayTao) + "</td>"
+                                + "<td align='center' class='custom-form'><input type='number' class='item-soluong form-control' min='0' value='0' onchange='AutoCorrectNumber(this)' />"
+
+                            htmlResult += "</td>"
+                                + "<td align='center'>"
+                                + "<button type='button' class='btn custom-btn-detail' onclick='GoDetail(" + item.ID + ")'><i class='fas fa-eye'></i></button>"
+                                + "<button type='button' class='btn custom-btn-edit' onclick='GoAddItem(this)'><i class='fas fa-plus'></i></button>"
+                                + "</td>";
+                            htmlResult += "</tr>";
+
+                            if (!isFill) {
+                                isFill = true;
+                            }
+                        }
+                    });
+                    htmlResult += "</tbody>"
+
+                    if (!isFill) {
+                        htmlResult = "<tbody><tr><td>Không có mặt hàng nào phù hợp!</td></tr></tbody>"
+                    }
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#add-item-printer').html(htmlResult);
+                    $('#menu_paging').html(RenderPageButton(page, maxPage));
+                }
+                else {
+                    $('#menu_paging').html("");
+                    if (rs.ErrCode == 3) {
+                        //
+                    }
+                    else {
+                        //
+                    }
+                    let htmlResult = "<tbody><tr><td>Không có mặt hàng nào phù hợp!</td></tr></tbody>";
+                    $('#add-item-printer').html(htmlResult);
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#menu_paging').html("");
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            HideLoading();
+        });
+    }
+
+    function ShowAddItem(ele) {
+        if (!isSearch) {
+            TransPage(1);
+            isSearch = true;
+        }
+
+        $('#add-item').addClass("active");
+    }
+
+    function HideAddItem(ele) {
+        $('#add-item').removeClass("active");
+    }
+
+    function GoAddItem(ele) {
+        let tr = $(ele).parents('tr');
+        itemName = tr.find(".item-name").text();
+        itemID = tr.find('.item-id').text();
+        itemImage = tr.find(".item-image").html();
+        itemGia = tr.find(".item-gia").text();
+        itemSL = tr.find('.item-soluong').val();
+        itemNgayTao = tr.find('.item-ngaytao').text();
+
+        if (itemSL <= 0) {
+            ShowFailMessage("Không thể thêm mặt hàng với số lượng 0!");
+        }
+        else {
+            ShowLoading();
+            listAddItem.push({ ID: itemID, Ten: itemName, Img: itemImage, Gia: itemGia, SL: itemSL, NgayTao: itemNgayTao });
+            tr.remove();
+            LoadListAddItem();
+            HideLoading();
+            ShowSuccessMessage("Đã thêm mặt hàng " + itemName + " vào yêu cầu xuất hàng!");
+        }
+    }
+
+    //List chi tiết phiếu xuất
+    function LoadListAddItem() {
+        let htmlResult = "";
+        let stt = 1;
+        if (listAddItem != null && listAddItem != undefined && listAddItem.length > 0) {
+            htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px' style='cursor: pointer;' onclick='SelectAllRecord(this)'>#</th>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Hình ảnh</th>\
+                                <th>Tên mặt hàng</th>\
+                                <th>Đơn giá</th>\
+                                <th>Ngày tạo</th>\
+                                <th width='130px'>Số lượng</th>\
+                                <th>Thao tác</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+
+            listAddItem.forEach((item) => {
+                htmlResult += "<tr>"
+                    + "<td align='center'><input type='checkbox' class='is-selected custom-checkbox' /></div></td>"
+                    + "<td align='center'>" + (stt++) + "</td>"
+                    + "<td align='center' class='item-id'>" + item.ID + "</td>"
+                    + "<td align='center' class='item-image'>" + item.Img + "</td>"
+                    + "<td class='item-name'>" + item.Ten + "</td>"
+                    + "<td align='center' class='item-gia'>" + item.Gia + "</td>"
+                    + "<td align='center' class='item-ngaytao'>" + item.NgayTao + "</td>"
+                    + "<td align='center' class='custom-form'><input type='number' class='item-soluong form-control' min='0' value='" + item.SL + "' onchange='AutoCorrectNumber(this)' />"
+
+                htmlResult += "</td>"
+                    + "<td align='center'>"
+                    + "<button type='button' class='btn custom-btn-delete' onclick='GoDelete(this)'><i class='fas fa-trash-alt'></i></button>"
+                    + "</td>";
+                htmlResult += "</tr>";
+            });
+
+            console.log(1);
+        }
+        else {
+            htmlResult = "<tbody><tr><td>Danh sách mặt hàng trong yêu cầu đang trống!</td></tr></tbody>";
+        }
+
+        $('#tbl-items').html(htmlResult);
+    }
+
+    function GoDelete(ele) {
+        let tr = $(ele).parents('tr');
+        id = tr.find('.item-id').text();
+        name = tr.find('.item-name').text();
+        action = 0;
+
+        ShowUIContent("Xác nhận xóa mặt hàng " + name + " ra khỏi yêu cầu xuất hàng?");
+    }
+
+    var allSelected = false;
+    function SelectAllRecord(ele) {
+        allSelected = !allSelected;
+        $('#tbl-items .is-selected').prop("checked", allSelected);
+    }
+
+    var listDeleteID = new Array();
+    function GoDeleteAll() {
+        delete listDeleteID;
+        listDeleteID = new Array();
+        $('#tbl-items .is-selected').each(function () {
+            if (this.checked) {
+                listDeleteID.push($(this).parents("tr").find(".item-id").text());
+            }
+        });
+
+        if (listDeleteID != null && listDeleteID != undefined && listDeleteID.length > 0) {
+            action = 1;
+            ShowUIContent("Xác nhận xóa " + listDeleteID.length + " bản ghi được chọn?");
+        }
+        else {
+            ShowFailMessage("Vui lòng chọn bản ghi trước khi nhấn nút xóa!");
+        }
+    }
+
+
+    //Submit
+    var listItemSubmit = new Array();
+    function Create() {
+        delete listItemSubmit;
+        listItemSubmit = new Array();
+
+        $('#tbl-items tbody tr').each(function () {
+            let tr = $(this);
+            itemID = tr.find('.item-id').text();
+            itemSL = tr.find('.item-soluong').val();
+            if (itemID != null && itemID != undefined && itemID.length > 0) {
+                listItemSubmit.push(new { ID: itemID, SL: itemSL });
+            }
+        });
+
+        if (listItemSubmit != null && listItemSubmit != undefined && listItemSubmit.length > 0) {
+            action = 1;
+            ShowUIContent("Xác nhận tạo yêu cầu xuất hàng với " + listItemSubmit.length + " mặt hàng được chọn?");
+        }
+        else {
+            ShowFailMessage("Không thể tạo yêu cầu xuất hàng trống!");
+        }
+    }
+
+    $(function () {
+        GetListHeThong();
+
+        $('#sel_HeThong').change(function () {
+            GetListCuaHang();
+        });
+
+        $('.UI-accept').click(function () {
+            UIContentToLoading();
+
+            switch (action) {
+                case 0:
+                    for (let i = 0; i < listAddItem.length; i++) {
+                        if (listAddItem[i].ID == id) {
+                            listAddItem.splice(i, 1);
+                            break;
+                        }
+                    }
+                    LoadListAddItem();
+                    HideLoading();
+                    break;
+                case 1:
+                    for (let i = 0; i < listDeleteID.length; i++) {
+                        for (let j = 0; j < listAddItem.length; j++) {
+                            if (listAddItem[j].ID == listDeleteID[i]) {
+                                listAddItem.splice(j, 1);
+                                break;
+                            }
+                        }
+                    }
+                    LoadListAddItem();
+                    HideLoading();
+                    break;
+                case 2:
+                    //For submit
+                    $.ajax({
+                        url: ctrl_Name + "PostCreate",
+                        method: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: { ListCTPX: listItemSubmit },
+                        success: function (result, status, xhr) {
+                            let rs = JSON.parse(result);
+                            console.log("Create result:", rs);
+                            if (rs.ErrCode == 2) {
+                                ShowUIBlock();
+                                ShowSuccessMessage("Thêm mới bản ghi thành công, tự động chuyển hướng sau khi hết thông báo!", function () { window.location.replace(ctrl_Name + "/Detail?id=" + rs.Data); });
+                            }
+                            else if (rs.ErrCode == 0) {
+                                ShowFailMessage("Có lỗi xảy ra trong quá trình tạo bản ghi!");
+                            }
+                            else {
+                                ShowFailMessage(rs.ErrDes);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+                        }
+                    }).always(function () {
+                        HideLoading();
+                    });
+
+                    break;
+                default:
+                    HideLoading();
+            }
+        });
+
+        //Check filter change
+        $('#sel_Size').change(function () {
+            TransPage(1);
+        });
+
+        $('#sel_OrderBy').change(function () {
+            TransPage(page);
+        });
+        $('#sel_OrderDes').change(function () {
+            TransPage(page);
+        });
+
+        //Enter
+        $('#txt_SearchValue').keydown(function (event) {
+            if (event.key == "Enter") {
+                TransPage(1);
+            }
+        });
+    });
+
+
+    function SingleImageChange(ele) {
+        let image = ele.files[0];
+        let src = (image != null && image != undefined) ? URL.createObjectURL(image) : errorImagePath;
+        $('#avatar-review').prop("src", src);
+        $('#txt_ImgName').val($(ele).val().split('\\').pop());
+    }
+</script>

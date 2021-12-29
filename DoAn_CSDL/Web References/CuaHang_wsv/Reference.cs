@@ -307,22 +307,24 @@ namespace DoAn_CSDL.CuaHang_wsv {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetListCombobox", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public API_ResultOfListOfListCombobox_ettOfInt32 GetListCombobox() {
-            object[] results = this.Invoke("GetListCombobox", new object[0]);
+        public API_ResultOfListOfListCombobox_ettOfInt32 GetListCombobox(int htID) {
+            object[] results = this.Invoke("GetListCombobox", new object[] {
+                        htID});
             return ((API_ResultOfListOfListCombobox_ettOfInt32)(results[0]));
         }
         
         /// <remarks/>
-        public void GetListComboboxAsync() {
-            this.GetListComboboxAsync(null);
+        public void GetListComboboxAsync(int htID) {
+            this.GetListComboboxAsync(htID, null);
         }
         
         /// <remarks/>
-        public void GetListComboboxAsync(object userState) {
+        public void GetListComboboxAsync(int htID, object userState) {
             if ((this.GetListComboboxOperationCompleted == null)) {
                 this.GetListComboboxOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetListComboboxOperationCompleted);
             }
-            this.InvokeAsync("GetListCombobox", new object[0], this.GetListComboboxOperationCompleted, userState);
+            this.InvokeAsync("GetListCombobox", new object[] {
+                        htID}, this.GetListComboboxOperationCompleted, userState);
         }
         
         private void OnGetListComboboxOperationCompleted(object arg) {

@@ -285,8 +285,17 @@ span.required{
     padding-left: 4rem;
 }
 
-
-
+/* Hiden part of website */
+.custom-hidden-part{
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.3s;
+    padding: 0;
+}
+.custom-hidden-part.active{
+    max-height: none;
+    padding: 0;
+}
 
 
 

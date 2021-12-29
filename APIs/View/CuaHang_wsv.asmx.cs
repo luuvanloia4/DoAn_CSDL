@@ -58,9 +58,9 @@ namespace APIs.View
         }
 
         [WebMethod]
-        public API_Result<List<ListCombobox_ett<int>>> GetListCombobox()
+        public API_Result<List<ListCombobox_ett<int>>> GetListCombobox(int htID)
         {
-            return ctrl.GetListCombobox();
+            return ctrl.GetListCombobox(htID);
         }
 
         [WebMethod]

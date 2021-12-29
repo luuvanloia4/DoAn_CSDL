@@ -52,15 +52,15 @@ namespace APIs.View
         }
 
         [WebMethod]
-        public API_Result<List<ListCombobox_ett<int>>> GetListComboboxID(string loginCode, int phanQuyenID = -1)
+        public API_Result<List<ListCombobox_ett<int>>> GetListComboboxID(string loginCode, int phanQuyenID = -1, int heThongID = -1)
         {
-            return ctrl.GetListComboboxID(loginCode, phanQuyenID);
+            return ctrl.GetListComboboxID(loginCode, phanQuyenID, heThongID);
         }
 
         [WebMethod]
-        public API_Result<List<ListCombobox_ett<string>>> GetListComboboxName(string loginCode, int phanQuyenID = -1)
+        public API_Result<List<ListCombobox_ett<string>>> GetListComboboxName(string loginCode, int phanQuyenID = -1, int heThongID = -1)
         {
-            return ctrl.GetListComboboxName(loginCode, phanQuyenID);
+            return ctrl.GetListComboboxName(loginCode, phanQuyenID, heThongID);
         }
 
         [WebMethod]
@@ -94,7 +94,7 @@ namespace APIs.View
         }
 
         [WebMethod]
-        public API_Result<bool> GetGroupID(string loginCode)
+        public API_Result<GroupID_ett> GetGroupID(string loginCode)
         {
             return ctrl.GetGroupID(loginCode);
         }

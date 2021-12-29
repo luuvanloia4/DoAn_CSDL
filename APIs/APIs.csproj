@@ -104,6 +104,7 @@
       <DependentUpon>Database.dbml</DependentUpon>
     </Compile>
     <Compile Include="Models\Entity\DashBoard_ett.cs" />
+    <Compile Include="Models\Entity\GroupID_ett.cs" />
     <Compile Include="Models\Entity\ListCombobox_ett.cs" />
     <Compile Include="Models\Entity\TaiKhoan_ett.cs" />
     <Compile Include="Models\EnumBindMode.cs" />

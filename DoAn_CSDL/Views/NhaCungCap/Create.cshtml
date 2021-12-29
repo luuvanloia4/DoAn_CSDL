@@ -161,8 +161,8 @@
         if (STK_val.length == 0) {
             TryFocus(STK, "Không được để trống tài khoản!");
         }
-        else if (STK_val.length > 11) {
-            TryFocus(STK, "Số tài khoản không vượt quá 11 ký tự!");
+        else if (STK_val.length > 20) {
+            TryFocus(STK, "Số tài khoản không vượt quá 20 ký tự!");
         }
         else if (!ValidSDT(STK_val)) {
             TryFocus(STK, "Số tài khoản chỉ chứa các ký tự 0-9!");

@@ -1,5 +1,5 @@
 ﻿.UI-container{
-    display: none;
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -9,15 +9,22 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
+
+    opacity: 0;
+    visibility: hidden;
+    transition-property: visibility, opacity;
+    transition-duration: .5s;
+    transition-timing-function: ease-in-out;
 }
 .UI-show{
-    display: flex;
+    opacity: 1;
+    visibility: visible;
 }
 .UI-container .UI-show{
     display: block!important;
 }
 .UI-loading {
-    display: none;
+    display: block;
     width: 50rem;
     padding: 5rem 7rem;
     background-color: white;
@@ -35,40 +42,59 @@
     height: 7rem;
     border-width: 0.5rem;
 }
+
 /* new option */
 .load-dots{
     position: relative;
     width: 30rem;
-    height: 10rem;
-    background-color: lightblue;
+    height: 18rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-/* .load-dot{
-    width: 1rem;
-    height: 1rem;
+
+:root{
+    --animation-color-start: rgb(80, 195, 233);
+    --animation-color-end: rgb(248, 82, 82);
+}
+
+@keyframes dot_loading_animation {
+    0% {
+        background-color: --animation-color-start;
+        height: 10%;
+    }
+
+    50% {
+        height: 90%;
+        background-color: var(--animation-color-end); 
+    }
+
+    100% {
+        background-color: var(--animation-color-start);
+        height: 10%;
+    }
+}
+
+.load-dot{
+    width: 1.2rem;
+    height: 10%;
     margin: .5rem;
     display:block;
     position: relative;
-    background-color: blue;
+    background-color: rgb(80, 195, 233);
     transition: .25s ease;
-    animation: dot_loading_animation;
+    animation: dot_loading_animation 1s infinite;
+    animation-delay: calc(var(--dot-pos)*0.0325s);
+    animation-timing-function: ease-in-out;
+}
 
-    @keyframes dot_loading_animation {
-        {
-            background-color: lightblue;
-            height: 3.5rem;
-        }
-    }
-} */
 .loading-text{
     font-size: 2rem;
     text-align: center;
 }
 
 .UI-content {
-    display: none;
+    display: block;
     width: 70rem;
     padding: 2rem 4rem;
     background-color: white;
@@ -175,11 +201,21 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     
     background-color: rgba(255, 255, 255, 0.7);
+
+    visibility: hidden;
+    opacity: 0;
+    transition-property: visibility, opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
+}
+.UI-hidden.show{
+    visibility: visible;
+    opacity: 1;
 }
 .UI-hidden .btn{
     font-size: 1.6rem;
@@ -208,7 +244,7 @@
     }
 
 .UI-image{
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
@@ -219,6 +255,18 @@
     left: 0;
     z-index: 14;
     background-color:rgba(255, 255, 255, 0.7);
+
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.8);
+    transition-property: visibility, opacity, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
+}
+.UI-image.active{
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
 }
     .UI-image img{
         width: 100%;
@@ -247,18 +295,29 @@
     /*  */
 .UI-add-item{
     position: fixed;
+    display: flex;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    display: none;
     justify-content: center;
     align-items: center;
     padding: 1rem 2rem;
     z-index: 12;
     
     background-color: rgba(255, 255, 255, 0.7);
+
+    visibility: hidden;
+    opacity: 0;
+    transition-property: visibility, opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
 }
+.UI-add-item.active{
+    opacity: 1;
+    visibility: visible;
+}
+
 .UI-add-item .btn{
     font-size: 1.6rem;
     padding: 0.7rem 1rem;

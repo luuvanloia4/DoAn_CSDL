@@ -526,7 +526,11 @@
         </s:sequence>
       </s:complexType>
       <s:element name="GetListCombobox">
-        <s:complexType />
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="htID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
       </s:element>
       <s:element name="GetListComboboxResponse">
         <s:complexType>

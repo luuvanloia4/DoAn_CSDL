@@ -48,6 +48,7 @@ namespace APIs.Ctrls
                         newObj.SDT = obj.SDT;
                         newObj.STK = obj.STK;
                         newObj.NganHang = obj.NganHang;
+                        newObj.HeThongID = obj.HeThongID;
                         if (Authentication.IsSuperAdmin(curUser))
                         {
                             newObj.TaiKhoanID = obj.TaiKhoanID;
@@ -369,12 +370,17 @@ namespace APIs.Ctrls
             return rs;
         }
 
-        public API_Result<List<ListCombobox_ett<int>>> GetListCombobox()
+        public API_Result<List<ListCombobox_ett<int>>> GetListCombobox(int htID)
         {
             API_Result<List<ListCombobox_ett<int>>> rs = new API_Result<List<ListCombobox_ett<int>>>();
             try
             {
-                IQueryable<view_CuaHang> qrs = db.view_CuaHangs.Where(u => (u.IsDelete == null || u.IsDelete == false));
+                IQueryable<view_CuaHang> qrs = db.view_CuaHangs.Where(u => (u.IsDelete == null || u.IsDelete == false)).OrderBy(u => u.Ten);
+
+                if(htID > 0)
+                {
+                    qrs = qrs.Where(u => u.HeThongID.Equals(htID));
+                }
 
                 List<ListCombobox_ett<int>> listCB = new List<ListCombobox_ett<int>>();
                 foreach (var item in qrs.ToList())

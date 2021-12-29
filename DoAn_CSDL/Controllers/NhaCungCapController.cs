@@ -158,8 +158,9 @@ namespace DoAn_CSDL.Controllers
         [HttpPost]
         public string GetDetail()
         {
+            string txt_ID = Request["id"];
             int id;
-            if(Session[Constants.NCCID_SessionName] == null)
+            if(!string.IsNullOrEmpty(txt_ID))
             {
                 id = SharedFunction.ParseID(Request["id"]);
             }

@@ -1,4 +1,6 @@
 ﻿$(function () {
+    HideLoading();
+
     $('.UI-cancel').click(function () {
         //Ẩn tất cả UIblock
         $('.UI-show').removeClass("UI-show");
@@ -10,30 +12,33 @@ var loadingCount = 0;
 function ShowUIContent(msg) {
     $('.UI-content .message').html(msg);
     $('.UI-content').addClass("UI-show");
-    $('.UI-container').addClass("UI-show");
+    $('#UI-content').addClass("UI-show");
 }
 
 function UIContentToLoading() {
-    $('.UI-content').removeClass("UI-show");
-    $('.UI-loading').addClass("UI-show");
+    $('#UI-content').removeClass("UI-show");
+    $('#UI-loading').addClass("UI-show");
     loadingCount++;
 }
 
 function ShowLoading() {
     $('.UI-loading').addClass("UI-show");
-    $('.UI-container').addClass("UI-show");
+    $('#UI-loading').addClass("UI-show");
     loadingCount++;
 }
 
 function HideLoading() {
-    $('.UI-loading').removeClass("UI-show");
-    $('.UI-container').removeClass("UI-show");
-    loadingCount = 0;
+    setTimeout(function(){
+        $('.UI-loading').removeClass("UI-show");
+        $('#UI-loading').removeClass("UI-show");
+        loadingCount = 0;
+    },
+    300);
 }
 function ShowUIBlock(){
     $('.UI-loading').removeClass("UI-show");
-    $('.UI-content').removeClass("UI-show");
-    $('.UI-container').addClass("d-flex");
+    $('#UI-loading').addClass("UI-show");
+    $('#UI-content').removeClass("UI-show");
 }
 
 function CheckLoadingCount() {
@@ -153,14 +158,14 @@ $(function () {
         if (event.target !== this) {
             return;
         }
-        $(this).removeClass("d-flex");
+        $(this).removeClass("show");
     });
 
     $('.add-new-item').click(function(event){
         if(event.target !== this){
             return;
         }
-        $(this).removeClass("d-flex");
+        $(this).removeClass("active");
     });
 });
 
@@ -170,8 +175,8 @@ function UIShowImage(src){
     UI_image.find("img").prop("src", src);
     // console.log(UI_image.find("img"));
     // console.log(src);
-    UI_image.addClass("d-flex");
+    UI_image.addClass("active");
 }
 function UIHideImage(){
-    $('.UI-image').removeClass("d-flex");
+    $('.UI-image').removeClass("active");
 }

@@ -20,6 +20,9 @@ namespace DoAn_CSDL.Shared
         public const string DefaultImage = "/Data/System/Images/img_error.png";
         public const string DefaultAvatar = "/Data/System/Images/default_image.jpg";
 
+        //Error Image:
+        public const string ErrorFolder = "/Data/System/Images/Error/";
+
         //Upload
         public const string RootPath = "/Data/";
         public const string UploadRootPath = RootPath + "Upload/";

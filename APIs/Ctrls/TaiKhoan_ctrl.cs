@@ -562,7 +562,7 @@ namespace APIs.Ctrls
             return rs;
         }
 
-        public API_Result<List<ListCombobox_ett<int>>> GetListComboboxID(string loginCode, int phanQuyenID = -1)
+        public API_Result<List<ListCombobox_ett<int>>> GetListComboboxID(string loginCode, int phanQuyenID = -1, int heThongID = -1)
         {
             API_Result<List<ListCombobox_ett<int>>> rs = new API_Result<List<ListCombobox_ett<int>>>();
             try
@@ -570,7 +570,12 @@ namespace APIs.Ctrls
                 if (Authentication.CheckLogin(loginCode))
                 {
                     List<int> listDaiDienID;
-                    IQueryable<view_TaiKhoan> qrs = db.view_TaiKhoans.Where(u => u.PhanQuyenID != 0 && (u.IsDelete == null || u.IsDelete == false));
+                    view_TaiKhoan vt = new view_TaiKhoan();
+                    IQueryable<view_TaiKhoan> qrs = (from u in db.view_TaiKhoans
+                                                     join ht_tk in db.tbl_HT_TKs on u.ID equals ht_tk.TaiKhoanID
+                                                     where (u.PhanQuyenID != 0) && (u.IsDelete == null || u.IsDelete == false)
+                                                        && (heThongID <= 0 || ht_tk.HeTHongID.Equals(heThongID))
+                                                     select u);
                     if (phanQuyenID.Equals(Authentication.qAdmin))
                     {
                         listDaiDienID = db.tbl_HeThongs.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
@@ -612,7 +617,7 @@ namespace APIs.Ctrls
             return rs;
         }
 
-        public API_Result<List<ListCombobox_ett<string>>> GetListComboboxName(string loginCode, int phanQuyenID = -1)
+        public API_Result<List<ListCombobox_ett<string>>> GetListComboboxName(string loginCode, int phanQuyenID = -1, int heThongID = -1)
         {
             API_Result<List<ListCombobox_ett<string>>> rs = new API_Result<List<ListCombobox_ett<string>>>();
             try
@@ -620,7 +625,11 @@ namespace APIs.Ctrls
                 if (Authentication.CheckLogin(loginCode))
                 {
                     List<int> listDaiDienID;
-                    IQueryable<view_TaiKhoan> qrs = db.view_TaiKhoans.Where(u => u.PhanQuyenID != 0 && (u.IsDelete == null || u.IsDelete == false));
+                    IQueryable<view_TaiKhoan> qrs = (from u in db.view_TaiKhoans
+                                                     join ht_tk in db.tbl_HT_TKs on u.ID equals ht_tk.TaiKhoanID
+                                                     where (u.PhanQuyenID != 0) && (u.IsDelete == null || u.IsDelete == false)
+                                                        && (heThongID <= 0 || ht_tk.HeTHongID.Equals(heThongID))
+                                                     select u);
                     if (phanQuyenID.Equals(Authentication.qAdmin))
                     {
                         listDaiDienID = db.tbl_HeThongs.Where(u => u.IsDelete == null || u.IsDelete == false).Select(u => u.TaiKhoanID.Value).ToList();
@@ -932,34 +941,26 @@ namespace APIs.Ctrls
         }
 
         //Extension
-        public API_Result<bool> GetGroupID(string loginCode)
+        public API_Result<GroupID_ett> GetGroupID(string loginCode)
         {
-            API_Result<bool> rs = new API_Result<bool>();
+            API_Result<GroupID_ett> rs = new API_Result<GroupID_ett>();
             try
             {
                 var curUser = Authentication.GetUser(loginCode).Data;
-                if(curUser != null)
+                if (curUser != null)
                 {
-                    rs.PageCount = curUser.PhanQuyenID;
-                    switch (curUser.PhanQuyenID)
-                    {
-                        case 1:
-                        case 2:
-                            tbl_HeThong obj = (from ht in db.tbl_HeThongs
-                                               join httk in db.tbl_HT_TKs on ht.ID equals httk.HeTHongID
-                                               where httk.TaiKhoanID.Equals(curUser.ID) && (ht.IsDelete == null || ht.IsDelete == false)
-                                               select ht).First();
-                            rs.RecordCount = obj.ID;
-                            break;
-                        case 3:
-                            tbl_CuaHang ch = db.tbl_CuaHangs.Where(u => u.TaiKhoanID.Equals(curUser.ID) && (u.IsDelete == null || u.IsDelete == false)).First();
-                            rs.RecordCount = ch.ID;
-                            break;
-                        case 4:
-                            tbl_NhaCungCap ncc = db.tbl_NhaCungCaps.Where(u => u.TaiKhoanID.Equals(curUser.ID) && (u.IsDelete == null || u.IsDelete == false)).First();
-                            rs.RecordCount = ncc.ID;
-                            break;
-                    }
+                    rs.Data = new GroupID_ett();
+
+                    tbl_HeThong ht = (from h in db.tbl_HeThongs
+                                           join httk in db.tbl_HT_TKs on h.ID equals httk.HeTHongID
+                                           where httk.TaiKhoanID.Equals(curUser.ID) && (h.IsDelete == null || h.IsDelete == false)
+                                           select h).FirstOrDefault();
+                    rs.Data.HeThongID = (ht != null) ? ht.ID : -1;
+                    tbl_CuaHang ch = db.tbl_CuaHangs.Where(u => u.TaiKhoanID.Equals(curUser.ID) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
+                    rs.Data.CuaHangID = (ch != null) ? ch.ID : -1;
+                    tbl_NhaCungCap ncc = db.tbl_NhaCungCaps.Where(u => u.TaiKhoanID.Equals(curUser.ID) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
+                    rs.Data.NhaCungCapID = (ncc != null) ? ncc.ID : -1;
+
                     rs.ErrCode = EnumErrCode.Success;
                 }
                 else

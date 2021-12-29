@@ -1,0 +1,82 @@
+﻿*{
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 10px;
+}
+
+body{
+    font-size: 1.6rem;
+}
+
+.error-page{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-position: center;
+    background-size: cover;
+}
+
+.error-page__content{
+    padding: 3rem 7rem;
+    /* background-color: white; */
+    background-color: transparent;
+    border-radius: .3rem;
+    transform: translateY(32rem);
+}
+
+.error-page__title{
+    text-align: center;
+    color: white;
+}
+
+.error-page__title-1{
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+.error-page__button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+@keyframes error-button {
+    0%{
+        background-position: 0% 0%;
+        border-color: white;
+    }
+    50%{
+        background-position: 100% 0%;
+        border-color: rgb(246, 255, 121);
+    }
+    100%{
+        background-position: 0% 0%;
+        border-color: white;
+    }
+}
+
+.error-page__button .btn{
+    font-size: 2rem;
+    font-weight: 500;
+    padding: 1rem 3rem;
+}
+.error-page__button .btn:hover{
+    transform: scale(1.3);
+}
+
+.error-page__button .btn-animation{
+    background-image: linear-gradient(to right, blue, red);
+    background-size: 200%;
+    animation: infinite error-button 1.5s;
+    transition: .3s;
+}

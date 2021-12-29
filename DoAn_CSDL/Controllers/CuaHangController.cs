@@ -171,7 +171,7 @@ namespace DoAn_CSDL.Controllers
         public string GetDetail()
         {
             int id;
-            if (Session[Constants.NCCID_SessionName] == null)
+            if (!string.IsNullOrEmpty(Request["id"]))
             {
                 id = SharedFunction.ParseID(Request["id"]);
             }
@@ -248,8 +248,15 @@ namespace DoAn_CSDL.Controllers
         [HttpPost]
         public string GetListCombobox()
         {
+
+            int htID = SharedFunction.ParseID(Request["htID"]);
+            if(htID < 0)
+            {
+                htID = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
+            }
+
             CuaHang_wsv.CuaHang_wsv ch_wsv = new CuaHang_wsv.CuaHang_wsv();
-            var rs = ch_wsv.GetListCombobox();
+            var rs = ch_wsv.GetListCombobox(htID);
 
             return JsonConvert.SerializeObject(rs);
         }

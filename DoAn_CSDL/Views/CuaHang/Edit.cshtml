@@ -1,17 +1,19 @@
 ﻿@using DoAn_CSDL.Shared
 @{
-    ViewBag.Title = "Cập nhật nhà cung cấp";
+    ViewBag.Title = "Cập nhật thông tin cửa hàng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
-    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = (phanQuyen == 0 || phanQuyen == 3);
     int id = SharedFunction.ParseID(Request["id"]);
+    int htID = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
 }
 
 <div class="main__content">
-    <h1 class="main__title">CẬP NHẬT NHÀ CUNG CẤP</h1>
+    <h1 class="main__title">CẬP NHẬT THÔNG TIN CỬA HÀNG</h1>
 
     <div class="card">
-        <p class="card-title">Thông tin nhà cung cấp:</p>
+        <p class="card-title">Thông tin cửa hàng:</p>
         <div class="card-body">
             <form class="form-group custom-form" id="input-form" onsubmit="return false;">
                 <div class="row">
@@ -28,13 +30,13 @@
                         <div class="col-4 d-none d-sm-block"></div>*@
 
                     <div class="col-12 col-sm-4 col-md-3 form-group position-relative">
-                        <label for="txt_ID">Mã nhà cung cấp:</label>
-                        <input type="text" name="txt_ID" id="txt_ID" class="form-control" autocomplete="off" maxlength="500" value="@id" readonly />
+                        <label for="txt_ID">Mã cửa hàng:</label>
+                        <input type="text" name="txt_ID" id="txt_ID" class="form-control" autocomplete="off" maxlength="500" value="@id" disabled />
                     </div>
                     <div class="col-8 d-none d-sm-block"></div>
 
                     <div class="col-12 col-sm-8 col-md-6 form-group position-relative">
-                        <label for="txt_Ten">Tên nhà cung cấp<span class="required">*</span>:</label>
+                        <label for="txt_Ten">Tên cửa hàng<span class="required">*</span>:</label>
                         <input type="text" name="txt_Ten" id="txt_Ten" class="form-control" autocomplete="off" maxlength="200" autofocus />
                     </div>
 
@@ -85,8 +87,7 @@
 
 <script>
     var editObj;
-    const ctrl_Name = "/NhaCungCap/";
-    loadingCount = 0;
+    const ctrl_Name = "/CuaHang/";
 
     function FillData(obj) {
         $('#txt_Ten').val(obj.Ten);
@@ -94,46 +95,71 @@
         $('#txt_SDT').val(obj.SDT);
         $('#txt_STK').val(obj.STK);
         $('#txt_NganHang').val(obj.NganHang);
+        $('#sel_DaiDien').html("<option value='" + obj.TaiKhoanID + "' selected>" + obj.UserName + " (" + obj.HoTen + ")</option>");
     }
 
     function GetObject() {
         let id = $('#txt_ID').val();
-        ShowLoading();
-
         $.ajax({
             url: ctrl_Name + "GetDetail",
             method: "POST",
             data: { id },
             success: function (result, status, xhr) {
                 let rs = JSON.parse(result);
+                console.log(rs);
 
                 if (rs.ErrCode == 2) {
                     editObj = rs.Data;
-                    FillData(editObj);
-                    GetListDaiDien();
+                    FillData(rs.Data);
                 }
                 else if (rs.ErrCode == 0) {
-                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu, vui lòng thử lại sau ít phút!");
+                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu!");
                 }
                 else {
-                    ShowFailMessage(rs.Des);
+                    ShowFailMessage(rs.ErrDes);
                 }
             },
             error: function () {
                 ShowFailMessage("Mất kết nối với máy chủ!");
             }
         }).always(function () {
-            CheckLoadingCount();
+            HideLoading();
+        });
+    }
+
+    function GetListHeThong() {
+        $.ajax({
+            url: "/HeThong/GetListCombobox",
+            method: "POST",
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List nha cung cap: ", rs);
+
+                let htmlResult = "<option value='-1'>-- Chọn hệ thống --</option>";
+                if (rs.ErrCode == 2) {
+                    rs.Data.forEach((item) => {
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
+                    });
+                }
+                else {
+                    //Error;
+                }
+
+                $('#sel_HeThong').html(htmlResult);
+            },
+            error: function () {
+                //
+            }
+        }).done(function () {
+            GetListDaiDien();
         });
     }
 
     function GetListDaiDien() {
-        ShowLoading();
-
         $.ajax({
             url: "/TaiKhoan/GetListCombobox",
             method: "POST",
-            data: {role: "nhacungcap"},
+            data: { role: "cuahang", htID: $('#sel_HeThong').val() },
             success: function (result, status, xhr) {
                 let rs = JSON.parse(result);
                 console.log("List tai khoan: ", rs);
@@ -141,7 +167,7 @@
                 let htmlResult = "<option value='-1'>-- Chọn người đại diện --</option>"
                 if (rs.ErrCode == 2) {
                     rs.Data.forEach((item) => {
-                        htmlResult += "<option value='" + item.Data + "'" + ((item.Data == editObj.TaiKhoanID)? "selected": "") + ">" + item.DisplayData + "</option>";
+                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
                     });
                 }
                 else {
@@ -152,8 +178,6 @@
             error: function () {
                 //
             }
-        }).always(function () {
-            CheckLoadingCount();
         });
     }
 
@@ -164,10 +188,10 @@
         let Ten = $('#txt_Ten');
         let Ten_val = Ten.val();
         if (Ten_val.length == 0) {
-            TryFocus(Ten, "Không được để trống tên hệ thống!");
+            TryFocus(Ten, "Không được để trống tên cửa hàng!");
         }
         else if (Ten_val.length > 200) {
-            TryFocus(Ten, "Tên hệ thống không vượt quá 200 ký tự!");
+            TryFocus(Ten, "Tên cửa hàng không vượt quá 200 ký tự!");
         }
 
         let DiaChi = $('#txt_DiaChi');
@@ -220,7 +244,7 @@
 
         //Khi dữ liệu đã đúng:
         if (!hasFocus) {
-            ShowUIContent("Xác nhận cập nhật dữ liệu?");
+            ShowUIContent("Xác nhận cập nhật bản ghi?");
         }
     }
 
@@ -244,7 +268,7 @@
                     console.log("Edit result:", rs);
                     if (rs.ErrCode == 2) {
                         ShowUIBlock();
-                        ShowSuccessMessage("Cập nhật dữ liệu thành công, tự động chuyển hướng sau khi hết thông báo!", function () { window.location.replace(ctrl_Name + "Detail?id=" + editObj.ID); });
+                        ShowSuccessMessage("Cập nhật bản ghi thành công, tự động chuyển hướng sau khi hết thông báo!", function () { window.location.replace(ctrl_Name + "/Detail?id=" + editObj.ID); });
                     }
                     else if (rs.ErrCode == 0) {
                         ShowFailMessage("Có lỗi xảy ra trong quá trình cập nhật dữ liệu!");

@@ -1,13 +1,12 @@
 ﻿@using DoAn_CSDL.Shared
 @{
-    ViewBag.Title = "Thông tin hệ thống";
+    ViewBag.Title = "Thông tin cửa hàng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     int id = SharedFunction.ParseID(Request["id"]);
-    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
-    bool isAdmin = (phanQuyen == 0 || phanQuyen == 1);
+    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
 
     //For search paging
-    string alias = "taikhoan_hethong";
+    string alias = "phieuxuat_cuahang";
     int size = (Session[alias + "_Size"] == null) ? 5 : int.Parse(Session[alias + "_Size"].ToString());
     int page = (Session[alias + "_Page"] == null) ? 1 : int.Parse(Session[alias + "_Page"].ToString());
     int searchType = (Session[alias + "_SearchType"] == null) ? 0 : int.Parse(Session[alias + "_SearchType"].ToString());
@@ -18,7 +17,7 @@
 
 <div class="main__inner">
     <div class="main__content @Html.Raw(isAdmin? "w-100": "")">
-        <h2 class="main__title">THÔNG TIN HỆ THỐNG</h2>
+        <h2 class="main__title">THÔNG TIN CỬA HÀNG</h2>
         <div class="custom-detail">
             <div class="d-none">
                 <input type="text" name="txt_ID" id="txt_ID" class="form-control" value="@id" hidden />
@@ -29,7 +28,10 @@
                     <!---->
                 </table>
 
-                <div class="@Html.Raw(isAdmin? "d-flex": "d-none") justify-content-end pt-3">
+                <div class="d-flex justify-content-between pt-5 @Html.Raw(isAdmin? "": "d-none")">
+                    <button type="button" class="btn btn-primary custom-btn-func" onclick="GoCreate(this)">
+                        <i class="fas fa-plus"></i> Thêm yêu cầu xuất hàng
+                    </button>
                     <button type="button" class="btn btn-success custom-btn-func" onclick="window.location.href = ctrlName + 'Edit?id=' + @id;">
                         <i class="fas fa-sync"></i> Cập nhật dữ liệu
                     </button>
@@ -37,14 +39,14 @@
             </div>
 
             <div class="card @Html.Raw(isAdmin? "": "d-none")" style="margin-top: 4rem">
-                <h2 class="card-title">Danh sách tài khoản thuộc hệ thống</h2>
+                <h2 class="card-title">Danh sách yêu cầu xuất hàng của cửa hàng</h2>
                 <div class="card-body">
                     <div class="row pb-2">
-                        <div class="col-12 col-sm-4 form-group position-relative">
-                            <label for="sel_PhanQuyen">
-                                Phân quyền:
-                                <select name="sel_PhanQuyen" id="sel_PhanQuyen" class="form-control custom-select w-auto">
-                                    <option value="-1">-- Chọn nhóm quyền --</option>
+                        <div class="col-12 col-sm-4 form-group position-relative d-none">
+                            <label for="sel_Status">
+                                Trạng thái:
+                                <select name="sel_PhanQuyen" id="sel_Status" class="form-control custom-select w-auto">
+                                    <option value="-1">-- Chọn trạng thái yêu cầu xuất hàng --</option>
                                     <!---->
                                 </select>
                             </label>
@@ -79,8 +81,8 @@
                                 Sắp xếp:
                                 <select name="sel_OrderBy" id="sel_OrderBy" class="form-control custom-select w-auto">
                                     <option value="0" @Html.Raw((orderBy == 0) ? "selected" : "")>Ngày tạo</option>
-                                    <option value="1" @Html.Raw((orderBy == 1) ? "selected" : "")>Mã tài khoản</option>
-                                    <option value="3" @Html.Raw((orderBy == 3) ? "selected" : "")>Tên tài khoản</option>
+                                    <option value="1" @Html.Raw((orderBy == 1) ? "selected" : "")>Mã phiếu xuất</option>
+                                    <option value="3" @Html.Raw((orderBy == 3) ? "selected" : "")>Mã cửa hàng</option>
                                 </select>
                             </label>
                             <label for="sel_OrderDes">
@@ -96,10 +98,8 @@
                                 Tìm kiếm
                                 <select name="sel_SearchType" id="sel_SearchType" class="form-control custom-select w-auto">
                                     <option value="0" @Html.Raw((searchType == 0) ? "selected" : "")>Tất cả</option>
-                                    <option value="1" @Html.Raw((searchType == 1) ? "selected" : "")>Mã tài khoản</option>
-                                    <option value="2" @Html.Raw((searchType == 2) ? "selected" : "")>Tên tài khoản</option>
-                                    <option value="3" @Html.Raw((searchType == 3) ? "selected" : "")>Họ và tên</option>
-                                    <option value="5" @Html.Raw((searchType == 5) ? "selected" : "")>Số điện thoại</option>
+                                    <option value="1" @Html.Raw((searchType == 1) ? "selected" : "")>Mã phiếu xuất</option>
+                                    <option value="2" @Html.Raw((searchType == 2) ? "selected" : "")>Tên cửa hàng</option>
                                 </select>
                                 với từ khóa
                                 <input type="search" name="txt_SearchValue" id="txt_SearchValue" class="form-control custom-search-input" autocomplete="on" maxlength="200" value="@searchValue" />
@@ -130,7 +130,7 @@
 <!-- Thẻ ẩn toàn màn hình -->
 <div class="UI-hidden" id="detail">
     <div class="UI-hidden__content">
-        <h1 class="title">THÔNG TIN TÀI KHOẢN:</h1>
+        <h1 class="title">THÔNG TIN YÊU CẦU XUẤT HÀNG:</h1>
         <div class="d-flex">
             <img src="#" class="img-detail mr-5 mb-3" onclick="ShowImage(this)" id="obj_avatar" />
             <div class="user" id="obj_top">
@@ -145,7 +145,7 @@
 
 <script>
     var detailObj;
-    const ctrlName = "/HeThong/";
+    const ctrlName = "/CuaHang/";
     var id;
     var isAdmin = @isAdmin;
     loadingCount = 0; //For multiple loading progress
@@ -154,12 +154,12 @@
         htmlResult = "<tbody>"
         htmlResult += "\
         <tr>\
-            <th>Mã hệ thống:</th>\
+            <th>Mã nhà cửa hàng:</th>\
             <td>" + obj.ID + "</td>\
         </tr>";
         htmlResult += "\
         <tr>\
-            <th>Tên hệ thống:</th>\
+            <th>Tên cửa hàng:</th>\
             <td>" + obj.Ten + "</td>\
         </tr>";
         htmlResult += "\
@@ -239,20 +239,20 @@
         });
     }
 
-    //For tbl_TaiKhoan
-    const ctrl_Name_Second = "/TaiKhoan/";
+    //For tbl_MatHang
+    const ctrl_Name_Second = "/PhieuXuat/";
     var action = 0;
 
-    var searchValue, mode, phanQuyen, size, orderBy, orderDes, page, maxPage;
-    var userID, userName;
+    var searchValue, mode, size, orderBy, orderDes, page, maxPage;
+    var itemID, itemName;
     var startTime, endTime;
+    var status;
 
     function TransPage(index) {
         ShowLoading();
         //Làm mới đầu vào:
         searchValue = $('#txt_SearchValue').val();
         searchType = $('#sel_SearchType').val();
-        phanQuyen = $('#sel_PhanQuyen').val();
         size = $('#sel_Size').val();
         orderBy = $('#sel_OrderBy').val();
         orderDes = $('#sel_OrderDes').val();
@@ -261,48 +261,49 @@
         startTime = $('#txt_StartTime').val();
         endTime = $('#txt_EndTime').val();
 
+        status = $('#sel_Status');
+
         //Bắt đầu tìm kiếm:
         $.ajax({
             url: ctrl_Name_Second + "SearchPaging",
             method: "POST",
             data: {
-                searchValue, searchType, phanQuyen, size, orderBy, orderDes, page,
-                startTime, endTime, heThongID: id
+                searchValue, searchType, size, orderBy, orderDes, page,
+                startTime, endTime, nccID: id
             },
             success: function (result, status, xhr) {
                 let rs = JSON.parse(result);
-                console.log("List tai khoan: ", rs);
+                console.log("List phieu xuat: ", rs);
                 if (rs.ErrCode == 2) {
-                    let listTaiKhoan = rs.Data;
-                    //Danh sách tài khoản
                     let htmlResult = "<thead>\
                             <tr>\
                                 <th width='50px' style='cursor: pointer;' onclick='SelectAllRecord(this)'>#</th>\
                                 <th width='50px'>STT</th>\
                                 <th width='60px'>ID</th>\
-                                <th>Tên tài khoản</th>\
-                                <th>Họ và tên</th>\
-                                <th>Ngày sinh</th>\
-                                <th>Số điện thoại</th>\
-                                <th>Ngày lập</th>\
-                                <th>Phân quyền</th>\
+                                <th>Ngày tạo</th>\
+                                <th>Ngày phê duyệt</th>\
+                                <th>Người phê duyệt</th>\
+                                <th>Tài khoản người phê duyệt>\
+                                <th>Ngày hoàn thành</th>\
+                                <th>Trạng thái</th>\
                                 <th>Thao tác</th>\
                             </tr>\
                         </thead>\
                         <tbody>";
                     maxPage = rs.PageCount;
                     let stt = 1;
-                    listTaiKhoan.forEach((item) => {
+                    rs.Data.forEach((item) => {
                         htmlResult += "<tr>"
                             + "<td align='center'><input type='checkbox' class='is-selected custom-checkbox' /></div></td>"
                             + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
                             + "<td align='center' class='item-id'>" + item.ID + "</td>"
-                            + "<td class='item-name'>" + item.UserName + "</td>"
-                            + "<td>" + item.HoTen + "</td>"
-                            + "<td align='center'>" + ParseDate(item.NgaySinh) + "</td>"
-                            + "<td>" + item.SDT + "</td>"
-                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
-                            + "<td>" + item.PhanQuyen;
+                            + "<td align='center'>" + ParseHDate(item.NgayLap) + "</td>"
+                            + "<td align='center'>" + ((item.TrangThai == 0)? "Chưa duyệt": ParseHDate(item.NgayDuyet)) + "</td>"
+                            + "<td>" + ((item.TrangThai == 0) ? "Chưa duyệt" : item.HoTen) + "</td>"
+                            + "<td>" + ((item.TrangThai == 0) ? "Chưa duyệt" : item.UserName) + "</td>"
+                            + "<td align='center'>" + ((item.TrangThai != 2)? "Chưa hoàn thành" : item.NgayHoanThanh) + "</td>"
+                            + "<td align='center'>" + ((item.TrangThai == 0)? "Chờ phê duyệt": (item.TrangThai == 1)? "Đang giao hàng": "Đã hoàn thành");
+
                         htmlResult += "</td>"
                             + "<td align='center'>"
                             + "<button type='button' class='btn custom-btn-detail' onclick='GoDetail(" + item.ID + ")'><i class='fas fa-eye'></i></button>"
@@ -322,7 +323,6 @@
                     $('#menu_paging').html("");
                     if (rs.ErrCode == 3) {
                         //
-                        ShowFailMessage("Không tìm thấy kết quả với từ khóa '" + searchValue + "'!");
                         let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
                         $('#result-printer').html(htmlResult);
                     }
@@ -358,17 +358,15 @@
                 if (rs.ErrCode == 2) {
                     let user = rs.Data;
 
-                    let htmlResult = "<p><strong>Mã tài khoản:</strong> " + user.ID + "</p>"
-                        + "<p><strong>Tên tài khoản:</strong> " + user.UserName + "</p>"
-                        + "<p><strong>Phân quyền:</strong> " + user.PhanQuyen + "</p>";
+                    let htmlResult = "<p><strong>Mã mặt hàng:</strong> " + user.ID + "</p>"
+                        + "<p><strong>Tên mặt hàng:</strong> " + user.Ten + "</p>"
+                        + "<p><strong>Đơn giá:</strong> " + user.Gia + "</p>";
                     $("#obj_top").html(htmlResult);
 
-                    htmlResult = "<p><strong>Họ và tên:</strong> " + user.HoTen + "</p>"
-                        + "<p><strong>Ngày sinh:</strong> " + ParseDate(user.NgaySinh) + "</p>"
-                        + "<p><strong>Địa chỉ:</strong> " + user.DiaChi + "</p>"
-                        + "<p><strong>Số điện thoại:</strong> " + user.SDT + "</p>"
+                    htmlResult = "<p><strong>Mô tả:</strong> " + user.MoTa + "</p>"
+                        + "<p><strong>Nhà cung cấp:</strong> " + user.TenNCC + "</p>"
                     htmlResult += "<div class='d-flex justify-content-end'>"
-                        + "<a href='/TaiKhoan/Edit?id=" + user.ID + "' class='btn btn-success'>"
+                        + "<a href='" + ctrl_Name_Second + "Edit?id=" + user.ID + "' class='btn btn-success'>"
                         + "<i class='fas fa-user-edit'></i> Cập nhật thông tin"
                         + "</a>"
                         + "</div>";
@@ -402,11 +400,11 @@
 
     function GoDelete(ele) {
         let tr = $(ele).parents('tr');
-        userName = tr.find(".item-name").text();
-        userID = tr.find('.item-id').text();
+        itemName = tr.find(".item-name").text();
+        itemID = tr.find('.item-id').text();
         action = 0;
 
-        ShowUIContent("Xác nhận xóa bản ghi " + name + "?");
+        ShowUIContent("Xác nhận xóa bản ghi " + itemName + "?");
     }
 
     var allSelected = false;
@@ -438,39 +436,12 @@
         ShowUIContent("Xác nhận xuất dữ liệu ra file excel?");
     }
 
-    function GetListPhanQuyen() {
-        $.ajax({
-            url: "/PhanQuyen/GetListCombobox",
-            method: "POST",
-            success: function (result, status, xhr) {
-                let rs = JSON.parse(result);
-
-                let htmlResult = "<option value='-1'>-- Chọn nhóm quyền --</option>"
-                if (rs.ErrCode == 2) {
-                    rs.Data.forEach((item) => {
-                        htmlResult += "<option value='" + item.Data + "'>" + item.DisplayData + "</option>";
-                    });
-                }
-                else {
-                    //Error
-                }
-
-                $('#sel_PhanQuyen').html(htmlResult);
-            },
-            error: function () {
-                //Error
-            }
-        });
-    }
-
     //Ready
     $(function () {
         GetObject();
 
         if (isAdmin) {
             TransPage(1);
-
-            GetListPhanQuyen();
 
             //Nhấn nút xác nhận:
             $('.UI-accept').click(function () {
@@ -480,13 +451,13 @@
                         $.ajax({
                             url: ctrl_Name_Second + "Delete",
                             method: "POST",
-                            data: { id },
+                            data: { id: itemID },
                             success: function (result, status, xhr) {
                                 let rs = JSON.parse(result);
                                 console.log(rs);
                                 if (rs.ErrCode == 2) {
                                     TransPage(page);
-                                    ShowSuccessMessage("Xóa bản ghi " + userName + " thành công!");
+                                    ShowSuccessMessage("Xóa bản ghi " + itemName + " thành công!");
                                 }
                                 else if (rs.ErrCode == 0) {
                                     ShowFailMessage("Xóa bản ghi thất bại, vui lòng thử lại sau ít phút!");
@@ -593,9 +564,17 @@
                 if (event.key == "Enter") {
                     TransPage(1);
                 }
-            })
+            });
         }
     });
+
+    //For add item
+    function SingleImageChange(ele) {
+        let image = ele.files[0];
+        let src = (image != null && image != undefined) ? URL.createObjectURL(image) : errorImagePath;
+        $('#avatar-review').prop("src", src);
+        $('#txt_ImgName').val($(ele).val().split('\\').pop());
+    }
 </script>
 
 

@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <div class="card" style="margin-top: 4rem; display: none;" id="phieunhap-container">
+            <div class="card custom-hidden-part" style="margin-top: 4rem;" id="phieunhap-container">
                 <h2 class="card-title" style="font-size: 2rem;">Danh sách phiếu nhập</h2>
                 <div class="card-body">
                     <div class="row pb-3">
@@ -161,7 +161,7 @@
                 <label for="sel_OrderDes">
                     theo thứ tự:
                     <select name="sel_OrderDes" id="sel_OrderDes" class="form-control custom-select w-auto">
-                        <option value="false" @Html.Raw(isDes ? "" : "selected") )>Tăng dần</option>
+                        <option value="false" @Html.Raw(isDes ? "" : "selected")>Tăng dần</option>
                         <option value="true" @Html.Raw(isDes ? "selected" : "")>Giảm dần</option>
                     </select>
                 </label>
@@ -203,7 +203,7 @@
 </div>
 
 <!-- Thẻ ẩn toàn màn hình -->
-<div class="UI-hidden">
+<div class="UI-hidden" id="detail">
     <div class="UI-hidden__content">
         <h1 class="title">THÔNG TIN MẶT HÀNG:</h1>
         <div class="d-flex">
@@ -389,7 +389,8 @@
     function GoPhieuNhap() {
         let divPhieuNhap = $('#phieunhap-container');
 
-        if (divPhieuNhap.css("display") != "none") {
+        if (divPhieuNhap.hasClass("active")) {
+            divPhieuNhap.removeClass("active");
             return;
         }
 
@@ -437,22 +438,22 @@
                     //Danh sách nút chuyển trang:
                     //Hiển thị kết quả
                     $('#phieunhap-printer').html(htmlResult);
-                    divPhieuNhap.show();
+                    divPhieuNhap.addClass("active");
                 }
                 else if (rs.ErrCode == 3) {
                     ShowFailMessage("Không tìm phiếu nhập phù hợp với hợp đồng!");
                     let htmlResult = "<tbody><tr><td>Không tìm phiếu nhập phù hợp với hợp đồng!</td></tr></tbody>";
                     $('#phieunhap-printer').html(htmlResult);
-                    divPhieuNhap.show();
+                    divPhieuNhap.addClass("active");
                 }
                 else {
                     ShowFailMessage("Lấy kết quả tìm kiếm thất bại!");
-                    divPhieuNhap.hide();
+                    divPhieuNhap.removeClass("active");
                 }
             },
             error: function (xhr, status, error) {
                 ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
-                divPhieuNhap.hide();
+                divPhieuNhap.removeClass("active");
             }
         });
     }
@@ -516,7 +517,7 @@
                     let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
                     $('#phieunhap-add-printer').html(htmlResult);
                 }
-                $('#phieunhap-add').addClass("d-flex");
+                $('#phieunhap-add').addClass("active");
             },
             error: function (xhr, status, error) {
                 ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
@@ -527,7 +528,7 @@
     }
 
     function HideAddPhieuNhap(ele) {
-        $('#phieunhap-add').removeClass("d-flex");
+        $('#phieunhap-add').removeClass("active");
     }
 
     var listAddCTPN = new Array();
@@ -610,7 +611,7 @@
                     let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
                     $('#phieunhap-chitiet-printer').html(htmlResult);
                 }
-                $('#phieunhap-chitiet').addClass("d-flex");
+                $('#phieunhap-chitiet').addClass("active");
             },
             error: function () {
                 ShowFailMessage("Mất kết nối với máy chủ!");
@@ -621,7 +622,7 @@
     }
 
     function HideListCTPN() {
-        $('#phieunhap-chitiet').removeClass("d-flex");
+        $('#phieunhap-chitiet').removeClass("active");
     }
 
     var pnID;
@@ -834,11 +835,11 @@
     }
 
     function ShowAddIem(ele) {
-        $('#add-item').addClass("d-flex");
+        $('#add-item').addClass("active");
     }
 
     function HideAddItem(ele) {
-        $('#add-item').removeClass("d-flex");
+        $('#add-item').removeClass("active");
     }
 
     function GoAddItem(ele) {
