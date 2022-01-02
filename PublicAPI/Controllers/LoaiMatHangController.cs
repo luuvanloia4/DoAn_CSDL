@@ -16,8 +16,36 @@ using PublicAPI.Shared;
 namespace PublicAPI.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class ValuesController : ApiController
+    public class LoaiMatHangController : ApiController
     {
+        [HttpPost]
+        public async Task<HttpResponseMessage> GetListCombobox()
+        {
+            ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new MultipartFormDataStreamProvider(root);
+
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(provider);
+                var formData = provider.FormData;
+
+                LoaiMatHang_wsv.LoaiMatHang_wsv lmh_wsv = new LoaiMatHang_wsv.LoaiMatHang_wsv();
+                var rs = lmh_wsv.GetListCombobox();
+
+                return Request.CreateResponse(HttpStatusCode.OK, rs);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.ToString());
+            }
+        }
+
         #region Sample action API
         [HttpPost]
         public async Task<HttpResponseMessage> Sample()
@@ -41,8 +69,8 @@ namespace PublicAPI.Controllers
                 string multiParam = formData.Get("MultiParam");
                 //
 
-                TaiKhoan_wsv.TaiKhoan_wsv tk_wsv = new TaiKhoan_wsv.TaiKhoan_wsv();
-                var rs = tk_wsv.CheckLogin(loginCode);
+                Kho_wsv.Kho_wsv kho_wsv = new Kho_wsv.Kho_wsv();
+                var rs = kho_wsv.GetByID(-1);
 
                 return Request.CreateResponse(HttpStatusCode.OK, rs);
             }

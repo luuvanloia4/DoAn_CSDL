@@ -164,7 +164,16 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HopDongController.cs" />
+    <Compile Include="Controllers\CuaHangController.cs" />
+    <Compile Include="Controllers\LoaiMatHangController.cs" />
+    <Compile Include="Controllers\MatHangController.cs" />
+    <Compile Include="Controllers\PhieuXuatController.cs" />
+    <Compile Include="Controllers\NhaCungCapController.cs" />
+    <Compile Include="Controllers\ViTriController.cs" />
     <Compile Include="Controllers\TaiKhoanController.cs" />
+    <Compile Include="Controllers\HeThongController.cs" />
+    <Compile Include="Controllers\KhoController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -198,6 +207,11 @@
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
     <Compile Include="Web References\LoaiMatHang_wsv\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\MatHang_wsv\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -381,6 +395,28 @@
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
     <None Include="Web References\LoaiMatHang_wsv\LoaiMatHang_wsv.disco" />
+    <Content Include="Web References\MatHang_wsv\API_ResultOfBoolean.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfListOfListCombobox_ettOfInt32.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfListOfview_MatHang.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfListOfview_MH_HT.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfString.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <Content Include="Web References\MatHang_wsv\API_ResultOfview_MatHang.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\MatHang_wsv\MatHang_wsv.disco" />
     <Content Include="Web References\Menu_wsv\API_ResultOfListOfview_Menu.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </Content>
@@ -389,6 +425,11 @@
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Web References\MatHang_wsv\MatHang_wsv.wsdl" />
+    <Content Include="Web References\MatHang_wsv\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </Content>
     <None Include="Web References\Menu_wsv\Menu_wsv.disco" />
     <Content Include="Web References\NhaCungCap_wsv\API_ResultOfBoolean.datasource">
       <DependentUpon>Reference.map</DependentUpon>
@@ -640,6 +681,17 @@
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>PublicAPI_LoaiMatHang_wsv_LoaiMatHang_wsv</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://localhost:44377/View/MatHang_wsv.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\MatHang_wsv\</RelPath>
+      <UpdateFromURL>https://localhost:44377/View/MatHang_wsv.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>PublicAPI_MatHang_wsv_MatHang_wsv</CachedSettingsPropName>
     </WebReferenceUrl>
     <WebReferenceUrl Include="https://localhost:44377/View/Menu_wsv.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>

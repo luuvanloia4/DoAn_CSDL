@@ -132,5 +132,15 @@ namespace PublicAPI.Properties {
                 return ((string)(this["PublicAPI_PhieuXuat_PhieuXuat_wsv"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44377/View/MatHang_wsv.asmx")]
+        public string PublicAPI_MatHang_wsv_MatHang_wsv {
+            get {
+                return ((string)(this["PublicAPI_MatHang_wsv_MatHang_wsv"]));
+            }
+        }
     }
 }

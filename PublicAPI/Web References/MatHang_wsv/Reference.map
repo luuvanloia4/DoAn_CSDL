@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.DiscoveryDocumentReference" url="https://localhost:44377/View/MatHang_wsv.asmx?disco" filename="MatHang_wsv.disco" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://localhost:44377/View/MatHang_wsv.asmx?wsdl" filename="MatHang_wsv.wsdl" />
+  </Results>
+</DiscoveryClientResultsFile>
