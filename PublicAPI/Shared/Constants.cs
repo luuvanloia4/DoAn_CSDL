@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace PublicAPI.Shared
+{
+    public class Constants
+    {
+        //Session
+        public const string LoginCode_SessionName = "LoginCode";
+        public const string UserID_SessionName = "UseID";
+        public const string UserRole_SessionName = "UserRole";
+        public const string NCCID_SessionName = "NCCID";
+        public const string HeThongID_SessionName = "HeThongID";
+        public const string CuaHangID_SessionName = "CuaHangID";
+
+        //File location
+        //Default file:
+        public const string DefaultImage = "/Data/System/Images/img_error.png";
+        public const string DefaultAvatar = "/Data/System/Images/default_image.jpg";
+
+        //Error Image:
+        public const string ErrorFolder = "/Data/System/Images/Error/";
+
+        //Upload
+        public const string RootPath = "/Data/";
+        public const string UploadRootPath = RootPath + "Upload/";
+        public const string ImageUploadPath = UploadRootPath + "Images/";
+        public const string UserImageUploadPath = ImageUploadPath + "User/";
+        public const string SystemImageUploadPath = ImageUploadPath + "System/";
+        public const string ProductImageUploadPath = ImageUploadPath + "Product/";
+        public const string BannerImageUploadPath = ImageUploadPath + "Banner/";
+
+        //Export
+        //...
+    }
+}

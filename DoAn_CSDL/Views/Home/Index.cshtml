@@ -179,6 +179,7 @@
             method: "POST",
             data: {txt_StartTime, txt_EndTime},
             success: function (result, status, xhr) {
+                console.log(result);
                 let rs = JSON.parse(result);
                 console.log("Dashboard: ", rs);
 

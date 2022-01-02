@@ -1016,5 +1016,23 @@ namespace APIs.Ctrls
 
             return rs;
         }
+
+        public API_Result<bool> CheckLogin(string loginCode)
+        {
+            API_Result<bool> rs = new API_Result<bool>();
+            try
+            {
+                rs.Data = Authentication.CheckLogin(loginCode);
+                rs.ErrCode = EnumErrCode.Success;
+            }
+            catch(Exception ex)
+            {
+
+                rs.ErrCode = EnumErrCode.Error;
+                rs.ErrDes = ex.Message;
+            }
+
+            return rs;
+        }
     }
 }

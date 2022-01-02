@@ -104,5 +104,11 @@ namespace APIs.View
         {
             return ctrl.GetDashBoardData(loginCode, startTime, endTime);
         }
+
+        [WebMethod]
+        public API_Result<bool> CheckLogin(string loginCode)
+        {
+            return ctrl.CheckLogin(loginCode);
+        }
     }
 }

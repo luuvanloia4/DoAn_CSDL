@@ -57,6 +57,8 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         private System.Threading.SendOrPostCallback GetDashBoardDataOperationCompleted;
         
+        private System.Threading.SendOrPostCallback CheckLoginOperationCompleted;
+        
         private bool useDefaultCredentialsSetExplicitly;
         
         /// <remarks/>
@@ -136,6 +138,9 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
         
         /// <remarks/>
         public event GetDashBoardDataCompletedEventHandler GetDashBoardDataCompleted;
+        
+        /// <remarks/>
+        public event CheckLoginCompletedEventHandler CheckLoginCompleted;
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Login", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -592,6 +597,35 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             if ((this.GetDashBoardDataCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetDashBoardDataCompleted(this, new GetDashBoardDataCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/CheckLogin", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public API_ResultOfBoolean CheckLogin(string loginCode) {
+            object[] results = this.Invoke("CheckLogin", new object[] {
+                        loginCode});
+            return ((API_ResultOfBoolean)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void CheckLoginAsync(string loginCode) {
+            this.CheckLoginAsync(loginCode, null);
+        }
+        
+        /// <remarks/>
+        public void CheckLoginAsync(string loginCode, object userState) {
+            if ((this.CheckLoginOperationCompleted == null)) {
+                this.CheckLoginOperationCompleted = new System.Threading.SendOrPostCallback(this.OnCheckLoginOperationCompleted);
+            }
+            this.InvokeAsync("CheckLogin", new object[] {
+                        loginCode}, this.CheckLoginOperationCompleted, userState);
+        }
+        
+        private void OnCheckLoginOperationCompleted(object arg) {
+            if ((this.CheckLoginCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.CheckLoginCompleted(this, new CheckLoginCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -4281,6 +4315,32 @@ namespace DoAn_CSDL.TaiKhoan_wsv {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((API_ResultOfDashBoard_ett)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    public delegate void CheckLoginCompletedEventHandler(object sender, CheckLoginCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class CheckLoginCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal CheckLoginCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public API_ResultOfBoolean Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((API_ResultOfBoolean)(this.results[0]));
             }
         }
     }
