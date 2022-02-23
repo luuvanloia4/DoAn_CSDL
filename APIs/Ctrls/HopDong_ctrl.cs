@@ -66,7 +66,7 @@ namespace APIs.Ctrls
                 if (htID > 0)
                 {
                     tbl_MH_HT mh_htObj = db.tbl_MH_HTs.Where(u => u.HeThongID.Equals(htID) && u.MatHangID.Equals(cthd.ID)).FirstOrDefault();
-                    if (mh_htObj != null)
+                    if (mh_htObj == null)
                     {
                         try
                         {
@@ -386,19 +386,32 @@ namespace APIs.Ctrls
                     tbl_HopDong delObj = db.tbl_HopDongs.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
                     if (Authentication.IsSuperAdmin(curUser) || delObj.NguoiLap.Equals(curUser.ID))
                     {
-                        if (delObj != null)
+                        if (delObj == null)
                         {
-                            delObj.IsDelete = true;
-                            db.SubmitChanges();
-
-                            rs.ErrCode = EnumErrCode.Success;
-                            rs.Data = true;
-                            rs.ErrDes = string.Format(Constants.MSG_Delete_Success, tableName);
+                            rs.ErrCode = EnumErrCode.DoesNotExist;
+                            rs.ErrDes = string.Format(Constants.MSG_Object_Empty, id);    
+                        }
+                        else if(delObj.TrangThai != 0)
+                        {
+                            rs.ErrCode = EnumErrCode.Fail;
+                            rs.ErrDes = "Không thể xóa hợp đồng đã vận chuyển hoặc hoàn thành!";
                         }
                         else
                         {
-                            rs.ErrCode = EnumErrCode.DoesNotExist;
-                            rs.ErrDes = string.Format(Constants.MSG_Object_Empty, id);
+                            float procress = GetProgress(id).Data;
+                            if (procress != 0)
+                            {
+                                rs.ErrCode = EnumErrCode.Fail;
+                                rs.ErrDes = "Không thể xóa hợp đồng đã vận chuyển hoặc hoàn thành!";
+                            }
+                            else {
+                                delObj.IsDelete = true;
+                                db.SubmitChanges();
+
+                                rs.ErrCode = EnumErrCode.Success;
+                                rs.Data = true;
+                                rs.ErrDes = string.Format(Constants.MSG_Delete_Success, tableName);
+                            }
                         }
                     }
                     else
@@ -501,7 +514,7 @@ namespace APIs.Ctrls
 
                     if(nccID > 0)
                     {
-                        qrs = qrs.Where(u => u.HeThongID.Equals(nccID));
+                        qrs = qrs.Where(u => u.NhaCungCapID.Equals(nccID));
                     }
 
                     if(trangThai >= 0)
@@ -621,6 +634,9 @@ namespace APIs.Ctrls
             API_Result<view_HopDong> rs = new API_Result<view_HopDong>();
             try
             {
+                //Update trang thai
+                GetProgress(id);
+                //
                 var obj = db.view_HopDongs.Where(u => u.ID.Equals(id) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
                 rs.Data = obj;
                 rs.ErrCode = EnumErrCode.Success;
@@ -639,6 +655,7 @@ namespace APIs.Ctrls
             API_Result<float> rs = new API_Result<float>();
             try
             {
+                tbl_HopDong obj = db.tbl_HopDongs.Where(u => u.ID.Equals(id)).FirstOrDefault();
                 var procResult = db.pr_HopDong_GetProgress(id);
                 int tongMH = 0, tongMHDaGiao = 0;
                 foreach(var item in procResult)
@@ -649,10 +666,62 @@ namespace APIs.Ctrls
 
                 if(tongMH > 0)
                 {
+                    if(obj == null)
+                    {
+                        //
+                    }
+                    else if (tongMH <= tongMHDaGiao)
+                    {
+                        if(obj.TrangThai != 1)
+                        {
+                            try
+                            {
+                                obj.TrangThai = 1;
+                                db.SubmitChanges();
+                            }
+                            catch(Exception ex)
+                            {
+                                //
+                            }
+                        }
+                    }
+                    else if(tongMH > tongMHDaGiao)
+                    {
+                        if (obj.TrangThai != 0)
+                        {
+                            try
+                            {
+                                obj.TrangThai = 0;
+                                db.SubmitChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                //
+                            }
+                        }
+                    }
+
                     rs.Data = (float)Math.Round((double)tongMHDaGiao * 100 / tongMH, 2);
                 }
                 else
                 {
+                    if(obj == null)
+                    {
+                        //
+                    }
+                    else if (obj.TrangThai != 0)
+                    {
+                        try
+                        {
+                            obj.TrangThai = 0;
+                            db.SubmitChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            //
+                        }
+                    }
+
                     rs.Data = 0;
                 }
 

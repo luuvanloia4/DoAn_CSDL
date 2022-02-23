@@ -3,8 +3,9 @@
     ViewBag.Title = "Thêm mới yêu cầu xuất hàng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
-    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
-    bool isAdmin = (phanQuyen == 0 || phanQuyen == 3);
+    int userRole = (Session[Constants.UserRole_SessionName] != null) ? SharedFunction.ParseID(Session[Constants.UserRole_SessionName].ToString()) : -1;
+    bool isAdmin = userRole == 1;
+    bool isNCC = userRole == 4;
 
     int htID = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
     int chID = SharedFunction.ParseID(Session[Constants.CuaHangID_SessionName].ToString());
@@ -276,7 +277,7 @@
                         if (!CheckItemAdded(item.ID)) {
                             htmlResult += "<tr>"
                                 + "<td align='center'>" + ((page - 1) * size + (stt++)) + "</td>"
-                                + "<td align='center' class='item-id'>" + item.ID + "</td>"
+                                + "<td align='center' class='item-id'>" + item.MatHangID + "</td>"
                                 + "<td align='center' class='item-image'><img class='img-detail' src='" + ParseImageURL(item.Img) + "' onclick='ShowImage(this)'></img></td>"
                                 + "<td class='item-name'>" + item.Ten + "</td>"
                                 + "<td align='center' class='item-gia'>" + item.Gia + "</td>"
@@ -456,12 +457,12 @@
             itemID = tr.find('.item-id').text();
             itemSL = tr.find('.item-soluong').val();
             if (itemID != null && itemID != undefined && itemID.length > 0) {
-                listItemSubmit.push(new { ID: itemID, SL: itemSL });
+                listItemSubmit.push({ ID: itemID, SL: itemSL });
             }
         });
 
         if (listItemSubmit != null && listItemSubmit != undefined && listItemSubmit.length > 0) {
-            action = 1;
+            action = 2;
             ShowUIContent("Xác nhận tạo yêu cầu xuất hàng với " + listItemSubmit.length + " mặt hàng được chọn?");
         }
         else {
@@ -491,25 +492,15 @@
                     HideLoading();
                     break;
                 case 1:
-                    for (let i = 0; i < listDeleteID.length; i++) {
-                        for (let j = 0; j < listAddItem.length; j++) {
-                            if (listAddItem[j].ID == listDeleteID[i]) {
-                                listAddItem.splice(j, 1);
-                                break;
-                            }
-                        }
-                    }
-                    LoadListAddItem();
-                    HideLoading();
+                    //
                     break;
                 case 2:
                     //For submit
+                    id = $('#txt_ID').val();
                     $.ajax({
                         url: ctrl_Name + "PostCreate",
                         method: "POST",
-                        processData: false,
-                        contentType: false,
-                        data: { ListCTPX: listItemSubmit },
+                        data: { id, ListCTPX: JSON.stringify(listItemSubmit) },
                         success: function (result, status, xhr) {
                             let rs = JSON.parse(result);
                             console.log("Create result:", rs);

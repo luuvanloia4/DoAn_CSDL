@@ -3,7 +3,7 @@
 
 <nav id="nav">
     <div class="navbar nav__content">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" id="menu-right">
             @{
                 var listMainMenu = Model.Where(u => u.reID < 0).ToList();
             }
@@ -94,6 +94,8 @@
 <script src="~/Scripts/Main.js"></script>
 
 <script>
+    var curUrl = document.URL;
+
     function ToggleSecondNav(ele, event) {
         let hideEle = $(ele).siblings(".hide-navbar");
         let itemHeight = hideEle.find("a").outerHeight();
@@ -112,4 +114,33 @@
             hideEle.height((12 + itemCount * (itemHeight + PxConvert(itemMarginBottom))) + "px");
         }
     }
+
+    function ActiveMenu() {
+        $('#menu-right a').each(function () {
+            if ($(this).hasClass(".nav-item")) {
+                $(this).parent().removeClass("active");
+                $(this).siblings(".hide-navbar").height(0);
+            }
+            else {
+                $(this).removeClass("active");
+            }
+
+            let itemURL = $(this).attr("href");
+            if (curUrl.indexOf(itemURL) > -1) {
+                //console.log("Active: ", this);
+                if ($(this).hasClass("nav-link")) {
+                    ToggleSecondNav(this);
+                }
+                else {
+                    ToggleSecondNav($(this).parents(".nav-item").children("a")[0]);
+                    $(this).addClass("active");
+                }
+            }
+            //console.log(itemURL);
+        });
+    }
+
+    $(function () {
+        ActiveMenu();
+    })
 </script>

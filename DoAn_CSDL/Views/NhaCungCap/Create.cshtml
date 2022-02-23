@@ -4,7 +4,8 @@
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
     int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
-    bool isAdmin = (phanQuyen == 0 || phanQuyen == 4);
+    bool isAdmin = (phanQuyen == 0 || phanQuyen == 1);
+    bool isNCC = (phanQuyen == 4);
 }
 
 <div class="main__content">

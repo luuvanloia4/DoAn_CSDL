@@ -68,6 +68,28 @@ namespace APIs.Ctrls
                         rs.Data = newObj.ID;
                         rs.ErrDes = string.Format(Constants.MSG_Insert_Success, tableName);
                     }
+                    else if(Authentication.IsCuaHang(curUser))
+                    {
+                        //Admin
+                        tbl_CuaHang newObj = new tbl_CuaHang();
+                        newObj.Ten = obj.Ten;
+                        newObj.DiaChi = obj.DiaChi;
+                        newObj.SDT = obj.SDT;
+                        newObj.STK = obj.STK;
+                        newObj.NganHang = obj.NganHang;
+                        newObj.HeThongID = obj.HeThongID;
+                        newObj.TaiKhoanID = curUser.ID;
+                        newObj.NgayTao = DateTime.Now;
+                        newObj.NgayCapNhat = newObj.NgayTao;
+                        newObj.IsDelete = false;
+
+                        db.tbl_CuaHangs.InsertOnSubmit(newObj);
+                        db.SubmitChanges();
+
+                        rs.ErrCode = EnumErrCode.Success;
+                        rs.Data = newObj.ID;
+                        rs.ErrDes = string.Format(Constants.MSG_Insert_Success, tableName);
+                    }
                     else
                     {
                         rs.ErrCode = EnumErrCode.PermissionDenied;
@@ -407,8 +429,15 @@ namespace APIs.Ctrls
             try
             {
                 var obj = db.view_CuaHangs.Where(u => u.ID.Equals(id) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
-                rs.Data = obj;
-                rs.ErrCode = EnumErrCode.Success;
+                if(obj != null)
+                {
+                    rs.Data = obj;
+                    rs.ErrCode = EnumErrCode.Success;
+                }
+                else
+                {
+                    rs.ErrCode = EnumErrCode.Empty;
+                }
             }
             catch (Exception ex)
             {

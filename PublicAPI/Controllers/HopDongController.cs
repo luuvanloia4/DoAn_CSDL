@@ -188,7 +188,7 @@ namespace PublicAPI.Controllers
                 //
 
                 HopDong_wsv.HopDong_wsv hd_wsv = new HopDong_wsv.HopDong_wsv();
-                var rs = hd_wsv.GetListCTPN(id);
+                var rs = hd_wsv.GetListPhieuNhap(id);
 
                 return Request.CreateResponse(HttpStatusCode.OK, rs);
             }

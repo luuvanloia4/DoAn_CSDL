@@ -187,12 +187,12 @@
                             + "<td align='center' class='item-id'>" + item.ID + "</td>"
                             + "<td>" + item.TenCH + "</td>"
                             + "<td>" + item.SDTCH + "</td>"
-                            + "<td>" + ParseTrangThaiHD(item.TrangThai);
+                            + "<td>" + (item.TrangThai == 0 ? "Chờ phê duyệt": item.TrangThai == 1? "Đã được phê duyệt": "Đã hoàn thành");
                         if (item.TrangThai != 0) {
                             htmlResult += "</td>"
                                 + "<td>" + item.HoTen + "</td>"
                                 + "<td>" + item.UserName + "</td>"
-                                + "<td>" + ParseHDate(item.NgayPheDuyet);
+                                + "<td>" + ParseHDate(item.NgayDuyet);
                         }
                         else {
                             htmlResult += "</td>"

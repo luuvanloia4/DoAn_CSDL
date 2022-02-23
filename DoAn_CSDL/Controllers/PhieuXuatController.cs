@@ -107,6 +107,14 @@ namespace DoAn_CSDL.Controllers
         public string PostCreate()
         {
             int chID = SharedFunction.ParseID(Request["id"]);
+            if(chID <= 0)
+            {
+                if(Session[Constants.CuaHangID_SessionName] != null)
+                {
+                    chID = SharedFunction.ParseID(Session[Constants.CuaHangID_SessionName].ToString());
+                }
+            }
+
             List<PhieuXuat_wsv.ID_SL> listCTPX = JsonConvert.DeserializeObject<List<PhieuXuat_wsv.ID_SL>>(Request["ListCTPX"]);
 
             //Create obj
@@ -141,7 +149,17 @@ namespace DoAn_CSDL.Controllers
             return JsonConvert.SerializeObject(rs);
         }
 
-        //CTHD
+        //CTPX
+        [HttpPost]
+        public string GetListCTPX()
+        {
+            int pxID = SharedFunction.ParseID(Request["id"]);
+            PhieuXuat_wsv.PhieuXuat_wsv px_wsv = new PhieuXuat_wsv.PhieuXuat_wsv();
+            var rs = px_wsv.GetListCTPX(Session[Constants.LoginCode_SessionName].ToString(), pxID);
+
+            return JsonConvert.SerializeObject(rs);
+        }
+
         [HttpPost]
         public string UpdateListCTPX()
         {

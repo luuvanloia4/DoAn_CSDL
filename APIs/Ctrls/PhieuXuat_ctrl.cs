@@ -248,19 +248,27 @@ namespace APIs.Ctrls
                     tbl_PhieuXuat delObj = db.tbl_PhieuXuats.Where(u => (u.IsDelete == null || u.IsDelete == false) && u.ID.Equals(id)).FirstOrDefault();
                     if (delObj != null)
                     {
-                        if (Authentication.IsSuperAdmin(curUser) || Authentication.IsOwnCuaHang(curUser.ID, delObj.CuaHangID.Value))
+                        if(delObj.TrangThai != 0)
                         {
-                            delObj.IsDelete = true;
-                            db.SubmitChanges();
-
-                            rs.ErrCode = EnumErrCode.Success;
-                            rs.Data = true;
-                            rs.ErrDes = string.Format(Constants.MSG_Delete_Success, tableName);
+                            rs.ErrCode = EnumErrCode.Fail;
+                            rs.ErrDes = "Không thể xóa yêu cầu xuất hàng đã được phê duyệt hoặc hoàn thành!";
                         }
                         else
                         {
-                            rs.ErrCode = EnumErrCode.PermissionDenied;
-                            rs.ErrDes = Constants.MSG_Permission_Denied;
+                            if (Authentication.IsSuperAdmin(curUser) || Authentication.IsOwnCuaHang(curUser.ID, delObj.CuaHangID.Value))
+                            {
+                                delObj.IsDelete = true;
+                                db.SubmitChanges();
+
+                                rs.ErrCode = EnumErrCode.Success;
+                                rs.Data = true;
+                                rs.ErrDes = string.Format(Constants.MSG_Delete_Success, tableName);
+                            }
+                            else
+                            {
+                                rs.ErrCode = EnumErrCode.PermissionDenied;
+                                rs.ErrDes = Constants.MSG_Permission_Denied;
+                            }
                         }
                     }
                     else
@@ -576,6 +584,11 @@ namespace APIs.Ctrls
                     rs.ErrCode = EnumErrCode.Empty;
                     rs.ErrDes = string.Format(Constants.MSG_Object_Empty, pxID);
                 }
+                else if(editObj.TrangThai != 0)
+                {
+                    rs.ErrCode = EnumErrCode.Fail;
+                    rs.ErrDes = "Yêu cầu xuất hàng không còn ở trạng thái chờ duyệt!";
+                }
                 else if(curUser == null)
                 {
                     rs.ErrCode = EnumErrCode.NotYetLogin;
@@ -585,6 +598,7 @@ namespace APIs.Ctrls
                 {
                     tbl_CuaHang curCH = db.tbl_CuaHangs.Where(u => u.ID.Equals(editObj.ID) && (u.IsDelete == null || u.IsDelete == false)).FirstOrDefault();
                     if (Authentication.IsSuperAdmin(loginCode) || Authentication.IsOwnHeThong(curUser.ID, curCH.HeThongID.Value)){
+
                         //Check hàng trong kho
                         List<tbl_ChiTietPX> listCTPX = db.tbl_ChiTietPXes.Where(u => u.PhieuXuatID.Equals(pxID)).ToList();
                         bool isEnough = true;
@@ -606,7 +620,11 @@ namespace APIs.Ctrls
 
                         if (isEnough)
                         {
-                            editObj.TrangThai = 1; //Phe duyet
+                            editObj.TrangThai = 1; //Phe duyet\
+                            editObj.NguoiDuyet = curUser.ID;
+                            editObj.NgayDuyet = DateTime.Now;
+                            db.SubmitChanges();
+                            rs.Data = true;
                             rs.ErrCode = EnumErrCode.Success;
                         }
                         else
@@ -643,6 +661,11 @@ namespace APIs.Ctrls
                     rs.ErrCode = EnumErrCode.Empty;
                     rs.ErrDes = string.Format(Constants.MSG_Object_Empty, pxID);
                 }
+                else if(editObj.TrangThai == 1)
+                {
+                    rs.ErrCode = EnumErrCode.Fail;
+                    rs.ErrDes = "Yêu cầu xuất hàng không còn ở trạng thái phê duyệt!";
+                }
                 else if (curUser == null)
                 {
                     rs.ErrCode = EnumErrCode.NotYetLogin;
@@ -651,6 +674,9 @@ namespace APIs.Ctrls
                 else if(Authentication.IsSuperAdmin(loginCode) || Authentication.IsOwnCuaHang(curUser.ID, editObj.CuaHangID.Value))
                     {
                     editObj.TrangThai = 2; //Hoan thanh
+                    editObj.NgayHT = DateTime.Now;
+                    db.SubmitChanges();
+                    rs.Data = true;
                     rs.ErrCode = EnumErrCode.Success;
                 }
                 else

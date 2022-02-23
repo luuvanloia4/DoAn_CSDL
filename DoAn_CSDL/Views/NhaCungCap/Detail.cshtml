@@ -3,7 +3,17 @@
     ViewBag.Title = "Thông tin nhà cung cấp";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     int id = SharedFunction.ParseID(Request["id"]);
-    bool isAdmin = (Session[Constants.UserRole_SessionName] == null) ? false : Session[Constants.UserRole_SessionName].Equals(0);
+    int userRole = (Session[Constants.UserRole_SessionName] != null) ? SharedFunction.ParseID(Session[Constants.UserRole_SessionName].ToString()) : -1;
+    bool isAdmin = userRole == 1;
+    bool isNCC = userRole == 4;
+
+    if(id <= 0)
+    {
+        if(Session[Constants.NCCID_SessionName] != null)
+        {
+            id = SharedFunction.ParseID(Session[Constants.NCCID_SessionName].ToString());
+        }
+    }
 
     //For search paging
     string alias = "mathang_ncc";
@@ -15,6 +25,7 @@
     bool isDes = (Session[alias + "_IsDes"] == null) ? false : bool.Parse(Session[alias + "_IsDes"].ToString());
 }
 
+@userRole
 <div class="main__inner">
     <div class="main__content @Html.Raw(isAdmin? "w-100": "")">
         <h2 class="main__title">THÔNG TIN NHÀ CUNG CẤP</h2>
@@ -28,11 +39,11 @@
                     <!---->
                 </table>
 
-                <div class="d-flex justify-content-between pt-5 @Html.Raw(isAdmin? "": "d-none")">
-                    <button type="button" class="btn btn-primary custom-btn-func" onclick="ShowAddItem(this)">
+                <div class="d-flex justify-content-between pt-5">
+                    <button type="button" class="btn btn-primary custom-btn-func" onclick="ShowAddItem(this)" @Html.Raw((isAdmin || isNCC)? "": "hidden")>
                         <i class="fas fa-plus"></i> Thêm mặt hàng
                     </button>
-                    <button type="button" class="btn btn-success custom-btn-func" onclick="window.location.href = ctrlName + 'Edit?id=' + @id;">
+                    <button type="button" class="btn btn-success custom-btn-func" onclick="window.location.href = ctrlName + 'Edit?id=' + @id;" @Html.Raw((isAdmin || isNCC)? "": "hidden")>
                         <i class="fas fa-sync"></i> Cập nhật dữ liệu
                     </button>
                 </div>
@@ -60,7 +71,7 @@
                 </div>
             </div>
 
-            <div class="card @Html.Raw(isAdmin? "": "d-none")" style="margin-top: 4rem">
+            <div class="card @Html.Raw(isAdmin || isNCC? "": "d-none")" style="margin-top: 4rem">
                 <h2 class="card-title">Danh sách mặt hàng của nhà cung cấp</h2>
                 <div class="card-body">
                     <div class="row pb-2">
@@ -227,7 +238,7 @@
     var detailObj;
     const ctrlName = "/NhaCungCap/";
     var id;
-    var isAdmin = @isAdmin;
+    var isAdmin = @(isAdmin || isNCC);
     loadingCount = 0; //For multiple loading progress
 
     function FillData(obj) {
@@ -441,11 +452,12 @@
     }
 
     function ShowAddItem(ele) {
-        $('#add-item').addClass("d-flex");
+        console.log("Show add item!");
+        $('#add-item').addClass("active");
     }
 
     function HideAddItem(ele) {
-        $('#add-item').removeClass("d-flex");
+        $('#add-item').removeClass("active");
     }
 
     function AddItem(ele) {

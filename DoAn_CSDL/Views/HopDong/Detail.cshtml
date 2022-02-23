@@ -1,10 +1,11 @@
 ﻿@using DoAn_CSDL.Shared
 @{
-    ViewBag.Title = "Thông tin hệ thống";
+    ViewBag.Title = "Chi tiết hợp đồng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     int id = SharedFunction.ParseID(Request["id"]);
     int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
     bool isAdmin = (phanQuyen == 0 || phanQuyen == 1);
+    bool isNCC = phanQuyen == 4;
 
     //For search paging
     string alias = "chitiet_hopdong";
@@ -35,12 +36,12 @@
 
                 <hr />
 
-                <div class="@Html.Raw(isAdmin? "d-flex": "d-none") justify-content-between">
+                <div class="@Html.Raw(isAdmin || isNCC? "d-flex": "d-none") justify-content-between">
                     <button type="button" class="btn btn-primary custom-btn-func" onclick="GoPhieuNhap(this)">
                         <i class="fas fa-shipping-fast"></i> Danh sách phiếu nhập
                     </button>
 
-                    <button type="button" class="btn btn-success custom-btn-func" onclick="window.location.href = ctrlName + 'Edit?id=' + @id;">
+                    <button type="button" class="btn btn-success custom-btn-func" onclick="ShowFailMessage('Liên hệ admin để chỉnh sửa dữ liệu hợp đồng!')" @*onclick="window.location.href = ctrlName + 'Edit?id=' + @id;"*@ @Html.Raw(isAdmin? "": "hidden")>
                         <i class="fas fa-sync"></i> Cập nhật dữ liệu
                     </button>
                 </div>
@@ -50,7 +51,7 @@
                 <h2 class="card-title" style="font-size: 2rem;">Danh sách phiếu nhập</h2>
                 <div class="card-body">
                     <div class="row pb-3">
-                        <div class="col-12 d-flex justify-content-between">
+                        <div class="col-12 @Html.Raw(isAdmin? "d-flex": "d-none") justify-content-between">
                             <button type="button" class="btn btn-primary" onclick="ShowAddPhieuNhap(this)">
                                 <i class="fas fa-plus"></i> Thêm phiếu nhập
                             </button>
@@ -64,7 +65,7 @@
                 </div>
             </div>
 
-            <div class="card @Html.Raw(isAdmin? "": "d-none")" style="margin-top: 4rem">
+            <div class="card @Html.Raw(isAdmin || isNCC? "": "d-none")" style="margin-top: 4rem">
                 <h2 class="card-title" style="font-size: 2rem;">Chi tiết hợp đồng</h2>
                 <div class="card-body">
                     <div class="row pb-3">
@@ -222,7 +223,7 @@
     var detailObj;
     const ctrlName = "/HopDong/";
     var id;
-    var isAdmin = @isAdmin;
+    var isAdmin = @(isAdmin || isNCC);
     var listUpdateItem;
     loadingCount = 0; //For multiple loading progress
 
@@ -1081,6 +1082,7 @@
                             data: { pnID },
                             success: function (result, status, xhr) {
                                 let rs = JSON.parse(result);
+                                console.log("Delete PN result: ", rs);
                                 if (rs.ErrCode == 2) {
                                     ShowSuccessMessage("Xóa phiếu nhập thành công!", function () { window.location.reload(); });
                                 }

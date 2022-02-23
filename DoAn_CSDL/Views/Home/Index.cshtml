@@ -1,7 +1,11 @@
-﻿
+﻿@using DoAn_CSDL.Shared
 @{
     ViewBag.Title = "Trang chủ";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    int userRole = (Session[Constants.UserRole_SessionName] != null) ? SharedFunction.ParseID(Session[Constants.UserRole_SessionName].ToString()) : -1;
+    bool isAdmin = userRole == 1 || userRole == 2;
+    bool isCH = userRole == 3;
+    bool isNCC = userRole == 4;
 }
 
 
@@ -33,7 +37,7 @@
                 </form>
             </div>
         </div>
-        <div class="work-follow" id="wf-hd">
+        <div class="work-follow @Html.Raw(isAdmin || isNCC? "": "d-none")" id="wf-hd">
             <h2 class="work-follow__title">HỢP ĐỒNG</h2>
             <table class="table table-bordered work-follow__table">
                 <tbody>
@@ -79,8 +83,8 @@
             </table>
         </div>
 
-        <div class="work-follow" id="yc-wf">
-            <h2 class="work-follow__title">YÊU CẦU SUẤT HÀNG</h2>
+        <div class="work-follow @Html.Raw(isAdmin || isCH? "": "d-none")" id="yc-wf">
+            <h2 class="work-follow__title">YÊU CẦU XUẤT HÀNG</h2>
             <table class="table table-bordered work-follow__table">
                 <tbody>
                     <tr>
@@ -111,7 +115,7 @@
                             </a>
                         </td>
                         <td>
-                            <a href="/HopDong/Index?trangthai=1" class="work-follow__link">
+                            <a href="/PhieuXuat/Index?trangthai=1" class="work-follow__link">
                                 <div>
                                     <div class="work-follow__number">
                                         <p id="yc-check">0</p>

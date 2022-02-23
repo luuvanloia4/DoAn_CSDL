@@ -1,7 +1,342 @@
-﻿
+﻿@using DoAn_CSDL.Shared
 @{
-    ViewBag.Title = "Detail";
+    ViewBag.Title = "Chi tiết yêu cầu xuất hàng";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    int id = SharedFunction.ParseID(Request["id"]);
+    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
+    bool isAdmin = (phanQuyen == 0 || phanQuyen == 1);
+    bool isNCC = phanQuyen == 4;
+    bool isCH = phanQuyen == 3;
 }
 
-<h2>Detail</h2>
+<div class="main__inner">
+    <div class="main__content @Html.Raw(isAdmin? "w-100": "")">
+        <h2 class="main__title">THÔNG TIN YÊU CẦU XUẤT HÀNG</h2>
+        <div class="custom-detail">
+            <div class="d-none">
+                <input type="text" name="txt_ID" id="txt_ID" class="form-control" value="@id" hidden />
+            </div>
 
+            <div class="custom-detail__content">
+                <table class="custom-detail__table" id="detail-printer" align="center">
+                    <!---->
+                </table>
+
+                <br />
+                <br />
+                <div class="@Html.Raw(isAdmin || isCH? "d-flex": "d-none") justify-content-end">
+
+                    <button type="button" class="btn btn-success custom-btn-func" onclick="ShowFailMessage('Liên hệ admin để chỉnh sửa dữ liệu hợp đồng!')" @*onclick="window.location.href = ctrlName + 'Edit?id=' + @id;"*@ @Html.Raw(isAdmin || isCH ? "" : "hidden")>
+                        <i class="fas fa-sync"></i> Cập nhật dữ liệu
+                    </button>
+                </div>
+            </div>
+
+            <div class="card @Html.Raw(isAdmin || isCH? "": "d-none")" style="margin-top: 4rem">
+                <h2 class="card-title" style="font-size: 2rem;">Chi tiết yêu cầu xuất hàng</h2>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="table table-hover table-bordered table-striped custom-table" id="result-printer">
+                            <!-- Search result show up here -->
+                        </table>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                    @if (isAdmin)
+                    {
+                        <button type="button" class="btn btn-primary custom-btn-func d-none" onclick="GoAccept(this)" id="btn-pheduyet">
+                            <i class="fas fa-check"></i> Phê duyệt yêu cầu xuất hàng
+                        </button>
+                    }
+                    else if (isCH)
+                    {
+                        <button type="button" class="btn btn-primary custom-btn-func d-none" onclick="GoDone(this)" id="btn-hoanthanh">
+                            <i class="fas fa-save"></i> Hoàn thành yêu cầu xuất hàng
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thẻ ẩn toàn màn hình -->
+<div class="UI-hidden" id="detail">
+    <div class="UI-hidden__content">
+        <h1 class="title">THÔNG TIN MẶT HÀNG:</h1>
+        <div class="d-flex">
+            <img src="#" class="img-detail mr-5 mb-3" onclick="ShowImage(this)" id="obj_avatar" />
+            <div class="user" id="obj_top">
+                <!-- Thông tin tài khoản hiển thị ở đây! -->
+            </div>
+        </div>
+        <div class="user" id="obj_bottom">
+            <!---->
+        </div>
+    </div>
+</div>
+
+<script>
+    var detailObj;
+    const ctrlName = "/PhieuXuat/";
+    var id;
+    var isAdmin = @(isAdmin || isCH);
+    var listUpdateItem;
+    loadingCount = 0; //For multiple loading progress
+
+    function FillData(obj) {
+        htmlResult = "<tbody>"
+        htmlResult += "\
+        <tr>\
+            <th>Mã yêu cầu:</th>\
+            <td>" + obj.ID + "</td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Tên nhà cửa hàng:</th>\
+            <td>" + obj.TenCH + "</td>\
+            <td style='width: 150px;'></td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Địa chỉ:</th>\
+            <td>" + obj.DiaChiCH + "</td>\
+            <td></td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Số điện thoại:</th>\
+            <td>" + obj.SDTCH + "</td>\
+            <td></td>\
+        </tr>";
+        htmlResult += "\
+        <tr>\
+            <th>Ngày lập:</th>\
+            <td>" + ParseHDate(obj.NgayLap) + "</td>\
+        </tr>";
+
+        if (obj.TrangThai == 0) {
+            htmlResult += "\
+        <tr>\
+            <th>Trạng thái:</th>\
+            <td><span class='bg-primary text-white'>Chờ phê duyệt</span></td>\
+        </tr>";
+            $('#btn-pheduyet').removeClass("d-none");
+        }
+        if (obj.TrangThai >= 1) {
+            htmlResult += "\
+        <tr>\
+            <th>Trạng thái:</th>\
+            <td><span class='bg-primary text-white'>Chờ phê duyệt</span></td>\
+        </tr>";
+            htmlResult += "\
+        <tr>\
+            <th>Người duyệt:</th>\
+            <td>" + obj.HoTen + "</td>\
+        </tr>";
+            htmlResult += "\
+        <tr>\
+            <th>Tài khoản người duyệt:</th>\
+            <td>" + obj.UserName + "</td>\
+        </tr>";
+            htmlResult += "\
+        <tr>\
+            <th>Ngày duyệt:</th>\
+            <td>" + obj.UserName + "</td>\
+        </tr>";
+            if (obj.TrangThai == 1) {
+                $('#btn-hoanthanh').removeClass("d-none");
+            }
+            else if (obj.TrangThai == 2) {
+                htmlResult += "\
+                <tr>\
+                    <th>Người duyệt:</th>\
+                    <td>" + ParseHDate(obj.NgayDuyet) + "</td>\
+                </tr>";
+            }
+        }
+
+
+        //htmlResult += "\
+        //<tr>\
+        //    <th>Trạng thái:</th>\
+        //    <td>" + ParseTrangThaiHD(obj.TrangThai) + "</td>\
+        //</tr>";
+
+        htmlResult += "</tbody>";
+        $('#detail-printer').html(htmlResult);
+    }
+
+    function GetObject() {
+        ShowLoading();
+        id = $('#txt_ID').val();
+        console.log("ID: ", id);
+
+        $.ajax({
+            url: ctrlName + "GetDetail",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("Detail: ", rs);
+
+                if (rs.ErrCode == 2) {
+                    detailObj = rs.Data;
+                    FillData(detailObj);
+                    GetListCTPX();
+                }
+                else if (rs.ErrCode == 0) {
+                    ShowFailMessage("Có lỗi xảy ra trong quá trình lấy dữ liệu, vui lòng thử lại sau!");
+                }
+                else {
+                    ShowFailMessage(rs.ErrDes);
+                }
+            },
+            error: function () {
+                ShowFailMessage("Mất kết nối với máy chủ!");
+            }
+        }).always(function () {
+            CheckLoadingCount();
+        });
+    }
+
+    function GoAccept(ele) {
+        action = 1;
+        ShowUIContent("Xác nhận phê duyệt yêu cầu xuất hàng?");
+    }
+
+    function GoDone(ele) {
+        actioh = 2;
+        ShowUIContent("Xác nhận hoàn thành yêu cầu xuất hàng <br> (hoàn tất quá trình giao hàng)?");
+    }
+
+    //Chi tiet hop dong
+    function GetListCTPX() {
+        //Bắt đầu tìm kiếm:
+        $.ajax({
+            url: ctrlName + "GetListCTPX",
+            method: "POST",
+            data: { id },
+            success: function (result, status, xhr) {
+                let rs = JSON.parse(result);
+                console.log("List mat hang: ", rs);
+                if (rs.ErrCode == 2) {
+                    let listTaiKhoan = rs.Data;
+                    //Danh sách tài khoản
+                    let htmlResult = "<thead>\
+                            <tr>\
+                                <th width='50px'>STT</th>\
+                                <th width='60px'>ID</th>\
+                                <th>Hình ảnh</th>\
+                                <th>Tên mặt hàng</th>\
+                                <th>Đơn giá</th>\
+                                <th>Loại mặt hàng</th>\
+                                <th>Ngày tạo</th>\
+                                <th width='120px'>Số lượng</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>";
+                    maxPage = rs.PageCount;
+                    let stt = 1;
+                    listTaiKhoan.forEach((item) => {
+                        htmlResult += "<tr>"
+                            + "<td align='center'>" + (stt++) + "</td>"
+                            + "<td align='center' class='item-id'>" + item.MatHangID + "</td>"
+                            + "<td align='center'><img class='img-detail' src='" + ParseImageURL(item.Img) + "' onclick='ShowImage(this)'></img></td>"
+                            + "<td class='item-name'>" + item.Ten + "</td>"
+                            + "<td align='center'>" + item.Gia + "</td>"
+                            + "<td>" + item.TenLMH + "</td>"
+                            + "<td align='center'>" + ParseHDate(item.NgayTao) + "</td>"
+                            + "<td align='center' class='custom-form'><input type='number' class='item-soluong form-control' min='" + item.SoLuongDaGiao + "' value='" + item.SoLuong + "' onchange='AutoCorrectNumber(this)' disabled /></td>";
+
+                        htmlResult += "</tr>";
+                    });
+                    htmlResult += "</tbody>"
+
+                    //Danh sách nút chuyển trang:
+                    //Hiển thị kết quả
+                    $('#result-printer').html(htmlResult);
+                }
+                else {
+                    if (rs.ErrCode == 3) {
+                        //
+                        ShowFailMessage("Không tìm thấy kết quả với từ khóa '" + searchValue + "'!");
+                        let htmlResult = "<tbody><tr><td>" + rs.ErrDes + "</td></tr></tbody>";
+                        $('#result-printer').html(htmlResult);
+                    }
+                    else {
+                        ShowFailMessage("Lấy kết quả tìm kiếm thất bại, vui lòng kiểm tra đầu vào và thử lại!");
+                    }
+                }
+            },
+            error: function (xhr, status, error) {
+                ShowFailMessage("Mất kết nối với máy chủ, vui lòng thử lại sau ít phút!");
+            }
+        }).always(function () {
+            //
+        });
+    }
+
+    //Ready
+    $(function () {
+        GetObject();
+
+        if (isAdmin) {
+            //Nhấn nút xác nhận:
+            $('.UI-accept').click(function () {
+                UIContentToLoading();
+                switch (action) {
+                    case 1:
+                        $.ajax({
+                            url: ctrlName + "/PheDuyet",
+                            method: "POST",
+                            data: { id: detailObj.ID },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                if (rs.ErrCode == 2) {
+                                    ShowSuccessMessage("Phê duyệt yêu cầu xuất hàng thành công!", function () { window.location.reload(); });
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình phê duyệt yêu cầu xuất hàng!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                //
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                        break;
+                    case 2:
+                        $.ajax({
+                            url: ctrlName + "/HoanThanh",
+                            method: "POST",
+                            data: { id: detailObj.ID },
+                            success: function (result, status, xhr) {
+                                let rs = JSON.parse(result);
+                                if (rs.ErrCode == 2) {
+                                    ShowSuccessMessage("Hoàn thành yêu cầu xuất hàng thành công!", function () { window.location.reload(); });
+                                }
+                                else if (rs.ErrCode == 0) {
+                                    ShowFailMessage("Có lỗi xảy ra trong quá trình hoàn thành yêu cầu xuất hàng!");
+                                }
+                                else {
+                                    ShowFailMessage(rs.ErrDes);
+                                }
+                            },
+                            error: function () {
+                                //
+                            }
+                        }).always(function () {
+                            HideLoading();
+                        });
+                    default:
+                        HideLoading();
+                }
+            });
+        }
+    });
+</script>

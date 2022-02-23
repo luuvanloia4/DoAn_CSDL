@@ -52,6 +52,38 @@ namespace PublicAPI.Controllers
         }
 
         [HttpPost]
+        public async Task<HttpResponseMessage> GetUser()
+        {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new MultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data.
+                await Request.Content.ReadAsMultipartAsync(provider);
+                var formData = provider.FormData;
+
+                string loginCode = formData.Get("Token");
+
+                TaiKhoan_wsv.TaiKhoan_wsv tk_wsv = new TaiKhoan_wsv.TaiKhoan_wsv();
+                var rs = tk_wsv.GetCurrentUser(loginCode);
+
+                return Request.CreateResponse(HttpStatusCode.OK, rs);
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.ToString());
+            }
+        }
+
+        [HttpPost]
         public async Task<HttpResponseMessage> GetGroupID()
         {
             ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
@@ -138,7 +170,7 @@ namespace PublicAPI.Controllers
                 DateTime endTime = DateTime.Now;
                 SharedFunction.ParseDualTime(strStartTime, strEndTime, ref startTime, ref endTime);
 
-                int status = SharedFunction.ParseID(formData.Get("status"));
+                int status = SharedFunction.ParseID(formData.Get("Status"));
 
                 string searchValue = formData.Get("SearchValue");
                 int searchType = SharedFunction.ParseInt(formData.Get("SearchType"));
@@ -363,6 +395,41 @@ namespace PublicAPI.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<HttpResponseMessage> GetDashboardData()
+        {
+            ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new MultipartFormDataStreamProvider(root);
+
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(provider);
+                var formData = provider.FormData;
+
+                string loginCode = formData.Get("Token");
+                //
+                string txt_StartTime = formData.Get("StartTime");
+                string txt_EndTime = formData.Get("EndTime");
+                DateTime startTime = new DateTime();
+                DateTime endTime = new DateTime();
+                SharedFunction.ParseDualTime(txt_StartTime, txt_EndTime, ref startTime, ref endTime);
+
+                TaiKhoan_wsv.TaiKhoan_wsv tk_wsv = new TaiKhoan_wsv.TaiKhoan_wsv();
+                var rs = tk_wsv.GetDashBoardData(loginCode, startTime, endTime);
+
+                return Request.CreateResponse(HttpStatusCode.OK, rs);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.ToString());
+            }
+        }
         #region Sample action API
         [HttpPost]
         public async Task<HttpResponseMessage> Sample()

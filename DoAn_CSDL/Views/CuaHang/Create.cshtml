@@ -3,8 +3,10 @@
     ViewBag.Title = "Thêm mới cửa hàng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 
-    int phanQuyen = SharedFunction.ParseID((Session[Constants.UserRole_SessionName] == null) ? "" : Session[Constants.UserRole_SessionName].ToString());
-    bool isAdmin = (phanQuyen == 0 || phanQuyen == 3);
+    int userRole = (Session[Constants.UserRole_SessionName] != null) ? SharedFunction.ParseID(Session[Constants.UserRole_SessionName].ToString()) : -1;
+    bool isAdmin = userRole == 1;
+    bool isCH = userRole == 3;
+    bool isNCC = userRole == 4;
     int htID = SharedFunction.ParseID(Session[Constants.HeThongID_SessionName].ToString());
 }
 
